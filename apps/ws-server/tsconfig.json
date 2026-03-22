@@ -8,7 +8,7 @@
     "outDir": "dist",
     "rootDir": "src",
     "paths": {
-      "@whiteboard/shared": ["../../packages/shared/src/index.ts"]
+      "@whiteboard/shared": ["../../packages/shared/dist/index.d.ts"]
     },
     "noUnusedLocals": false,
     "noUnusedParameters": false
