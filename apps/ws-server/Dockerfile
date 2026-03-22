@@ -1,31 +1,36 @@
 FROM node:20-alpine AS base
 WORKDIR /app
 
-# Copy monorepo root files — tsconfig.base.json is required by both
-# packages/shared and apps/ws-server because their tsconfigs extend it
 COPY package.json package-lock.json turbo.json tsconfig.base.json ./
 COPY packages/shared/ ./packages/shared/
 COPY apps/ws-server/ ./apps/ws-server/
 
-# Install all workspace deps from root so npm hoisting works correctly.
+# Install all deps including devDeps (needed for tsc)
 RUN npm install --legacy-peer-deps --include=dev
 
-# Build @whiteboard/shared — produces packages/shared/dist/
+# Build @whiteboard/shared → packages/shared/dist/
 RUN cd packages/shared && npx tsc
 
-# Build ws-server — produces apps/ws-server/dist/
+# Build ws-server → apps/ws-server/dist/
 RUN npm run build --workspace=apps/ws-server
 
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-COPY --from=base /app/node_modules ./node_modules
-COPY --from=base /app/apps/ws-server/dist ./apps/ws-server/dist
-COPY --from=base /app/apps/ws-server/package.json ./apps/ws-server/package.json
+# Copy package files for a clean production install
+COPY package.json package-lock.json ./
+COPY packages/shared/package.json ./packages/shared/package.json
+COPY apps/ws-server/package.json ./apps/ws-server/package.json
 
-# Copy compiled shared dist (not TypeScript source) and point package.json to it
+# Install production deps only — ensures all runtime deps (mongoose etc.) are present
+RUN npm install --omit=dev --legacy-peer-deps
+
+# Copy compiled output from build stage
+COPY --from=base /app/apps/ws-server/dist ./apps/ws-server/dist
 COPY --from=base /app/packages/shared/dist ./packages/shared/dist
+
+# Overwrite shared package.json to point to compiled dist (not .ts source)
 RUN echo '{"name":"@whiteboard/shared","version":"0.1.0","main":"./dist/index.js","types":"./dist/index.d.ts"}' \
     > packages/shared/package.json
 
