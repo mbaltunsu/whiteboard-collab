@@ -22,7 +22,7 @@ import { usePresence } from '@/hooks/use-presence'
 import { useUIStore } from '@/lib/stores/ui-store'
 import type { ConnectionStatus } from '@/hooks/use-yjs'
 import type { ElementCreatePayload, ElementUpdatePayload } from '@/components/canvas/input-handler'
-import type * as Y from 'yjs'
+import * as Y from 'yjs'
 import type { WhiteboardElement } from '@whiteboard/shared'
 
 // ---------------------------------------------------------------------------
@@ -366,8 +366,7 @@ export default function BoardPage() {
       (payload: ElementCreatePayload & { id: string }) => {
         if (!elementsMap || !doc) return
         doc.transact(() => {
-          const { Y: Yjs } = require('yjs') as typeof import('yjs')
-          const yEl = new Yjs.Map<unknown>()
+          const yEl = new Y.Map<unknown>()
           const element: WhiteboardElement = {
             id: payload.id,
             type: payload.type,
@@ -449,7 +448,7 @@ export default function BoardPage() {
         remoteUsers={remoteUsers}
       />
 
-      {/* Full-viewport canvas */}
+      {/* Full-viewport canvas — onMouseMove wires cursor position to Socket.io */}
       <div
         style={{
           position: 'fixed',
@@ -457,6 +456,7 @@ export default function BoardPage() {
           overflow: 'hidden',
         }}
         aria-label="Whiteboard canvas"
+        onMouseMove={(e) => emitCursorMove(e.clientX, e.clientY)}
       >
         <WhiteboardCanvas
           elements={elements}
