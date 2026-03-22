@@ -15,6 +15,14 @@ const YjsDocSchema = new Schema<IYjsDoc>(
   { timestamps: false }
 )
 
+YjsDocSchema.pre('save', function () {
+  this.updatedAt = new Date()
+})
+
+YjsDocSchema.pre('findOneAndUpdate', function () {
+  this.set({ updatedAt: new Date() })
+})
+
 YjsDocSchema.index({ boardId: 1 }, { unique: true })
 
 export const YjsDocModel: Model<IYjsDoc> =

@@ -1,11 +1,5 @@
 import mongoose, { Schema, Document, Model } from 'mongoose'
-
-export type RoomPermission = 'owner' | 'editor' | 'viewer'
-
-export interface RoomMember {
-  userId: string
-  permission: RoomPermission
-}
+import type { RoomPermission, RoomMember } from '@whiteboard/shared'
 
 export interface IRoom extends Document {
   boardId: string
@@ -34,6 +28,7 @@ const RoomSchema = new Schema<IRoom>(
 
 RoomSchema.index({ boardId: 1 }, { unique: true })
 RoomSchema.index({ code: 1 }, { unique: true })
+RoomSchema.index({ 'members.userId': 1 })
 
 export const RoomModel: Model<IRoom> =
   (mongoose.models.Room as Model<IRoom>) ?? mongoose.model<IRoom>('Room', RoomSchema)
