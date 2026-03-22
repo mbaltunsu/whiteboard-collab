@@ -1,9 +1,9 @@
-import type { WhiteboardElement, ToolType } from "@whiteboard/shared"
+import type { WhiteboardElement, ToolType, ShapeType } from "@whiteboard/shared"
 import type { PresenceState } from "@whiteboard/shared"
 import { Viewport } from "./viewport"
 import { Renderer } from "./renderer"
 import { InputHandler, generateId } from "./input-handler"
-import type { InputCallbacks, ElementCreatePayload, ElementUpdatePayload } from "./input-handler"
+import type { InputCallbacks, ElementCreatePayload, ElementUpdatePayload, PreviewState } from "./input-handler"
 
 export interface CanvasManagerCallbacks {
   onElementCreate?: (payload: ElementCreatePayload & { id: string }) => void
@@ -53,6 +53,7 @@ export class CanvasManager {
 
     this.inputHandler = new InputHandler(canvasElement, this.viewport, inputCallbacks)
     this.inputHandler.setElements(this.elements)
+    this.inputHandler.onPreview = (state: PreviewState) => this.renderer?.setPreview(state)
   }
 
   private handleCreate(payload: ElementCreatePayload): void {
@@ -104,6 +105,51 @@ export class CanvasManager {
 
   setActiveTool(tool: ToolType): void {
     this.inputHandler?.setActiveTool(tool)
+  }
+
+  setActiveShapeType(shape: ShapeType): void {
+    this.inputHandler?.setActiveShapeType(shape)
+  }
+
+  setStrokeColor(color: string): void {
+    this.inputHandler?.setStrokeColor(color)
+  }
+
+  setStrokeWidth(w: number): void {
+    this.inputHandler?.setStrokeWidth(w)
+  }
+
+  setFillColor(color: string | null): void {
+    this.inputHandler?.setFillColor(color)
+  }
+
+  setPreview(state: PreviewState): void {
+    this.renderer?.setPreview(state)
+  }
+
+  zoomIn(): number {
+    const newScale = Math.min(this.viewport.scale + 0.25, 5)
+    this.viewport.setScale(newScale)
+    this.renderer?.markDirty()
+    return newScale
+  }
+
+  zoomOut(): number {
+    const newScale = Math.max(this.viewport.scale - 0.25, 0.1)
+    this.viewport.setScale(newScale)
+    this.renderer?.markDirty()
+    return newScale
+  }
+
+  resetZoom(): number {
+    this.viewport.setScale(1)
+    this.renderer?.markDirty()
+    return 1
+  }
+
+  setZoomLevel(level: number): void {
+    this.viewport.setScale(level)
+    this.renderer?.markDirty()
   }
 
   setRemoteCursors(cursors: PresenceState[]): void {

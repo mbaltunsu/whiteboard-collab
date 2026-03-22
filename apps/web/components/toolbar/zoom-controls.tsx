@@ -15,22 +15,28 @@ const ZOOM_STEP = 0.25
 
 interface ZoomControlsProps {
   onFitToScreen?: () => void
+  onZoomIn?: () => number | void
+  onZoomOut?: () => number | void
+  onReset?: () => number | void
 }
 
-export function ZoomControls({ onFitToScreen }: ZoomControlsProps) {
+export function ZoomControls({ onFitToScreen, onZoomIn, onZoomOut, onReset }: ZoomControlsProps) {
   const { zoom, setZoom } = useUIStore()
 
   const zoomIn = useCallback(() => {
-    setZoom(Math.min(zoom + ZOOM_STEP, MAX_ZOOM))
-  }, [zoom, setZoom])
+    const result = onZoomIn?.()
+    setZoom(typeof result === 'number' ? result : Math.min(zoom + ZOOM_STEP, MAX_ZOOM))
+  }, [zoom, setZoom, onZoomIn])
 
   const zoomOut = useCallback(() => {
-    setZoom(Math.max(zoom - ZOOM_STEP, MIN_ZOOM))
-  }, [zoom, setZoom])
+    const result = onZoomOut?.()
+    setZoom(typeof result === 'number' ? result : Math.max(zoom - ZOOM_STEP, MIN_ZOOM))
+  }, [zoom, setZoom, onZoomOut])
 
   const resetZoom = useCallback(() => {
-    setZoom(1)
-  }, [setZoom])
+    const result = onReset?.()
+    setZoom(typeof result === 'number' ? result : 1)
+  }, [setZoom, onReset])
 
   const fitToScreen = useCallback(() => {
     if (onFitToScreen) {
@@ -57,7 +63,7 @@ export function ZoomControls({ onFitToScreen }: ZoomControlsProps) {
               disabled={zoom <= MIN_ZOOM}
               aria-label="Zoom out"
               className={[
-                'flex items-center justify-center w-8 h-8 rounded-[var(--wb-radius-md)] transition-all duration-150',
+                'flex items-center justify-center w-10 h-10 md:w-8 md:h-8 rounded-[var(--wb-radius-md)] transition-all duration-150',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary)] focus-visible:ring-offset-1',
                 'text-[var(--wb-on-surface-variant)] hover:text-[var(--wb-on-surface)] hover:bg-[var(--wb-surface-container-low)]',
                 'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent',
@@ -80,7 +86,7 @@ export function ZoomControls({ onFitToScreen }: ZoomControlsProps) {
               onClick={resetZoom}
               aria-label={`Current zoom: ${displayPercent}%. Click to reset to 100%`}
               className={[
-                'flex items-center justify-center h-8 px-2 min-w-[3.5rem] rounded-[var(--wb-radius-md)] transition-all duration-150',
+                'flex items-center justify-center h-10 md:h-8 px-2 min-w-[3.5rem] rounded-[var(--wb-radius-md)] transition-all duration-150',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary)] focus-visible:ring-offset-1',
                 'text-[var(--wb-on-surface-variant)] hover:text-[var(--wb-on-surface)] hover:bg-[var(--wb-surface-container-low)]',
                 'text-xs font-medium tabular-nums',
@@ -104,7 +110,7 @@ export function ZoomControls({ onFitToScreen }: ZoomControlsProps) {
               disabled={zoom >= MAX_ZOOM}
               aria-label="Zoom in"
               className={[
-                'flex items-center justify-center w-8 h-8 rounded-[var(--wb-radius-md)] transition-all duration-150',
+                'flex items-center justify-center w-10 h-10 md:w-8 md:h-8 rounded-[var(--wb-radius-md)] transition-all duration-150',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary)] focus-visible:ring-offset-1',
                 'text-[var(--wb-on-surface-variant)] hover:text-[var(--wb-on-surface)] hover:bg-[var(--wb-surface-container-low)]',
                 'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent',
@@ -129,7 +135,7 @@ export function ZoomControls({ onFitToScreen }: ZoomControlsProps) {
               onClick={fitToScreen}
               aria-label="Fit to screen"
               className={[
-                'flex items-center justify-center w-8 h-8 rounded-[var(--wb-radius-md)] transition-all duration-150',
+                'flex items-center justify-center w-10 h-10 md:w-8 md:h-8 rounded-[var(--wb-radius-md)] transition-all duration-150',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary)] focus-visible:ring-offset-1',
                 'text-[var(--wb-on-surface-variant)] hover:text-[var(--wb-on-surface)] hover:bg-[var(--wb-surface-container-low)]',
               ].join(' ')}

@@ -9,6 +9,7 @@ import type {
 import type { PresenceState } from "@whiteboard/shared"
 import type { Viewport } from "./viewport"
 import { CANVAS_COLORS, CANVAS_FONTS } from "@/lib/theme"
+import type { PreviewState } from "./input-handler"
 
 // Grid spacing-10 = 2.5rem = 40px
 const GRID_SPACING = 40
@@ -23,6 +24,16 @@ export class Renderer {
   private elements: WhiteboardElement[] = []
   private remoteCursors: PresenceState[] = []
   private dpr: number
+  private preview: PreviewState = {
+    penPoints: [],
+    shapeStart: null,
+    shapeEnd: null,
+    activeShapeType: null,
+    tool: null,
+    strokeColor: '',
+    strokeWidth: 2,
+    eraserPos: null,
+  }
 
   constructor(canvas: HTMLCanvasElement, viewport: Viewport) {
     this.canvas = canvas
@@ -38,6 +49,11 @@ export class Renderer {
 
   setElements(elements: WhiteboardElement[]): void {
     this.elements = elements
+    this.markDirty()
+  }
+
+  setPreview(state: PreviewState): void {
+    this.preview = state
     this.markDirty()
   }
 
@@ -105,7 +121,13 @@ export class Renderer {
       ctx.restore()
     }
 
+    // Layer 3: Preview (in-progress drawing — canvas space)
+    this.drawPreview()
+
     ctx.restore()
+
+    // Layer 3b: Eraser cursor (screen space — must be outside viewport transform)
+    this.drawEraserCursor()
 
     // Layer 4: Presence (remote cursors)
     this.drawPresence()
@@ -161,7 +183,7 @@ export class Renderer {
         this.renderShape(el as ShapeElement)
         break
       case "comment":
-        this.renderCommentPin(el as CommentElement)
+        // rendered as HTML overlay — skip canvas rendering
         break
       // sticky notes are rendered as HTML overlay — skip here
       case "sticky":
@@ -283,7 +305,7 @@ export class Renderer {
     const { x, y } = el.position
     const { resolved } = el.data
 
-    const pinColor = resolved ? CANVAS_COLORS.outlineVariant : CANVAS_COLORS.primary
+    const pinColor = resolved ? CANVAS_COLORS.outlineVariant : CANVAS_COLORS.commentPin
     const pinW = 20
     const pinH = 28
 
@@ -312,6 +334,77 @@ export class Renderer {
       ctx.fillText(String(Math.min(msgCount, 9)), x + pinW / 2, y + 10)
     }
 
+    ctx.restore()
+  }
+
+  private drawPreview(): void {
+    const { ctx } = this
+    const { penPoints, shapeStart, shapeEnd, activeShapeType, strokeColor, strokeWidth, eraserPos, tool } = this.preview
+    const scale = this.viewport.scale
+
+    // Freehand trail (pen/highlighter in progress)
+    if (penPoints.length > 1) {
+      ctx.save()
+      ctx.strokeStyle = strokeColor || CANVAS_COLORS.onSurface
+      ctx.lineWidth = strokeWidth / scale
+      ctx.lineCap = "round"
+      ctx.lineJoin = "round"
+      ctx.beginPath()
+      ctx.moveTo(penPoints[0][0], penPoints[0][1])
+      for (let i = 1; i < penPoints.length; i++) {
+        ctx.lineTo(penPoints[i][0], penPoints[i][1])
+      }
+      ctx.stroke()
+      ctx.restore()
+    }
+
+    // Shape ghost — render the exact shape being drawn
+    if (shapeStart && shapeEnd) {
+      const x = Math.min(shapeStart.x, shapeEnd.x)
+      const y = Math.min(shapeStart.y, shapeEnd.y)
+      const w = Math.max(Math.abs(shapeEnd.x - shapeStart.x), 1)
+      const h = Math.max(Math.abs(shapeEnd.y - shapeStart.y), 1)
+      const color = strokeColor || CANVAS_COLORS.onSurface
+      const sw = strokeWidth / scale
+      const opts = { stroke: color, strokeWidth: sw, roughness: 1, fill: undefined }
+
+      switch (activeShapeType) {
+        case "ellipse":
+          this.roughCanvas.ellipse(x + w / 2, y + h / 2, w, h, opts)
+          break
+        case "diamond": {
+          const cx = x + w / 2
+          const cy = y + h / 2
+          this.roughCanvas.polygon([[cx, y], [x + w, cy], [cx, y + h], [x, cy]], opts)
+          break
+        }
+        case "line":
+          this.roughCanvas.line(shapeStart.x, shapeStart.y, shapeEnd.x, shapeEnd.y, opts)
+          break
+        case "arrow":
+          this.roughCanvas.line(shapeStart.x, shapeStart.y, shapeEnd.x, shapeEnd.y, opts)
+          break
+        default:
+          // rectangle (and any unknown type)
+          this.roughCanvas.rectangle(x, y, w, h, opts)
+      }
+    }
+
+  }
+
+  private drawEraserCursor(): void {
+    const { ctx } = this
+    const { tool, eraserPos, strokeWidth } = this.preview
+    if (tool !== "eraser" || !eraserPos) return
+    const screen = this.viewport.canvasToScreen(eraserPos.x, eraserPos.y)
+    const radius = Math.max(8, strokeWidth * 4)
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(screen.x, screen.y, radius, 0, Math.PI * 2)
+    ctx.strokeStyle = CANVAS_COLORS.onSurfaceVariant
+    ctx.lineWidth = 1.5
+    ctx.setLineDash([3, 3])
+    ctx.stroke()
     ctx.restore()
   }
 

@@ -1,4 +1,4 @@
-export type ElementType = "freehand" | "sticky" | "shape" | "comment"
+export type ElementType = "freehand" | "sticky" | "shape" | "comment" | "text"
 
 export type ShapeType = "rectangle" | "ellipse" | "diamond" | "arrow" | "line"
 
@@ -10,6 +10,7 @@ export type ToolType =
   | "shape"
   | "sticky"
   | "comment"
+  | "text"
   | "hand"
 
 export type StickyColor = "yellow" | "pink" | "blue" | "green" | "purple"
@@ -66,6 +67,7 @@ export interface CommentMessage {
 }
 
 export interface CommentData {
+  title: string
   resolved: boolean
   messages: CommentMessage[]
 }
@@ -75,8 +77,19 @@ export interface CommentElement extends BaseElement {
   data: CommentData
 }
 
+export interface TextData {
+  text: string
+  fontSize: number
+}
+
+export interface TextElement extends BaseElement {
+  type: "text"
+  data: TextData
+}
+
 export type WhiteboardElement =
   | FreehandElement
   | StickyNoteElement
   | ShapeElement
   | CommentElement
+  | TextElement

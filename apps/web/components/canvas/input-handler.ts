@@ -1,4 +1,4 @@
-import type { WhiteboardElement, ToolType, FreehandElement, ShapeElement } from "@whiteboard/shared"
+import type { WhiteboardElement, ToolType, ShapeType, FreehandElement, ShapeElement, TextElement } from "@whiteboard/shared"
 import { DEFAULTS } from "@whiteboard/shared"
 import type { Viewport } from "./viewport"
 import { CANVAS_COLORS } from "@/lib/theme"
@@ -13,6 +13,17 @@ export interface ElementUpdatePayload {
   size?: { w: number; h: number }
   data?: WhiteboardElement["data"]
   changes?: Partial<Omit<WhiteboardElement, "id">>
+}
+
+export interface PreviewState {
+  penPoints: [number, number, number][]
+  shapeStart: { x: number; y: number } | null
+  shapeEnd: { x: number; y: number } | null
+  activeShapeType: ShapeType | null
+  tool: ToolType | null
+  strokeColor: string
+  strokeWidth: number
+  eraserPos: { x: number; y: number } | null
 }
 
 export interface InputCallbacks {
@@ -48,7 +59,13 @@ export class InputHandler {
   private viewport: Viewport
   private callbacks: InputCallbacks
   private activeTool: ToolType = "select"
+  private activeShapeType: ShapeType = "rectangle"
+  private strokeColor: string = CANVAS_COLORS.onSurface
+  private strokeWidth: number = DEFAULTS.STROKE_WIDTH
+  private fillColor: string | null = null
   private elements: WhiteboardElement[] = []
+
+  onPreview?: (state: PreviewState) => void
 
   // Interaction state
   private drag: DragState = {
@@ -74,8 +91,31 @@ export class InputHandler {
   }
 
   setActiveTool(tool: ToolType): void {
+    if (tool !== 'eraser' && this.activeTool === 'eraser') {
+      this.onPreview?.({
+        penPoints: [], shapeStart: null, shapeEnd: null,
+        activeShapeType: null, tool: null, strokeColor: '',
+        strokeWidth: this.strokeWidth, eraserPos: null,
+      })
+    }
     this.activeTool = tool
     this.canvas.style.cursor = this.getCursorForTool(tool)
+  }
+
+  setActiveShapeType(shape: ShapeType): void {
+    this.activeShapeType = shape
+  }
+
+  setStrokeColor(color: string): void {
+    this.strokeColor = color
+  }
+
+  setStrokeWidth(width: number): void {
+    this.strokeWidth = width
+  }
+
+  setFillColor(color: string | null): void {
+    this.fillColor = color
   }
 
   setElements(elements: WhiteboardElement[]): void {
@@ -94,6 +134,7 @@ export class InputHandler {
       case "shape":
       case "sticky":
       case "comment":
+      case "text":
         return "crosshair"
       case "select":
       default:
@@ -178,8 +219,33 @@ export class InputHandler {
       case "highlighter": {
         const pressure = this.getPointerPressure(e)
         this.penPoints.push([canvas.x, canvas.y, pressure])
+        this.onPreview?.({
+          penPoints: this.penPoints,
+          shapeStart: null,
+          shapeEnd: null,
+          activeShapeType: null,
+          tool: this.activeTool,
+          strokeColor: this.strokeColor,
+          strokeWidth: this.strokeWidth,
+          eraserPos: null,
+        })
         break
       }
+
+      case "shape":
+        if (this.shapeStartCanvas) {
+          this.onPreview?.({
+            penPoints: [],
+            shapeStart: this.shapeStartCanvas,
+            shapeEnd: { x: canvas.x, y: canvas.y },
+            activeShapeType: this.activeShapeType,
+            tool: this.activeTool,
+            strokeColor: this.strokeColor,
+            strokeWidth: this.strokeWidth,
+            eraserPos: null,
+          })
+        }
+        break
 
       case "hand":
         this.viewport.pan(dxScreen, dyScreen)
@@ -239,8 +305,8 @@ export class InputHandler {
             position: { x: minX, y: minY },
             size: { w: Math.max(maxX - minX, 1), h: Math.max(maxY - minY, 1) },
             style: {
-              color: CANVAS_COLORS.onSurface,
-              strokeWidth: DEFAULTS.STROKE_WIDTH,
+              color: this.strokeColor,
+              strokeWidth: this.strokeWidth,
               opacity: DEFAULTS.OPACITY,
             },
             locked: false,
@@ -253,6 +319,7 @@ export class InputHandler {
           this.callbacks.onElementCreate({ element })
         }
         this.penPoints = []
+        this.onPreview?.({ penPoints: [], shapeStart: null, shapeEnd: null, activeShapeType: null, tool: null, strokeColor: '', strokeWidth: this.strokeWidth, eraserPos: null })
         break
       }
 
@@ -273,14 +340,14 @@ export class InputHandler {
               position: { x, y },
               size: { w, h },
               style: {
-                color: CANVAS_COLORS.onSurface,
-                strokeWidth: DEFAULTS.STROKE_WIDTH,
+                color: this.strokeColor,
+                strokeWidth: this.strokeWidth,
                 opacity: DEFAULTS.OPACITY,
               },
               locked: false,
               data: {
-                shapeType: "rectangle",
-                fill: null,
+                shapeType: this.activeShapeType,
+                fill: this.fillColor,
                 roughness: DEFAULTS.ROUGHNESS,
                 connectedTo: [],
               },
@@ -289,6 +356,7 @@ export class InputHandler {
           }
         }
         this.shapeStartCanvas = null
+        this.onPreview?.({ penPoints: [], shapeStart: null, shapeEnd: null, activeShapeType: null, tool: null, strokeColor: '', strokeWidth: this.strokeWidth, eraserPos: null })
         break
       }
 
@@ -348,7 +416,7 @@ export class InputHandler {
         const element: Omit<WhiteboardElement, "id" | "zIndex" | "createdBy"> = {
           type: "comment",
           position: { x: canvas.x, y: canvas.y },
-          size: { w: 20, h: 28 },
+          size: { w: 240, h: 160 },
           style: {
             color: CANVAS_COLORS.primary,
             strokeWidth: 1,
@@ -356,9 +424,27 @@ export class InputHandler {
           },
           locked: false,
           data: {
+            title: '',
             resolved: false,
             messages: [],
           },
+        }
+        this.callbacks.onElementCreate({ element })
+        break
+      }
+
+      case "text": {
+        const element: Omit<TextElement, "id" | "zIndex" | "createdBy"> = {
+          type: "text",
+          position: { x: canvas.x, y: canvas.y },
+          size: { w: 200, h: 60 },
+          style: {
+            color: this.strokeColor,
+            strokeWidth: 1,
+            opacity: 1,
+          },
+          locked: false,
+          data: { text: '', fontSize: 16 },
         }
         this.callbacks.onElementCreate({ element })
         break
@@ -397,20 +483,86 @@ export class InputHandler {
     }
   }
 
+  // Fires on every mousemove regardless of button state — used only for eraser cursor
+  private onMouseMoveGlobal = (e: MouseEvent): void => {
+    if (this.activeTool !== "eraser") return
+    const canvas = this.viewport.screenToCanvas(e.offsetX, e.offsetY)
+    this.onPreview?.({
+      penPoints: [],
+      shapeStart: null,
+      shapeEnd: null,
+      activeShapeType: null,
+      tool: "eraser",
+      strokeColor: '',
+      strokeWidth: this.strokeWidth,
+      eraserPos: { x: canvas.x, y: canvas.y },
+    })
+  }
+
+  private onTouchStart = (e: TouchEvent): void => {
+    e.preventDefault()
+    if (e.touches.length === 0) return
+    const touch = e.touches[0]
+    const rect = this.canvas.getBoundingClientRect()
+    const syntheticEvent = {
+      offsetX: touch.clientX - rect.left,
+      offsetY: touch.clientY - rect.top,
+      button: 0,
+      preventDefault: () => {},
+    } as unknown as MouseEvent
+    this.onMouseDown(syntheticEvent)
+  }
+
+  private onTouchMove = (e: TouchEvent): void => {
+    e.preventDefault()
+    if (e.touches.length === 0) return
+    const touch = e.touches[0]
+    const rect = this.canvas.getBoundingClientRect()
+    const syntheticEvent = {
+      offsetX: touch.clientX - rect.left,
+      offsetY: touch.clientY - rect.top,
+      button: 0,
+      preventDefault: () => {},
+    } as unknown as MouseEvent
+    this.onMouseMove(syntheticEvent)
+  }
+
+  private onTouchEnd = (e: TouchEvent): void => {
+    e.preventDefault()
+    const touch = e.changedTouches[0]
+    if (!touch) return
+    const rect = this.canvas.getBoundingClientRect()
+    const syntheticEvent = {
+      offsetX: touch.clientX - rect.left,
+      offsetY: touch.clientY - rect.top,
+      button: 0,
+      preventDefault: () => {},
+    } as unknown as MouseEvent
+    this.onMouseUp(syntheticEvent)
+  }
+
   private bindEvents(): void {
     this.canvas.addEventListener("mousedown", this.onMouseDown)
     this.canvas.addEventListener("mousemove", this.onMouseMove)
+    this.canvas.addEventListener("mousemove", this.onMouseMoveGlobal)
     this.canvas.addEventListener("mouseup", this.onMouseUp)
     this.canvas.addEventListener("wheel", this.onWheel, { passive: false })
     this.canvas.addEventListener("dblclick", this.onDoubleClick)
+    this.canvas.addEventListener("touchstart", this.onTouchStart, { passive: false })
+    this.canvas.addEventListener("touchmove", this.onTouchMove, { passive: false })
+    this.canvas.addEventListener("touchend", this.onTouchEnd, { passive: false })
   }
 
   destroy(): void {
     this.canvas.removeEventListener("mousedown", this.onMouseDown)
     this.canvas.removeEventListener("mousemove", this.onMouseMove)
+    this.canvas.removeEventListener("mousemove", this.onMouseMoveGlobal)
     this.canvas.removeEventListener("mouseup", this.onMouseUp)
     this.canvas.removeEventListener("wheel", this.onWheel)
     this.canvas.removeEventListener("dblclick", this.onDoubleClick)
+    this.canvas.removeEventListener("touchstart", this.onTouchStart)
+    this.canvas.removeEventListener("touchmove", this.onTouchMove)
+    this.canvas.removeEventListener("touchend", this.onTouchEnd)
   }
 }
 

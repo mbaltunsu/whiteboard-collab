@@ -26,8 +26,9 @@ export const CANVAS_COLORS = {
   primaryPulseStart: 'rgba(12, 11, 255, 0.3)',
   primaryPulseEnd: 'rgba(12, 11, 255, 0)',
   shadowColor: 'rgba(12, 15, 16, 0.12)',
-  gridDot: 'rgba(171, 173, 174, 0.3)',
-  gridDotFaint: 'rgba(171, 173, 174, 0.10)',
+  gridDot: 'rgba(171, 173, 174, 0.5)',
+  gridDotFaint: 'rgba(171, 173, 174, 0.30)',
+  commentPin: '#7c5cbf',
   cursorLabelBg: 'rgba(255, 255, 255, 0.85)',
   cursorLabelBorder: 'rgba(171, 173, 174, 0.15)',
   sticky: {

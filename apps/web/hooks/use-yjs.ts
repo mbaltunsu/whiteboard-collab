@@ -48,7 +48,8 @@ export function useYjs(boardId: string, token?: string | null): UseYjsReturn {
   useEffect(() => {
     if (!boardId) return
 
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL ?? "ws://localhost:4000"
+    const serverUrl = process.env.NEXT_PUBLIC_WS_SERVER_URL ?? "http://localhost:4000"
+    const wsUrl = serverUrl.replace(/^http/, "ws") + "/yjs"
 
     const doc = new Y.Doc()
     docRef.current = doc
@@ -99,7 +100,9 @@ export function useYjs(boardId: string, token?: string | null): UseYjsReturn {
     return () => {
       elementsMap.unobserveDeep(observer)
       undoManager.destroy()
-      provider.disconnect()
+      // React 18 Strict Mode calls cleanup before the connection is established in dev.
+      // "WebSocket is closed before connection is established" warning is harmless in production.
+      try { provider.disconnect() } catch { /* ignore Strict Mode dev-only warning */ }
       provider.destroy()
       persistence.destroy()
       doc.destroy()

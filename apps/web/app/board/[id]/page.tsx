@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -8,6 +8,10 @@ import { Settings, Share2, Undo2, Redo2 } from 'lucide-react'
 import { FONTS, GRADIENTS, STATUS_COLORS } from '@/lib/theme'
 
 import { WhiteboardCanvas } from '@/components/canvas/whiteboard-canvas'
+import type { WhiteboardCanvasHandle } from '@/components/canvas/whiteboard-canvas'
+import { StickyNoteOverlay } from '@/components/canvas/sticky-note-overlay'
+import { CommentOverlay } from '@/components/canvas/comment-overlay'
+import { TextOverlay } from '@/components/canvas/text-overlay'
 import {
   Toolbar,
   ColorPicker,
@@ -24,7 +28,7 @@ import { useUIStore } from '@/lib/stores/ui-store'
 import type { ConnectionStatus } from '@/hooks/use-yjs'
 import type { ElementCreatePayload, ElementUpdatePayload } from '@/components/canvas/input-handler'
 import * as Y from 'yjs'
-import type { WhiteboardElement } from '@whiteboard/shared'
+import type { CommentElement, StickyNoteElement, TextElement, WhiteboardElement } from '@whiteboard/shared'
 
 // ---------------------------------------------------------------------------
 // Connection status indicator
@@ -157,9 +161,11 @@ interface TopBarProps {
   boardId: string
   connectionStatus: ConnectionStatus
   remoteUsers: ReturnType<typeof usePresence>['remoteUsers']
+  onShare: () => void
+  shareCopied: boolean
 }
 
-function TopBar({ boardId, connectionStatus, remoteUsers }: TopBarProps) {
+function TopBar({ boardId, connectionStatus, remoteUsers, onShare, shareCopied }: TopBarProps) {
   return (
     <div
       style={{
@@ -199,7 +205,8 @@ function TopBar({ boardId, connectionStatus, remoteUsers }: TopBarProps) {
         <button
           type="button"
           aria-label="Share board"
-          title="Share board"
+          title="Copy board link"
+          onClick={onShare}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -207,18 +214,19 @@ function TopBar({ boardId, connectionStatus, remoteUsers }: TopBarProps) {
             height: 32,
             padding: '0 12px',
             borderRadius: 'var(--wb-radius-md, 0.375rem)',
-            background: GRADIENTS.primary,
-            border: 'none',
-            color: 'var(--wb-on-primary-solid)',
+            background: shareCopied ? 'var(--wb-surface-container-low)' : GRADIENTS.primary,
+            border: shareCopied ? '1px solid var(--wb-ghost-border)' : 'none',
+            color: shareCopied ? 'var(--wb-on-surface)' : 'var(--wb-on-primary-solid)',
             fontSize: '12px',
             fontFamily: FONTS.inter,
             fontWeight: 500,
             cursor: 'pointer',
-            boxShadow: 'var(--wb-primary-shadow-sm)',
+            boxShadow: shareCopied ? 'none' : 'var(--wb-primary-shadow-sm)',
+            transition: 'all 200ms',
           }}
         >
           <Share2 size={13} aria-hidden="true" />
-          Share
+          {shareCopied ? 'Copied!' : 'Share'}
         </button>
 
         <Link
@@ -326,7 +334,14 @@ export default function BoardPage() {
 
   const { remoteCursors, remoteUsers } = usePresence()
 
-  const { activeTool, setSelectedElementIds } = useUIStore()
+  const { activeTool, activeShapeType, strokeColor, strokeWidth, fillColor, setSelectedElementIds } = useUIStore()
+
+  const canvasRef = useRef<WhiteboardCanvasHandle>(null)
+  const [viewportState, setViewportState] = useState({ translateX: 0, translateY: 0, scale: 1 })
+  const [focusedStickyId, setFocusedStickyId] = useState<string | null>(null)
+  const [focusedCommentId, setFocusedCommentId] = useState<string | null>(null)
+  const [focusedTextId, setFocusedTextId] = useState<string | null>(null)
+  const [shareCopied, setShareCopied] = useState(false)
 
   // Redirect unauthenticated users (layout handles server-side, this guards
   // client-side hydration races)
@@ -382,6 +397,18 @@ export default function BoardPage() {
           yEl.set('locked', false)
 
           elementsMap.set(id, yEl as Y.Map<unknown>)
+
+          // Auto-focus sticky notes on creation
+          if (el.type === 'sticky') {
+            // Schedule after React re-render
+            setTimeout(() => setFocusedStickyId(id), 50)
+          }
+          if (el.type === 'comment') {
+            setTimeout(() => setFocusedCommentId(id), 50)
+          }
+          if (el.type === 'text') {
+            setTimeout(() => setFocusedTextId(id), 50)
+          }
         })
       },
     [elementsMap, doc, session?.user?.userId],
@@ -435,6 +462,67 @@ export default function BoardPage() {
     [],
   )
 
+  const handleViewportSnapshot = useCallback(
+    (v: { translateX: number; translateY: number; scale: number }) => {
+      setViewportState(v)
+    },
+    [],
+  )
+
+  const handleStickyTextChange = useCallback(
+    (id: string, text: string) => {
+      if (!elementsMap || !doc) return
+      doc.transact(() => {
+        const yEl = elementsMap.get(id)
+        if (!yEl) return
+        const data = yEl.get('data') as Record<string, unknown>
+        yEl.set('data', { ...data, text })
+      })
+    },
+    [elementsMap, doc],
+  )
+
+  const commentElements = elements.filter((e) => e.type === 'comment') as CommentElement[]
+  const textElements = elements.filter((e) => e.type === 'text') as TextElement[]
+
+  const handleTextTextChange = useCallback(
+    (id: string, text: string) => {
+      const el = elements.find((e) => e.id === id) as TextElement | undefined
+      if (!el) return
+      handleElementUpdate({ id, data: { ...el.data, text } })
+    },
+    [elements, handleElementUpdate],
+  )
+
+  const handleCommentTitleChange = useCallback(
+    (id: string, title: string) => {
+      const el = elements.find((e) => e.id === id) as CommentElement | undefined
+      if (!el) return
+      handleElementUpdate({ id, data: { ...el.data, title } })
+    },
+    [elements, handleElementUpdate],
+  )
+
+  const handleAddMessage = useCallback(
+    (id: string, text: string) => {
+      const el = elements.find((e) => e.id === id) as CommentElement | undefined
+      if (!el) return
+      const messages = [...(el.data.messages || []), { author: 'You', text, timestamp: Date.now() }]
+      handleElementUpdate({ id, data: { ...el.data, messages } })
+    },
+    [elements, handleElementUpdate],
+  )
+
+  const handleShare = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+    } catch {
+      // fallback: nothing to do — clipboard not available
+    }
+    setShareCopied(true)
+    setTimeout(() => setShareCopied(false), 2000)
+  }, [])
+
   if (sessionStatus === 'loading') {
     return null
   }
@@ -446,6 +534,8 @@ export default function BoardPage() {
         boardId={boardId}
         connectionStatus={connectionStatus}
         remoteUsers={remoteUsers}
+        onShare={handleShare}
+        shareCopied={shareCopied}
       />
 
       {/* Full-viewport canvas — onMouseMove wires cursor position to Socket.io */}
@@ -459,15 +549,46 @@ export default function BoardPage() {
         onMouseMove={(e) => emitCursorMove(e.clientX, e.clientY)}
       >
         <WhiteboardCanvas
+          ref={canvasRef}
           elements={elements}
           activeTool={activeTool}
+          activeShapeType={activeShapeType}
+          strokeColor={strokeColor}
+          strokeWidth={strokeWidth}
+          fillColor={fillColor}
           remoteCursors={remoteCursors}
           onElementCreate={handleElementCreate}
           onElementUpdate={handleElementUpdate}
           onElementSelect={handleElementSelect}
           onElementDelete={handleElementDelete}
           onViewportChange={handleViewportChange}
+          onViewportSnapshot={handleViewportSnapshot}
           className="w-full h-full"
+        />
+
+        <StickyNoteOverlay
+          stickies={elements.filter((e) => e.type === 'sticky') as StickyNoteElement[]}
+          viewport={viewportState}
+          focusedId={focusedStickyId}
+          onTextChange={handleStickyTextChange}
+          onFocusChange={setFocusedStickyId}
+        />
+
+        <CommentOverlay
+          comments={commentElements}
+          viewport={viewportState}
+          focusedId={focusedCommentId}
+          onTitleChange={handleCommentTitleChange}
+          onAddMessage={handleAddMessage}
+          onFocusChange={setFocusedCommentId}
+        />
+
+        <TextOverlay
+          texts={textElements}
+          viewport={viewportState}
+          focusedId={focusedTextId}
+          onTextChange={handleTextTextChange}
+          onFocusChange={setFocusedTextId}
         />
 
         {/* Remote cursor overlays — positioned absolutely over the canvas */}
@@ -514,7 +635,11 @@ export default function BoardPage() {
       </div>
 
       {/* Zoom controls — bottom right (self-positioned via fixed) */}
-      <ZoomControls />
+      <ZoomControls
+        onZoomIn={() => canvasRef.current?.zoomIn()}
+        onZoomOut={() => canvasRef.current?.zoomOut()}
+        onReset={() => canvasRef.current?.resetZoom()}
+      />
 
       {/* Undo / Redo — bottom center */}
       <BottomBar undoManager={undoManager} />

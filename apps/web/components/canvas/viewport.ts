@@ -62,6 +62,10 @@ export class Viewport {
     this._translateY = centerY - canvasPoint.y * this._scale
   }
 
+  setScale(level: number): void {
+    this._scale = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, level))
+  }
+
   getVisibleBounds(): VisibleBounds {
     const topLeft = this.screenToCanvas(0, 0)
     const bottomRight = this.screenToCanvas(this._screenWidth, this._screenHeight)
