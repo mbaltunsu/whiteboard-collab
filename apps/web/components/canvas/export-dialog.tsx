@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { ImageIcon, CodeIcon, DownloadIcon } from 'lucide-react'
+import { FONTS, CANVAS_COLORS, CANVAS_FONTS, GRADIENTS } from '@/lib/theme'
 
 type ExportFormat = 'png' | 'svg'
 type ScaleFactor = 1 | 2
@@ -22,15 +23,7 @@ interface ExportDialogProps {
   onClose: () => void
 }
 
-const STICKY_COLOR_MAP: Record<string, string> = {
-  yellow: '#f8a010',
-  pink: '#f472b6',
-  blue: '#60a5fa',
-  green: '#4ade80',
-  purple: '#a78bfa',
-}
-
-const GRID_DOT_COLOR = 'rgba(171, 173, 174, 0.3)'
+const GRID_DOT_COLOR = CANVAS_COLORS.gridDot
 const GRID_SPACING = 24
 
 function drawGrid(ctx: CanvasRenderingContext2D, width: number, height: number) {
@@ -83,7 +76,7 @@ function renderElementsToOffscreenCanvas(
   ctx.scale(scaleFactor, scaleFactor)
 
   // Background
-  ctx.fillStyle = '#f5f6f7'
+  ctx.fillStyle = CANVAS_COLORS.surface
   ctx.fillRect(0, 0, bounds.w, bounds.h)
 
   if (includeGrid) {
@@ -103,17 +96,17 @@ function renderElementsToOffscreenCanvas(
 
     switch (el.type) {
       case 'sticky': {
-        const bg = STICKY_COLOR_MAP[el.data.color] ?? '#f8a010'
+        const bg = CANVAS_COLORS.sticky[el.data.color] ?? CANVAS_COLORS.sticky.yellow
         ctx.fillStyle = bg
-        ctx.shadowColor = 'rgba(12, 15, 16, 0.12)'
+        ctx.shadowColor = CANVAS_COLORS.shadowColor
         ctx.shadowBlur = 4
         ctx.shadowOffsetY = 2
         ctx.beginPath()
         ctx.roundRect(x, y, w, h, 6)
         ctx.fill()
         ctx.shadowColor = 'transparent'
-        ctx.fillStyle = '#2c2f30'
-        ctx.font = `${el.data.fontSize ?? 14}px Inter, sans-serif`
+        ctx.fillStyle = CANVAS_COLORS.onSurface
+        ctx.font = `${el.data.fontSize ?? 14}px ${CANVAS_FONTS.inter}`
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         const maxWidth = w - 16
@@ -184,12 +177,12 @@ function renderElementsToOffscreenCanvas(
         break
       }
       case 'comment': {
-        ctx.fillStyle = '#0c0bff'
+        ctx.fillStyle = CANVAS_COLORS.primary
         ctx.beginPath()
         ctx.arc(x + w / 2, y + h / 2, 10, 0, Math.PI * 2)
         ctx.fill()
-        ctx.fillStyle = '#ffffff'
-        ctx.font = 'bold 11px Inter, sans-serif'
+        ctx.fillStyle = CANVAS_COLORS.onPrimary
+        ctx.font = `bold 11px ${CANVAS_FONTS.inter}`
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         ctx.fillText('!', x + w / 2, y + h / 2)
@@ -213,7 +206,7 @@ function buildSVG(elements: WhiteboardElement[], includeGrid: boolean): string {
   )
 
   // Background rect
-  parts.push(`<rect x="${bounds.x}" y="${bounds.y}" width="${bounds.w}" height="${bounds.h}" fill="#f5f6f7"/>`)
+  parts.push(`<rect x="${bounds.x}" y="${bounds.y}" width="${bounds.w}" height="${bounds.h}" fill="${CANVAS_COLORS.surface}"/>`)
 
   if (includeGrid) {
     parts.push(`<defs><pattern id="grid" width="${GRID_SPACING}" height="${GRID_SPACING}" patternUnits="userSpaceOnUse" patternTransform="translate(${bounds.x},${bounds.y})"><circle cx="0" cy="0" r="1" fill="${GRID_DOT_COLOR}"/></pattern></defs>`)
@@ -227,11 +220,11 @@ function buildSVG(elements: WhiteboardElement[], includeGrid: boolean): string {
 
     switch (el.type) {
       case 'sticky': {
-        const bg = STICKY_COLOR_MAP[el.data.color] ?? '#f8a010'
+        const bg = CANVAS_COLORS.sticky[el.data.color] ?? CANVAS_COLORS.sticky.yellow
         parts.push(
           `<g opacity="${opacity}">` +
           `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${bg}" filter="drop-shadow(0 2px 2px rgba(0,0,0,.12))"/>` +
-          `<text x="${x + w / 2}" y="${y + h / 2}" text-anchor="middle" dominant-baseline="middle" font-family="Inter, sans-serif" font-size="${el.data.fontSize ?? 14}" fill="#2c2f30">${escapeXml(el.data.text)}</text>` +
+          `<text x="${x + w / 2}" y="${y + h / 2}" text-anchor="middle" dominant-baseline="middle" font-family="${CANVAS_FONTS.inter}" font-size="${el.data.fontSize ?? 14}" fill="${CANVAS_COLORS.onSurface}">${escapeXml(el.data.text)}</text>` +
           `</g>`
         )
         break
@@ -276,8 +269,8 @@ function buildSVG(elements: WhiteboardElement[], includeGrid: boolean): string {
       case 'comment': {
         parts.push(
           `<g opacity="${opacity}">` +
-          `<circle cx="${x + w / 2}" cy="${y + h / 2}" r="10" fill="#0c0bff"/>` +
-          `<text x="${x + w / 2}" y="${y + h / 2}" text-anchor="middle" dominant-baseline="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">!</text>` +
+          `<circle cx="${x + w / 2}" cy="${y + h / 2}" r="10" fill="${CANVAS_COLORS.primary}"/>` +
+          `<text x="${x + w / 2}" y="${y + h / 2}" text-anchor="middle" dominant-baseline="middle" font-family="${CANVAS_FONTS.inter}" font-size="11" font-weight="bold" fill="${CANVAS_COLORS.onPrimary}">!</text>` +
           `</g>`
         )
         break
@@ -345,14 +338,14 @@ export function ExportDialog({ elements, canvasRef, isOpen, onClose }: ExportDia
         style={{
           background: 'var(--wb-surface-container-lowest, #ffffff)',
           borderRadius: 'var(--wb-radius-xl, 0.75rem)',
-          boxShadow: '0 12px 32px -4px rgba(12, 15, 16, 0.08)',
-          border: '1px solid rgba(171, 173, 174, 0.15)',
+          boxShadow: 'var(--wb-shadow-ambient)',
+          border: '1px solid var(--wb-ghost-border)',
         }}
       >
         <DialogHeader>
           <DialogTitle
             style={{
-              fontFamily: 'Manrope, sans-serif',
+              fontFamily: FONTS.manrope,
               fontWeight: 700,
               color: 'var(--wb-on-surface, #2c2f30)',
             }}
@@ -423,10 +416,10 @@ export function ExportDialog({ elements, canvasRef, isOpen, onClose }: ExportDia
             onClick={handleExport}
             disabled={isExporting}
             style={{
-              background: 'linear-gradient(135deg, #0c0bff, #9097ff)',
-              color: '#ffffff',
+              background: GRADIENTS.primary,
+              color: 'var(--wb-on-primary-solid)',
               borderRadius: 'var(--wb-radius-md, 0.375rem)',
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: FONTS.inter,
               fontWeight: 500,
             }}
           >
@@ -454,14 +447,14 @@ function FormatButton({ active, onClick, icon, label }: FormatButtonProps) {
       className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--wb-radius-md,0.375rem)] text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary,#0c0bff)]"
       style={{
         background: active
-          ? 'rgba(144, 151, 255, 0.2)'
+          ? 'var(--wb-primary-alpha-20)'
           : 'var(--wb-surface-container-low, #eff1f2)',
         color: active
           ? 'var(--wb-primary, #0c0bff)'
           : 'var(--wb-on-surface-variant, #595c5d)',
         border: active
-          ? '1px solid rgba(12, 11, 255, 0.25)'
-          : '1px solid rgba(171, 173, 174, 0.15)',
+          ? '1px solid var(--wb-primary-alpha-25)'
+          : '1px solid var(--wb-ghost-border)',
       }}
       aria-pressed={active}
     >
@@ -485,14 +478,14 @@ function ScaleButton({ active, onClick, label }: ScaleButtonProps) {
       className="px-4 py-2 rounded-[var(--wb-radius-md,0.375rem)] text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary,#0c0bff)]"
       style={{
         background: active
-          ? 'rgba(144, 151, 255, 0.2)'
+          ? 'var(--wb-primary-alpha-20)'
           : 'var(--wb-surface-container-low, #eff1f2)',
         color: active
           ? 'var(--wb-primary, #0c0bff)'
           : 'var(--wb-on-surface-variant, #595c5d)',
         border: active
-          ? '1px solid rgba(12, 11, 255, 0.25)'
-          : '1px solid rgba(171, 173, 174, 0.15)',
+          ? '1px solid var(--wb-primary-alpha-25)'
+          : '1px solid var(--wb-ghost-border)',
       }}
       aria-pressed={active}
     >

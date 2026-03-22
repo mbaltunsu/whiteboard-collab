@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, KeyboardEvent } from 'react'
 import type { CommentElement } from '@whiteboard/shared'
+import { FONTS } from '@/lib/theme'
 import {
   Popover,
   PopoverContent,
@@ -113,7 +114,7 @@ export function CommentThread({
             <span
               style={{
                 fontSize: '13px',
-                fontFamily: 'Inter, sans-serif',
+                fontFamily: FONTS.inter,
                 fontWeight: 600,
                 color: 'var(--wb-on-surface)',
                 letterSpacing: '-0.01em',
@@ -131,7 +132,7 @@ export function CommentThread({
                   background: 'var(--wb-secondary-container)',
                   color: 'var(--wb-on-secondary-container)',
                   fontSize: '10px',
-                  fontFamily: 'Inter, sans-serif',
+                  fontFamily: FONTS.inter,
                   fontWeight: 500,
                   lineHeight: '16px',
                 }}
@@ -152,14 +153,14 @@ export function CommentThread({
               padding: '3px 8px',
               borderRadius: 'var(--wb-radius-md)',
               background: isResolved
-                ? 'rgba(144, 151, 255, 0.15)'
+                ? 'var(--wb-primary-alpha-12)'
                 : 'transparent',
               color: isResolved
                 ? 'var(--wb-primary)'
                 : 'var(--wb-on-surface-variant)',
               border: '1px solid var(--wb-ghost-border)',
               fontSize: '11px',
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: FONTS.inter,
               fontWeight: 500,
               cursor: 'pointer',
               transition: 'background 120ms ease, color 120ms ease',
@@ -208,7 +209,7 @@ export function CommentThread({
               style={{
                 margin: 0,
                 fontSize: '12px',
-                fontFamily: 'Inter, sans-serif',
+                fontFamily: FONTS.inter,
                 color: 'var(--wb-on-surface-variant)',
                 textAlign: 'center',
               }}
@@ -237,7 +238,7 @@ export function CommentThread({
                   <span
                     style={{
                       fontSize: '11px',
-                      fontFamily: 'Inter, sans-serif',
+                      fontFamily: FONTS.inter,
                       fontWeight: 600,
                       color: 'var(--wb-on-surface)',
                       letterSpacing: '0.01em',
@@ -253,7 +254,7 @@ export function CommentThread({
                     dateTime={new Date(message.timestamp).toISOString()}
                     style={{
                       fontSize: '10px',
-                      fontFamily: 'Inter, sans-serif',
+                      fontFamily: FONTS.inter,
                       fontWeight: 400,
                       color: 'var(--wb-on-surface-variant)',
                       whiteSpace: 'nowrap',
@@ -267,7 +268,7 @@ export function CommentThread({
                   style={{
                     margin: 0,
                     fontSize: '12px',
-                    fontFamily: 'Inter, sans-serif',
+                    fontFamily: FONTS.inter,
                     fontWeight: 400,
                     color: 'var(--wb-on-surface)',
                     lineHeight: '1.5',
@@ -311,7 +312,7 @@ export function CommentThread({
                 border: '1px solid var(--wb-ghost-border)',
                 borderRadius: 'var(--wb-radius-md)',
                 fontSize: '12px',
-                fontFamily: 'Inter, sans-serif',
+                fontFamily: FONTS.inter,
                 color: 'var(--wb-on-surface)',
                 outline: 'none',
                 transition: 'border-color 120ms ease',
@@ -376,7 +377,7 @@ export function CommentThread({
               style={{
                 margin: 0,
                 fontSize: '11px',
-                fontFamily: 'Inter, sans-serif',
+                fontFamily: FONTS.inter,
                 color: 'var(--wb-on-surface-variant)',
                 textAlign: 'center',
               }}

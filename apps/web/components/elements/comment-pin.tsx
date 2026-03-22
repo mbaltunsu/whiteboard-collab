@@ -1,6 +1,7 @@
 'use client'
 
 import type { CommentElement } from '@whiteboard/shared'
+import { FONTS, CANVAS_COLORS } from '@/lib/theme'
 
 interface CommentPinProps {
   element: CommentElement
@@ -86,7 +87,7 @@ export function CommentPin({ element, onClick }: CommentPinProps) {
               background: 'var(--wb-tertiary-container)',
               color: 'var(--wb-on-tertiary-container)',
               fontSize: '10px',
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: FONTS.inter,
               fontWeight: 600,
               lineHeight: '16px',
               textAlign: 'center',
@@ -114,8 +115,8 @@ export function CommentPin({ element, onClick }: CommentPinProps) {
 
       <style>{`
         @keyframes wb-pin-pulse {
-          0%, 100% { box-shadow: var(--wb-shadow-ambient), 0 0 0 0 rgba(12, 11, 255, 0.3); }
-          50% { box-shadow: var(--wb-shadow-ambient), 0 0 0 6px rgba(12, 11, 255, 0); }
+          0%, 100% { box-shadow: var(--wb-shadow-ambient), 0 0 0 0 ${CANVAS_COLORS.primaryPulseStart}; }
+          50% { box-shadow: var(--wb-shadow-ambient), 0 0 0 6px ${CANVAS_COLORS.primaryPulseEnd}; }
         }
       `}</style>
     </button>

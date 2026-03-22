@@ -3,6 +3,7 @@
 import { useRef, useEffect, useCallback, useMemo, useState } from 'react'
 import type { WhiteboardElement } from '@whiteboard/shared'
 import type { VisibleBounds } from './viewport'
+import { CANVAS_COLORS } from '@/lib/theme'
 
 const MINIMAP_W = 200
 const MINIMAP_H = 150
@@ -116,14 +117,7 @@ export function Minimap({ elements, viewport, onNavigate, visible = true }: Mini
 
       switch (el.type) {
         case 'sticky': {
-          const colorMap: Record<string, string> = {
-            yellow: '#f8a010',
-            pink: '#f472b6',
-            blue: '#60a5fa',
-            green: '#4ade80',
-            purple: '#a78bfa',
-          }
-          ctx.fillStyle = colorMap[el.data.color] ?? '#f8a010'
+          ctx.fillStyle = CANVAS_COLORS.sticky[el.data.color] ?? CANVAS_COLORS.sticky.yellow
           ctx.beginPath()
           ctx.roundRect(x, y, Math.max(w, 4), Math.max(h, 4), 2)
           ctx.fill()
@@ -144,7 +138,7 @@ export function Minimap({ elements, viewport, onNavigate, visible = true }: Mini
           break
         }
         case 'comment': {
-          ctx.fillStyle = '#0c0bff'
+          ctx.fillStyle = CANVAS_COLORS.primary
           ctx.beginPath()
           ctx.arc(x + w / 2, y + h / 2, 3, 0, Math.PI * 2)
           ctx.fill()
@@ -168,13 +162,13 @@ export function Minimap({ elements, viewport, onNavigate, visible = true }: Mini
     const vpMiniH = vpH * miniScale
 
     // Viewport fill
-    ctx.fillStyle = `rgba(12, 11, 255, ${VIEWPORT_RECT_ALPHA})`
+    ctx.fillStyle = CANVAS_COLORS.primaryAlpha18
     ctx.beginPath()
     ctx.roundRect(vpMini.x, vpMini.y, vpMiniW, vpMiniH, 3)
     ctx.fill()
 
     // Viewport border
-    ctx.strokeStyle = 'rgba(12, 11, 255, 0.6)'
+    ctx.strokeStyle = CANVAS_COLORS.primaryAlpha60
     ctx.lineWidth = 1.5
     ctx.beginPath()
     ctx.roundRect(vpMini.x, vpMini.y, vpMiniW, vpMiniH, 3)
@@ -226,7 +220,7 @@ export function Minimap({ elements, viewport, onNavigate, visible = true }: Mini
         width: `${MINIMAP_W}px`,
         height: `${MINIMAP_H}px`,
         borderRadius: 'var(--wb-radius-xl, 0.75rem)',
-        background: 'rgba(255, 255, 255, 0.82)',
+        background: 'var(--wb-glass-bg)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         boxShadow: isHovered
