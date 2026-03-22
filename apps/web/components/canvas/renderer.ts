@@ -42,8 +42,11 @@ export class Renderer {
   }
 
   setRemoteCursors(cursors: PresenceState[]): void {
-    this.remoteCursors = cursors
-    this.markDirty()
+    // Only mark dirty if cursor data actually changed
+    if (JSON.stringify(cursors) !== JSON.stringify(this.remoteCursors)) {
+      this.remoteCursors = cursors
+      this.markDirty()
+    }
   }
 
   markDirty(): void {
@@ -87,12 +90,14 @@ export class Renderer {
     // Layer 1: Grid
     this.drawGrid(cssWidth, cssHeight)
 
-    // Layer 2: Elements (sorted by zIndex)
+    // Layer 2: Elements (culled to viewport, sorted by zIndex)
     ctx.save()
     ctx.translate(this.viewport.translateX, this.viewport.translateY)
     ctx.scale(this.viewport.scale, this.viewport.scale)
 
-    const sorted = [...this.elements].sort((a, b) => a.zIndex - b.zIndex)
+    const sorted = [...this.elements]
+      .filter(el => this.isElementVisible(el))
+      .sort((a, b) => a.zIndex - b.zIndex)
     for (const el of sorted) {
       ctx.save()
       ctx.globalAlpha = el.style.opacity
@@ -104,6 +109,17 @@ export class Renderer {
 
     // Layer 4: Presence (remote cursors)
     this.drawPresence()
+  }
+
+  private isElementVisible(el: WhiteboardElement): boolean {
+    const bounds = this.viewport.getVisibleBounds()
+    const margin = 50 // px buffer for elements partially in view
+    return (
+      el.position.x + el.size.w >= bounds.x - margin &&
+      el.position.y + el.size.h >= bounds.y - margin &&
+      el.position.x <= bounds.x + bounds.w + margin &&
+      el.position.y <= bounds.y + bounds.h + margin
+    )
   }
 
   private drawGrid(cssWidth: number, cssHeight: number): void {

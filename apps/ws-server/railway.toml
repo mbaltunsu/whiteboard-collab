@@ -1,0 +1,13 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "apps/ws-server/Dockerfile"
+
+[deploy]
+startCommand = "node apps/ws-server/dist/server.js"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[[services]]
+name = "ws-server"

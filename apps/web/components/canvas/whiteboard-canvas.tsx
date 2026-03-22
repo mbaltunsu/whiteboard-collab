@@ -70,19 +70,19 @@ export function WhiteboardCanvas({
     managerRef.current?.setRemoteCursors(remoteCursors)
   }, [remoteCursors])
 
-  // Handle window resize
+  // Handle container resize via ResizeObserver for precise container-based detection
   useEffect(() => {
-    const handleResize = () => {
-      const canvas = canvasRef.current
-      if (!canvas || !managerRef.current) return
-      const parent = canvas.parentElement
-      const width = parent?.clientWidth ?? window.innerWidth
-      const height = parent?.clientHeight ?? window.innerHeight
-      managerRef.current.resize(width, height)
-    }
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const container = canvas.parentElement
+    if (!container) return
 
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect
+      managerRef.current?.resize(width, height)
+    })
+    observer.observe(container)
+    return () => observer.disconnect()
   }, [])
 
   return (
