@@ -5,6 +5,7 @@ import { XCircleIcon, UsersIcon } from 'lucide-react'
 import { requireAuth } from '@/lib/auth'
 import { connectDB } from '@/lib/mongodb'
 import { RoomModel } from '@/lib/models/room'
+import { FONTS, GRADIENTS } from '@/lib/theme'
 
 export const metadata: Metadata = {
   title: 'Join Board',
@@ -76,7 +77,7 @@ export default async function InvitePage({
         justifyContent: 'center',
         backgroundColor: 'var(--wb-surface, #f5f6f7)',
         padding: '24px',
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: FONTS.inter,
       }}
     >
       <div
@@ -90,7 +91,7 @@ export default async function InvitePage({
           padding: '40px 32px',
           borderRadius: 'var(--wb-radius-lg, 0.5rem)',
           backgroundColor: 'var(--wb-surface-container-lowest, #ffffff)',
-          boxShadow: '0 12px 32px -4px rgba(12, 15, 16, 0.08)',
+          boxShadow: 'var(--wb-shadow-ambient)',
           textAlign: 'center',
         }}
       >
@@ -104,15 +105,15 @@ export default async function InvitePage({
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: isRoomFull
-              ? 'rgba(248, 160, 16, 0.12)'
-              : 'rgba(180, 19, 64, 0.08)',
+              ? 'var(--wb-tertiary-alpha-12)'
+              : 'var(--wb-error-alpha-08)',
           }}
         >
           {isRoomFull ? (
             <UsersIcon
               size={26}
               aria-hidden="true"
-              style={{ color: '#815100' }}
+              style={{ color: 'var(--wb-tertiary)' }}
             />
           ) : (
             <XCircleIcon
@@ -129,7 +130,7 @@ export default async function InvitePage({
             style={{
               margin: 0,
               fontSize: 20,
-              fontFamily: 'Manrope, sans-serif',
+              fontFamily: FONTS.manrope,
               fontWeight: 700,
               color: 'var(--wb-on-surface, #2c2f30)',
             }}
@@ -158,8 +159,8 @@ export default async function InvitePage({
               justifyContent: 'center',
               height: 38,
               borderRadius: 'var(--wb-radius-md, 0.375rem)',
-              background: 'linear-gradient(135deg, #0c0bff, #9097ff)',
-              color: '#fff',
+              background: GRADIENTS.primary,
+              color: 'var(--wb-on-primary-solid)',
               fontSize: 13,
               fontWeight: 500,
               textDecoration: 'none',
