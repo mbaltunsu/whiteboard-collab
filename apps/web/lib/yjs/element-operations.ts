@@ -90,6 +90,25 @@ export function deleteElements(doc: Y.Doc, ids: string[]): void {
   })
 }
 
+export function getElement(
+  doc: Y.Doc,
+  id: string,
+): WhiteboardElement | null {
+  const elementsMap = getElementsMap(doc)
+  const yElement = elementsMap.get(id)
+  if (!yElement) return null
+  return yElement.toJSON() as WhiteboardElement
+}
+
+export function getAllElements(doc: Y.Doc): WhiteboardElement[] {
+  const elementsMap = getElementsMap(doc)
+  const result: WhiteboardElement[] = []
+  elementsMap.forEach((yElement) => {
+    result.push(yElement.toJSON() as WhiteboardElement)
+  })
+  return result.sort((a, b) => a.zIndex - b.zIndex)
+}
+
 export function moveElement(
   doc: Y.Doc,
   id: string,
