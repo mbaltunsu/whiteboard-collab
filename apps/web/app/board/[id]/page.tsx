@@ -332,7 +332,7 @@ export default function BoardPage() {
   // client-side hydration races)
   useEffect(() => {
     if (sessionStatus === 'unauthenticated') {
-      router.replace('/auth/signin')
+      router.replace('/signin')
     }
   }, [sessionStatus, router])
 

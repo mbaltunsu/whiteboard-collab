@@ -33,7 +33,7 @@ export async function requireAuth(): Promise<Session> {
   const session = await getServerSession()
 
   if (!session) {
-    redirect('/auth/signin')
+    redirect('/signin')
   }
 
   return session

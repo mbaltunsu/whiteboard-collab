@@ -818,7 +818,7 @@ export default function HomePage() {
             <a href="#tech" className="nav-link">Architecture</a>
           </div>
           <div className="nav-actions">
-            <Link href="/auth/signin" className="nav-cta">Sign In</Link>
+            <Link href="/signin" className="nav-cta">Sign In</Link>
           </div>
         </nav>
 
@@ -1051,7 +1051,7 @@ export default function HomePage() {
           </p>
           <div className="cta-actions">
             <Link
-              href="/auth/signin"
+              href="/signin"
               className="btn-primary"
               style={{ fontSize: "1rem", padding: "0.9375rem 2.25rem" }}
             >
@@ -1078,7 +1078,7 @@ export default function HomePage() {
           <nav className="footer-links" aria-label="Footer navigation">
             <a href="#features" className="footer-link">Features</a>
             <a href="#tech" className="footer-link">Architecture</a>
-            <Link href="/auth/signin" className="footer-link">Sign In</Link>
+            <Link href="/signin" className="footer-link">Sign In</Link>
             <a
               href="https://github.com"
               target="_blank"

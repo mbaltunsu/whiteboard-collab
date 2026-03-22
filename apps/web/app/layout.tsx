@@ -42,6 +42,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn("font-sans", manrope.variable, inter.variable)}
+      suppressHydrationWarning
     >
       <body className="antialiased">
         <ThemeProvider>{children}</ThemeProvider>
