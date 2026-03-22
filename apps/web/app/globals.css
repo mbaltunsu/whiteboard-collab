@@ -126,6 +126,39 @@
     --wb-error-alpha-20: rgba(180, 19, 64, 0.20);
     --wb-on-primary-solid: #ffffff;
     --wb-tertiary-alpha-12: rgba(248, 160, 16, 0.12);
+    --wb-skeleton-glass-bg: rgba(239, 241, 242, 0.6);
+    --wb-error-surface: rgba(255, 240, 243, 1);
+    --wb-primary-shadow-sm: 0 2px 8px rgba(12, 11, 255, 0.2);
+    --wb-primary-shadow-md: 0 8px 24px -4px rgba(12, 11, 255, 0.35);
+    --wb-primary-shadow-lg: 0 14px 32px -4px rgba(12, 11, 255, 0.45);
+    --wb-minimap-shadow-hover: 0 16px 40px -6px rgba(12, 15, 16, 0.14);
+
+    /* Primary-container (light indigo) alpha tints */
+    --wb-primary-alpha-07: rgba(144, 151, 255, 0.07);
+    --wb-primary-alpha-08: rgba(144, 151, 255, 0.08);
+    --wb-primary-alpha-10: rgba(144, 151, 255, 0.10);
+    --wb-primary-alpha-14: rgba(144, 151, 255, 0.14);
+    --wb-primary-alpha-18-container: rgba(144, 151, 255, 0.18);
+    --wb-primary-alpha-30: rgba(144, 151, 255, 0.30);
+
+    /* Surface/neutral shadow alpha tints */
+    --wb-surface-shadow-alpha-13: rgba(12, 15, 16, 0.13);
+    --wb-surface-shadow-alpha-14: rgba(12, 15, 16, 0.14);
+    --wb-surface-shadow-alpha-05: rgba(0, 0, 0, 0.05);
+
+    /* Tertiary alpha tints */
+    --wb-tertiary-alpha-14: rgba(248, 160, 16, 0.14);
+
+    /* Outline-variant alpha tints */
+    --wb-outline-variant-alpha-25: rgba(171, 173, 174, 0.25);
+
+    /* Illustrative sticky note colors (hero canvas decoration) */
+    --wb-sticky-green-bg: #d1fae5;
+    --wb-sticky-green-text: #064e3b;
+
+    /* Illustrative avatar placeholder colors (hero social proof) */
+    --wb-avatar-emerald: #10b981;
+    --wb-avatar-violet: #8b5cf6;
   }
 
   * {
@@ -194,6 +227,8 @@
 
     --wb-glass-bg: rgba(12, 15, 16, 0.75);
     --wb-ghost-border: rgba(63, 65, 66, 0.4);
+    --wb-skeleton-glass-bg: rgba(31, 34, 35, 0.6);
+    --wb-error-surface: rgba(180, 19, 64, 0.12);
 
     /* Primary stays the same in dark mode — electric indigo */
     --wb-inverse-primary: #7c84ff;

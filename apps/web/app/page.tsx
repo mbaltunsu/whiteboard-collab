@@ -31,7 +31,7 @@ function HeroIllustration() {
             height="24"
             patternUnits="userSpaceOnUse"
           >
-            <circle cx="1" cy="1" r="1" fill="rgba(171,173,174,0.25)" />
+            <circle cx="1" cy="1" r="1" style={{ fill: 'var(--wb-outline-variant-alpha-25)' }} />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dot-grid)" />
@@ -53,10 +53,9 @@ function HeroIllustration() {
       >
         <path
           d="M 4 6 Q 6 3 12 4 L 148 2 Q 154 3 156 8 L 157 82 Q 156 88 150 87 L 10 88 Q 4 87 3 81 Z"
-          stroke="#0c0bff"
           strokeWidth="2"
-          fill="rgba(144,151,255,0.08)"
           strokeLinejoin="round"
+          style={{ stroke: 'var(--wb-primary)', fill: 'var(--wb-primary-alpha-08)' }}
         />
       </svg>
 
@@ -71,18 +70,18 @@ function HeroIllustration() {
       >
         <path
           d="M 2 20 Q 40 18 80 22 Q 100 23 112 20"
-          stroke="#555c69"
           strokeWidth="2"
           strokeLinecap="round"
           fill="none"
+          style={{ stroke: 'var(--wb-secondary)' }}
         />
         <path
           d="M 104 14 L 116 20 L 104 26"
-          stroke="#555c69"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
+          style={{ stroke: 'var(--wb-secondary)' }}
         />
       </svg>
 
@@ -97,29 +96,29 @@ function HeroIllustration() {
       >
         <path
           d="M 4 30 Q 20 10 40 32 Q 60 54 80 28 Q 100 4 120 30 Q 140 56 160 26 Q 180 2 196 30"
-          stroke="#f8a010"
           strokeWidth="2.5"
           strokeLinecap="round"
           fill="none"
           opacity="0.7"
+          style={{ stroke: 'var(--wb-tertiary-container)' }}
         />
       </svg>
 
       {/* Cursor presence indicators */}
       <div className="cursor-presence cursor-a">
-        <div className="cursor-dot" style={{ background: "#0c0bff" }} />
-        <div className="cursor-label" style={{ background: "#0c0bff" }}>
+        <div className="cursor-dot" style={{ background: 'var(--wb-primary)' }} />
+        <div className="cursor-label" style={{ background: 'var(--wb-primary)' }}>
           Alice
         </div>
       </div>
       <div className="cursor-presence cursor-b">
         <div
           className="cursor-dot"
-          style={{ background: "#f8a010" }}
+          style={{ background: 'var(--wb-tertiary-container)' }}
         />
         <div
           className="cursor-label"
-          style={{ background: "#f8a010", color: "#4a2c00" }}
+          style={{ background: 'var(--wb-tertiary-container)', color: 'var(--wb-on-tertiary-container)' }}
         >
           Bob
         </div>
@@ -218,7 +217,7 @@ export default function HomePage() {
         .nav-logo-dot {
           width: 8px; height: 8px;
           border-radius: 9999px;
-          background: linear-gradient(135deg, #0c0bff, #9097ff);
+          background: var(--wb-gradient-primary);
           flex-shrink: 0;
         }
         .nav-links {
@@ -250,12 +249,12 @@ export default function HomePage() {
         .nav-cta {
           font-size: 0.875rem;
           font-weight: 600;
-          color: #fff;
+          color: var(--wb-on-primary-solid);
           text-decoration: none;
           padding: 0.5rem 1.125rem;
           border-radius: var(--wb-radius-md);
-          background: linear-gradient(135deg, #0c0bff, #9097ff);
-          box-shadow: 0 4px 14px -2px rgba(12, 11, 255, 0.3);
+          background: var(--wb-gradient-primary);
+          box-shadow: var(--wb-primary-shadow-sm);
           transition: opacity 0.15s, transform 0.15s;
         }
         .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
@@ -285,7 +284,7 @@ export default function HomePage() {
           position: absolute;
           width: 700px; height: 700px;
           border-radius: 9999px;
-          background: radial-gradient(ellipse, rgba(144,151,255,0.1) 0%, transparent 65%);
+          background: radial-gradient(ellipse, var(--wb-primary-alpha-10) 0%, transparent 65%);
           top: -200px; right: -200px;
           pointer-events: none;
         }
@@ -300,7 +299,7 @@ export default function HomePage() {
           text-transform: uppercase;
           margin-bottom: 1.25rem;
           padding: 0.375rem 0.875rem;
-          background: rgba(144, 151, 255, 0.1);
+          background: var(--wb-primary-alpha-10);
           border-radius: var(--wb-radius-full);
           width: fit-content;
           animation: fadeUp 0.5s ease both;
@@ -316,7 +315,7 @@ export default function HomePage() {
           animation: fadeUp 0.5s 0.07s ease both;
         }
         .hero-heading-gradient {
-          background: linear-gradient(135deg, #0c0bff 20%, #9097ff 100%);
+          background: var(--wb-gradient-primary);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -342,17 +341,17 @@ export default function HomePage() {
           gap: 0.5rem;
           font-size: 1rem;
           font-weight: 600;
-          color: #fff;
+          color: var(--wb-on-primary-solid);
           text-decoration: none;
           padding: 0.875rem 1.875rem;
           border-radius: var(--wb-radius-md);
-          background: linear-gradient(135deg, #0c0bff, #9097ff);
-          box-shadow: 0 8px 24px -4px rgba(12, 11, 255, 0.35);
+          background: var(--wb-gradient-primary);
+          box-shadow: var(--wb-primary-shadow-md);
           transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .btn-primary:hover {
           transform: translateY(-2px);
-          box-shadow: 0 14px 32px -4px rgba(12, 11, 255, 0.45);
+          box-shadow: var(--wb-primary-shadow-lg);
         }
         .btn-ghost {
           display: inline-flex;
@@ -394,7 +393,7 @@ export default function HomePage() {
           justify-content: center;
           font-size: 0.6rem;
           font-weight: 700;
-          color: #fff;
+          color: var(--wb-on-primary-solid);
         }
         .avatar-chip:first-child { margin-left: 0; }
 
@@ -424,28 +423,28 @@ export default function HomePage() {
           border-radius: 3px;
           font-size: 0.8125rem;
           font-weight: 600;
-          box-shadow: 0 2px 4px rgba(12,15,16,0.14), 2px 3px 0 rgba(0,0,0,0.05);
+          box-shadow: 0 2px 4px var(--wb-surface-shadow-alpha-14), 2px 3px 0 var(--wb-surface-shadow-alpha-05);
         }
         .note-orange {
           top: 14%; left: 10%;
-          background: #f8a010;
-          color: #4a2c00;
+          background: var(--wb-tertiary-container);
+          color: var(--wb-on-tertiary-container);
           transform: rotate(-2.5deg);
           animation: floatIn 0.7s 0.5s ease both;
         }
         .note-blue {
           top: 44%; left: 52%;
-          background: rgba(144, 151, 255, 0.2);
+          background: var(--wb-primary-alpha-20);
           color: var(--wb-on-primary-container);
           transform: rotate(1.5deg);
           animation: floatIn 0.7s 0.7s ease both;
           backdrop-filter: blur(8px);
-          border: 1px solid rgba(144,151,255,0.3);
+          border: 1px solid var(--wb-primary-alpha-30);
         }
         .note-green {
           bottom: 18%; left: 18%;
-          background: #d1fae5;
-          color: #064e3b;
+          background: var(--wb-sticky-green-bg);
+          color: var(--wb-sticky-green-text);
           transform: rotate(-1deg);
           animation: floatIn 0.7s 0.9s ease both;
         }
@@ -486,7 +485,7 @@ export default function HomePage() {
         .cursor-label {
           font-size: 0.6875rem;
           font-weight: 600;
-          color: #fff;
+          color: var(--wb-on-primary-solid);
           padding: 2px 7px;
           border-radius: 9999px;
           white-space: nowrap;
@@ -500,12 +499,12 @@ export default function HomePage() {
         .glow-primary {
           width: 280px; height: 280px;
           top: -60px; right: -60px;
-          background: rgba(144, 151, 255, 0.18);
+          background: var(--wb-primary-alpha-18-container);
         }
         .glow-secondary {
           width: 180px; height: 180px;
           bottom: -50px; left: -50px;
-          background: rgba(248, 160, 16, 0.14);
+          background: var(--wb-tertiary-alpha-14);
         }
 
         /* ── Features section ──────────────────────────── */
@@ -561,13 +560,13 @@ export default function HomePage() {
         .feature-card:hover {
           transform: translateY(-4px);
           box-shadow:
-            0 20px 48px -8px rgba(12, 15, 16, 0.13),
-            0 0 0 1px rgba(144, 151, 255, 0.18);
+            0 20px 48px -8px var(--wb-surface-shadow-alpha-13),
+            0 0 0 1px var(--wb-primary-alpha-18-container);
         }
         .feature-icon-wrap {
           width: 42px; height: 42px;
           border-radius: var(--wb-radius-md);
-          background: rgba(144, 151, 255, 0.12);
+          background: var(--wb-primary-alpha-12);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -621,8 +620,8 @@ export default function HomePage() {
         }
         .tech-badge:hover { transform: translateY(-2px); }
         .tech-badge--accent {
-          background: rgba(144, 151, 255, 0.07);
-          border-color: rgba(144, 151, 255, 0.2);
+          background: var(--wb-primary-alpha-07);
+          border-color: var(--wb-primary-alpha-20);
         }
         .tech-badge-name {
           font-family: var(--font-manrope, 'Manrope', sans-serif);
@@ -671,7 +670,7 @@ export default function HomePage() {
           font-size: 0.8125rem;
         }
         .arch-node--primary {
-          background: rgba(144, 151, 255, 0.14);
+          background: var(--wb-primary-alpha-14);
           color: var(--wb-on-primary-container);
         }
         .arch-node--surface {
@@ -679,7 +678,7 @@ export default function HomePage() {
           color: var(--wb-on-surface-variant);
         }
         .arch-node--accent {
-          background: rgba(248, 160, 16, 0.14);
+          background: var(--wb-tertiary-alpha-14);
           color: var(--wb-tertiary);
         }
         .arch-arrow {
@@ -715,7 +714,7 @@ export default function HomePage() {
           position: absolute;
           width: 640px; height: 640px;
           border-radius: 9999px;
-          background: radial-gradient(ellipse, rgba(144,151,255,0.12) 0%, transparent 70%);
+          background: radial-gradient(ellipse, var(--wb-primary-alpha-12) 0%, transparent 70%);
           top: 50%; left: 50%;
           transform: translate(-50%, -50%);
           pointer-events: none;
@@ -860,10 +859,10 @@ export default function HomePage() {
             <div className="hero-social-proof">
               <div className="avatar-stack" aria-hidden="true">
                 {[
-                  { bg: "#0c0bff", label: "A" },
-                  { bg: "#f8a010", label: "B" },
-                  { bg: "#10b981", label: "C" },
-                  { bg: "#8b5cf6", label: "D" },
+                  { bg: 'var(--wb-primary)', label: "A" },
+                  { bg: 'var(--wb-tertiary-container)', label: "B" },
+                  { bg: 'var(--wb-avatar-emerald)', label: "C" },
+                  { bg: 'var(--wb-avatar-violet)', label: "D" },
                 ].map((a) => (
                   <div
                     key={a.label}
