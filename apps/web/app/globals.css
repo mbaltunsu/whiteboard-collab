@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@layer utilities {
+  .canvas-cursor-crosshair {
+    cursor: crosshair;
+  }
+
+  .canvas-cursor-grab {
+    cursor: grab;
+  }
+
+  .canvas-cursor-grabbing {
+    cursor: grabbing;
+  }
+}

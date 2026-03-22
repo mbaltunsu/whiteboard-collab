@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Infinite Curator - Room Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#e79400",
+              "surface-container-highest": "#dadddf",
+              "on-error-container": "#510017",
+              "error": "#b41340",
+              "on-secondary-fixed": "#39404c",
+              "surface-container": "#e6e8ea",
+              "surface-container-high": "#e0e3e4",
+              "surface-variant": "#dadddf",
+              "surface-bright": "#f5f6f7",
+              "on-secondary-container": "#4b525f",
+              "on-tertiary-fixed-variant": "#563400",
+              "surface-dim": "#d1d5d7",
+              "outline": "#757778",
+              "background": "#f5f6f7",
+              "on-primary-container": "#010083",
+              "on-primary-fixed": "#000000",
+              "secondary": "#555c69",
+              "tertiary-fixed": "#f8a010",
+              "primary": "#0c0bff",
+              "inverse-on-surface": "#9b9d9e",
+              "tertiary-container": "#f8a010",
+              "surface-tint": "#0c0bff",
+              "error-dim": "#a70138",
+              "primary-fixed": "#9097ff",
+              "on-error": "#ffefef",
+              "on-tertiary-container": "#4a2c00",
+              "surface-container-low": "#eff1f2",
+              "secondary-dim": "#49505d",
+              "surface-container-lowest": "#ffffff",
+              "outline-variant": "#abadae",
+              "on-background": "#2c2f30",
+              "on-secondary-fixed-variant": "#555c69",
+              "on-secondary": "#eef2ff",
+              "secondary-fixed": "#dce2f3",
+              "primary-fixed-dim": "#8088ff",
+              "tertiary-dim": "#714600",
+              "on-surface-variant": "#595c5d",
+              "inverse-primary": "#7c84ff",
+              "inverse-surface": "#0c0f10",
+              "tertiary": "#815100",
+              "surface": "#f5f6f7",
+              "on-primary-fixed-variant": "#01009f",
+              "secondary-fixed-dim": "#ced4e4",
+              "on-primary": "#d8d8ff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-tertiary": "#fff0e3",
+              "error-container": "#f74b6d",
+              "primary-container": "#9097ff",
+              "primary-dim": "#0300e1",
+              "on-surface": "#2c2f30",
+              "secondary-container": "#dce2f3"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .shadow-cloud {
+            box-shadow: 0 12px 32px -4px rgba(12, 15, 16, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body min-h-screen">
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-14 bg-[#eff1f2]/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm">
+<div class="flex items-center gap-8">
+<span class="text-lg font-extrabold text-[#2c2f30] dark:text-slate-100 font-headline">The Infinite Curator</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-[#0c0bff] font-bold font-manrope text-sm tracking-tight" href="#">File</a>
+<a class="text-[#2c2f30] dark:text-slate-400 font-manrope text-sm tracking-tight hover:bg-[#dadddf]/50 dark:hover:bg-slate-800 transition-all duration-300" href="#">Edit</a>
+<a class="text-[#2c2f30] dark:text-slate-400 font-manrope text-sm tracking-tight hover:bg-[#dadddf]/50 dark:hover:bg-slate-800 transition-all duration-300" href="#">View</a>
+<a class="text-[#2c2f30] dark:text-slate-400 font-manrope text-sm tracking-tight hover:bg-[#dadddf]/50 dark:hover:bg-slate-800 transition-all duration-300" href="#">Assets</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-[#2c2f30] dark:text-slate-400 hover:bg-[#dadddf]/50 transition-all duration-300 rounded-full">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</button>
+<button class="p-2 text-[#2c2f30] dark:text-slate-400 hover:bg-[#dadddf]/50 transition-all duration-300 rounded-full">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img alt="Active Collaborator Avatar" data-alt="Close up portrait of a professional male designer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChquNedEH2JQQNVsVMuwv69SNBFuckY1eth1FoAI2Pih-z1mZpBRuL3ANaVKPO1rUa8otuiQFt9HV02INyymYTP80XHP3z3yIEQK9ZSBDOAsy7Nvg3F7II8PsAxw5IiINJv_ESzCvtzMsb7F3sDhuQMaaBLm7KhuNHrCiklO8G3m7lVXhwmYAZGqyaySGpNqz4n7C4achOLnMmb6szdyUH-bO_fdoPcDUIv4WNiPXck-dd0tCLdemCmkSwEq9GdXEPBQjJowP0kXg"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar Shell (Toolbox) -->
+<aside class="fixed left-0 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center py-4 gap-4 bg-[#eff1f2]/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl m-4 w-16 shadow-cloud">
+<div class="flex flex-col items-center gap-6 w-full">
+<button class="flex flex-col items-center gap-1 group w-full">
+<div class="p-2 rounded-lg bg-[#0c0bff]/10 text-[#0c0bff] scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="near_me">near_me</span>
+</div>
+<span class="font-inter text-[10px] font-medium text-[#0c0bff]">Select</span>
+</button>
+<button class="flex flex-col items-center gap-1 group w-full">
+<div class="p-2 rounded-lg text-[#2c2f30] dark:text-slate-400 hover:bg-[#dadddf] scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</div>
+<span class="font-inter text-[10px] font-medium text-[#2c2f30] dark:text-slate-400">Draw</span>
+</button>
+<button class="flex flex-col items-center gap-1 group w-full">
+<div class="p-2 rounded-lg text-[#2c2f30] dark:text-slate-400 hover:bg-[#dadddf] scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="sticky_note_2">sticky_note_2</span>
+</div>
+<span class="font-inter text-[10px] font-medium text-[#2c2f30] dark:text-slate-400">Sticky</span>
+</button>
+<button class="flex flex-col items-center gap-1 group w-full">
+<div class="p-2 rounded-lg text-[#2c2f30] dark:text-slate-400 hover:bg-[#dadddf] scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="category">category</span>
+</div>
+<span class="font-inter text-[10px] font-medium text-[#2c2f30] dark:text-slate-400">Shapes</span>
+</button>
+<button class="flex flex-col items-center gap-1 group w-full">
+<div class="p-2 rounded-lg text-[#2c2f30] dark:text-slate-400 hover:bg-[#dadddf] scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="title">title</span>
+</div>
+<span class="font-inter text-[10px] font-medium text-[#2c2f30] dark:text-slate-400">Text</span>
+</button>
+<button class="flex flex-col items-center gap-1 group w-full">
+<div class="p-2 rounded-lg text-[#2c2f30] dark:text-slate-400 hover:bg-[#dadddf] scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="auto_fix_high">auto_fix_high</span>
+</div>
+<span class="font-inter text-[10px] font-medium text-[#2c2f30] dark:text-slate-400">Eraser</span>
+</button>
+</div>
+<div class="mt-4 border-t border-outline-variant/20 pt-4">
+<button class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="add_comment">add_comment</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pt-24 pl-24 pr-8 pb-32 max-w-7xl mx-auto">
+<!-- Dashboard Header -->
+<header class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2">
+<h1 class="font-headline text-4xl font-extrabold text-on-surface tracking-tight">Active Rooms</h1>
+<p class="font-body text-on-surface-variant max-w-md">Browse and manage your ongoing creative collaborations and digital whiteboards.</p>
+</div>
+<button class="group flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-primary to-primary-container text-white rounded-full font-bold shadow-cloud hover:shadow-lg transition-all duration-300">
+<span class="material-symbols-outlined text-xl" data-icon="add">add</span>
+<span class="font-manrope text-sm uppercase tracking-wider">Create New Room</span>
+</button>
+</header>
+<!-- Bento Grid Layout for Rooms -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Room Card 1: Large Featured -->
+<article class="lg:col-span-2 group relative bg-surface-container-lowest rounded-full overflow-hidden shadow-cloud border-outline-variant/10 border flex flex-col md:flex-row h-full transition-all duration-500 hover:scale-[1.01]">
+<div class="w-full md:w-3/5 relative h-64 md:h-auto overflow-hidden bg-surface-container-high">
+<img alt="Room Preview" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Abstract colorful digital whiteboard with sticky notes and flowcharts" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGweLu0zEDL2LFYo3tDNiECEgSsIeRdMNZ0NoDAdI-4ANorcfxtfFm9bzT3fuMfcm1tduErkciOu3dQwG1KlruN8I1BqBz_RWOf0siUbzjUi8KtFDlYWMOZNsV9v5vQWD8BtAy8nVFyrn5OBxn2XfzXwxy78SDZrMBiK7uB17qg3yuiEFwDHCuEzV_i780srVn17lZzhV2q2kb6ePE0hZNG4kzN_jWAh8GFFJr81EnmUdPp_pRndzXpcXKFk9kU4cMVAyIoAY7qpk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+<div class="absolute bottom-4 left-4 flex -space-x-2">
+<img alt="user" class="w-8 h-8 rounded-full border-2 border-surface-container-lowest" data-alt="Avatar of female collaborator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_fZq0p_OgncTQm2f_J970KNSHOQPCsJ5TCCtfN-DO63z0v800YLx-mYVUV-xtIgQYVEfUteGtQZ-98Sx953-iK-ZOt9Qy7dod91b8z1sRX0EEJsSt5wJ5mCe2xfm71AWbRCUaBRMrSdMHPqVNBv4Hnt1aJNXal5vsvOOFVvzdSjVUQiiQJF-WQf43lgJGiBN9HZQe5rXJaBeo14qJkq5sH9j7lBIALvQyDxWkRHiUQrSspDV9Ij3odrPeKnvNIV1N8f3Tmsv2EUE"/>
+<img alt="user" class="w-8 h-8 rounded-full border-2 border-surface-container-lowest" data-alt="Avatar of male collaborator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtZgmvSW8CjYJDipDE2tzmnyuV92HSpTkYPToS0gK5U_ON7GRNUieGIrsCv3FU6Z3ATFAjVycxoXiXOBSBnWPS_Q9L4KjOMV4rEkbO92JnOYkeX6Avz8MB8Jjgwed6uHw5nLzMRi4xsba-eVaCtZ9g_vX0E-7cRJxEZiyNSCVWqHc8CGTq3u_Lj6Cb2pjewvHHpYnwuxh-r7Iivl6MQ6Tlzq9J0DMsu7Mb6JGHcf57RwJ_V9FkqgpCzmXdZr0XkHLGinnMzhgZH7g"/>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-lowest bg-primary-container text-[10px] flex items-center justify-center font-bold text-on-primary-container">+12</div>
+</div>
+</div>
+<div class="p-8 flex flex-col justify-between flex-1">
+<div>
+<div class="flex items-center gap-2 mb-4">
+<span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label text-xs font-semibold text-primary uppercase tracking-widest">Live Now</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">Project Alpha Brainstorm</h3>
+<p class="text-sm text-on-surface-variant font-body leading-relaxed mb-6">Defining the core architecture and user journey for the 2024 ecosystem expansion.</p>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg text-outline" data-icon="person_edit">person_edit</span>
+<span class="text-xs text-on-surface-variant">Created by <strong class="text-on-surface">Alex Rivera</strong></span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg text-outline" data-icon="history">history</span>
+<span class="text-xs text-on-surface-variant">Last modified <strong class="text-on-surface">2 mins ago</strong></span>
+</div>
+</div>
+</div>
+<button class="mt-8 w-full py-4 bg-on-surface text-surface rounded-full font-bold hover:bg-primary transition-colors flex items-center justify-center gap-2 group/btn">
+                        Join Board
+                        <span class="material-symbols-outlined transition-transform group-hover/btn:translate-x-1" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Room Card 2: Square -->
+<article class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-cloud border-outline-variant/10 border p-2 flex flex-col h-full transition-all duration-300">
+<div class="aspect-[4/3] rounded-[1.25rem] overflow-hidden relative mb-4 bg-surface-container-high">
+<img alt="Sprint Preview" class="w-full h-full object-cover" data-alt="Close up of messy but organized physical sticky notes on a wall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCBGJKeK7cA7oF2Fdn__Ga2X6aNdlussa7MqsDzRCYn_5ePfqsGicCEw8SnxlVUTjEnDc9rbUC93KOGM40XqqGvJbCZ-YV9HQxrFH5jCssswuFasPpN7OeHYqLz_mlg6aK6DoR_S7frRqO90G-pSUHeIrw1T4oDuFxPoxeeBmHGOUdsvscA2dzG1WByFQGmnK7FM7WJ5bExHpfaoHztB6mL19Rso5hukIQyqjx90jYvg1-ygiIHMVtwdxw3qe41oXaeLch9Wts9Cg"/>
+<div class="absolute top-4 right-4 glass-panel bg-white/60 px-3 py-1.5 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-sm font-variation-settings: 'FILL' 1;" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="text-xs font-bold">4 active</span>
+</div>
+</div>
+<div class="px-6 pb-6 flex flex-col flex-1">
+<h3 class="font-headline text-lg font-bold mb-1">Design Sprint Q1</h3>
+<p class="text-xs text-on-surface-variant mb-6">Quarterly review and roadmap alignment.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold tracking-tighter">Modified</span>
+<span class="text-xs font-semibold">Yesterday</span>
+</div>
+<button class="p-3 bg-surface-container-low text-primary rounded-full hover:bg-primary-container/20 transition-colors">
+<span class="material-symbols-outlined" data-icon="login">login</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Room Card 3: Vertical -->
+<article class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-cloud border-outline-variant/10 border p-2 flex flex-col h-full transition-all duration-300">
+<div class="aspect-[4/3] rounded-[1.25rem] overflow-hidden relative mb-4 bg-surface-container-high">
+<img alt="Tech Preview" class="w-full h-full object-cover" data-alt="A clean top-down view of a designer's desk with a tablet" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7boUjnjgIkMfgC8wywHdcEMjZuQRDbg4cgypWjXEvF9MpoZ8qVdPPph5V0i2Mw4mIYwDkVrZf0ZRYN9CdBCfRiW8jPtv-WEU3W6MacN3wa0DCXNMoDpJ5LAe3hkrSRfYj6RWvzE8gDHMG5WQUxKmXm-8BlU3_ryF1YVqJZuOmqo0G4WMqsyJJomUMezrt_RdRkDPRqf7pl-8O0dWkRxlK-tRiuFjeFCJA32iWSils5ZjRok3jiDSne1sqnLxQW2ccRs79-bIG8Bg"/>
+<div class="absolute top-4 right-4 glass-panel bg-white/60 px-3 py-1.5 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="group">group</span>
+<span class="text-xs font-bold">0 active</span>
+</div>
+</div>
+<div class="px-6 pb-6 flex flex-col flex-1">
+<h3 class="font-headline text-lg font-bold mb-1">Brand Guidelines v2</h3>
+<p class="text-xs text-on-surface-variant mb-6">Updating the typography and color scale.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold tracking-tighter">Modified</span>
+<span class="text-xs font-semibold">3 days ago</span>
+</div>
+<button class="p-3 bg-surface-container-low text-primary rounded-full hover:bg-primary-container/20 transition-colors">
+<span class="material-symbols-outlined" data-icon="login">login</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Room Card 4: Horizontal Mini -->
+<article class="lg:col-span-2 group bg-surface-container-lowest rounded-full overflow-hidden shadow-cloud border-outline-variant/10 border p-2 flex items-center gap-6 h-32 transition-all duration-300">
+<div class="h-28 w-40 rounded-[1rem] overflow-hidden bg-surface-container-high shrink-0">
+<img alt="Abstract Preview" class="w-full h-full object-cover" data-alt="Blue and purple abstract gradient flow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIsxTcQ4hnY9bP1G7vWcR_SRYz2OTRXxqdEx1M94Iw0qch9Y9DIxKh0V1YIyXNUUrRg4Eo4Nww4UUSMsSDU3na5mNZD1xWsPt-QejO2l6PkYib4VBQn3WKUC65WZeh7L1gomUxIhLeuBFkSizHIjXgaxkKLfhWU7WhZ0VGcUjzoeZGUHXEz_m7-x6Ns07_DdZxM10jxmE1toCmJYugJaFgdDYKEVTVP952Lb8NsiPs6Q_AyJJCCucHPs9EB5hCMi14bcjFgDoka3w"/>
+</div>
+<div class="flex-1 pr-6 flex items-center justify-between">
+<div>
+<h3 class="font-headline text-lg font-bold mb-0.5">Quick Sketch Canvas</h3>
+<p class="text-xs text-on-surface-variant">Private sandbox for exploration.</p>
+<div class="flex items-center gap-4 mt-2">
+<span class="text-[10px] font-bold text-outline">CREATED BY ME</span>
+<span class="text-[10px] font-bold text-outline">MODIFIED 2H AGO</span>
+</div>
+</div>
+<button class="px-6 py-2 bg-surface-container-high text-on-surface font-bold text-sm rounded-full hover:bg-on-surface hover:text-white transition-all">
+                        Resume
+                    </button>
+</div>
+</article>
+</div>
+<!-- Pagination / Load More (Asymmetric) -->
+<div class="mt-16 flex items-center justify-center gap-12">
+<div class="h-[1px] flex-1 bg-outline-variant/20"></div>
+<button class="px-8 py-3 border-outline-variant/30 border rounded-full font-label text-sm font-semibold hover:bg-surface-container-high transition-colors">
+                Load More Boards
+            </button>
+<div class="h-[1px] flex-1 bg-outline-variant/20"></div>
+</div>
+</main>
+<!-- BottomNavBar Shell -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-center items-center pb-4">
+<div class="bg-[#ffffff]/80 dark:bg-slate-950/80 backdrop-blur-md rounded-full mb-6 mx-auto w-fit px-6 shadow-lg flex items-center h-16 gap-8">
+<button class="flex flex-col items-center justify-center gap-0.5 group">
+<span class="material-symbols-outlined text-slate-500 hover:text-[#0c0bff] transition-colors" data-icon="undo">undo</span>
+<span class="font-inter text-[10px] text-slate-500">Undo</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-0.5 group">
+<span class="material-symbols-outlined text-slate-500 hover:text-[#0c0bff] transition-colors" data-icon="redo">redo</span>
+<span class="font-inter text-[10px] text-slate-500">Redo</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-0.5 group">
+<span class="material-symbols-outlined text-slate-500 hover:text-[#0c0bff] transition-colors" data-icon="zoom_in">zoom_in</span>
+<span class="font-inter text-[10px] text-slate-500">Zoom</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-0.5 group">
+<span class="material-symbols-outlined text-[#0c0bff] font-bold transition-colors" data-icon="map">map</span>
+<span class="font-inter text-[10px] text-[#0c0bff] font-bold">Map</span>
+</button>
+</div>
+</nav>
+</body></html>
