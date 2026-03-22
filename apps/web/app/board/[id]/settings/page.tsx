@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeftIcon, CrownIcon, PencilIcon, EyeIcon } from 'lucide-react'
 import { requireAuth } from '@/lib/auth'
+import { FONTS } from '@/lib/theme'
 import { connectDB } from '@/lib/mongodb'
 import { BoardModel } from '@/lib/models/board'
 import { RoomModel } from '@/lib/models/room'
@@ -115,7 +116,7 @@ function PermissionBadge({ permission }: { permission: RoomPermission }) {
         backgroundColor: cfg.bg,
         color: cfg.color,
         fontSize: 11,
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: FONTS.inter,
         fontWeight: 500,
       }}
     >
@@ -167,7 +168,7 @@ function MemberAvatar({ name, image }: { name: string | null; image: string | nu
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: 12,
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: FONTS.inter,
         fontWeight: 600,
         color: 'var(--wb-on-surface-variant, #595c5d)',
         flexShrink: 0,
@@ -200,7 +201,7 @@ function Section({
         padding: '20px 24px',
         borderRadius: 'var(--wb-radius-lg, 0.5rem)',
         backgroundColor: 'var(--wb-surface-container-lowest, #ffffff)',
-        boxShadow: '0 2px 8px -2px rgba(12, 15, 16, 0.06)',
+        boxShadow: 'var(--wb-shadow-contact)',
       }}
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -208,7 +209,7 @@ function Section({
           style={{
             margin: 0,
             fontSize: 15,
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: FONTS.manrope,
             fontWeight: 700,
             color: 'var(--wb-on-surface, #2c2f30)',
           }}
@@ -220,7 +221,7 @@ function Section({
             style={{
               margin: 0,
               fontSize: 13,
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: FONTS.inter,
               color: 'var(--wb-on-surface-variant, #595c5d)',
             }}
           >
@@ -267,13 +268,13 @@ export default async function BoardSettingsPage({
             padding: '40px 32px',
             borderRadius: 'var(--wb-radius-lg, 0.5rem)',
             backgroundColor: 'var(--wb-surface-container-lowest, #ffffff)',
-            boxShadow: '0 2px 8px -2px rgba(12, 15, 16, 0.06)',
+            boxShadow: 'var(--wb-shadow-contact)',
           }}
         >
           <p
             style={{
               fontSize: 15,
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: FONTS.inter,
               color: 'var(--wb-on-surface-variant, #595c5d)',
             }}
           >
@@ -283,7 +284,7 @@ export default async function BoardSettingsPage({
             href="/dashboard"
             style={{
               fontSize: 13,
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: FONTS.inter,
               color: 'var(--wb-primary, #0c0bff)',
               textDecoration: 'underline',
             }}
@@ -318,14 +319,14 @@ export default async function BoardSettingsPage({
             padding: '40px 32px',
             borderRadius: 'var(--wb-radius-lg, 0.5rem)',
             backgroundColor: 'var(--wb-surface-container-lowest, #ffffff)',
-            boxShadow: '0 2px 8px -2px rgba(12, 15, 16, 0.06)',
+            boxShadow: 'var(--wb-shadow-contact)',
             textAlign: 'center',
           }}
         >
           <p
             style={{
               fontSize: 15,
-              fontFamily: 'Manrope, sans-serif',
+              fontFamily: FONTS.manrope,
               fontWeight: 700,
               color: 'var(--wb-on-surface, #2c2f30)',
             }}
@@ -335,7 +336,7 @@ export default async function BoardSettingsPage({
           <p
             style={{
               fontSize: 13,
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: FONTS.inter,
               color: 'var(--wb-on-surface-variant, #595c5d)',
             }}
           >
@@ -345,7 +346,7 @@ export default async function BoardSettingsPage({
             href={`/board/${id}`}
             style={{
               fontSize: 13,
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: FONTS.inter,
               color: 'var(--wb-primary, #0c0bff)',
               textDecoration: 'underline',
             }}
@@ -362,7 +363,7 @@ export default async function BoardSettingsPage({
       style={{
         minHeight: '100dvh',
         backgroundColor: 'var(--wb-surface, #f5f6f7)',
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: FONTS.inter,
       }}
     >
       {/* Top nav */}
@@ -411,7 +412,7 @@ export default async function BoardSettingsPage({
         <span
           style={{
             fontSize: 13,
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: FONTS.manrope,
             fontWeight: 700,
             color: 'var(--wb-on-surface, #2c2f30)',
           }}
@@ -437,7 +438,7 @@ export default async function BoardSettingsPage({
             style={{
               margin: 0,
               fontSize: 24,
-              fontFamily: 'Manrope, sans-serif',
+              fontFamily: FONTS.manrope,
               fontWeight: 700,
               color: 'var(--wb-on-surface, #2c2f30)',
             }}
@@ -566,7 +567,7 @@ export default async function BoardSettingsPage({
             padding: '20px 24px',
             borderRadius: 'var(--wb-radius-lg, 0.5rem)',
             backgroundColor: 'var(--wb-surface-container-lowest, #ffffff)',
-            border: '1px solid rgba(180, 19, 64, 0.2)',
+            border: '1px solid var(--wb-error-alpha-20)',
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -574,7 +575,7 @@ export default async function BoardSettingsPage({
               style={{
                 margin: 0,
                 fontSize: 15,
-                fontFamily: 'Manrope, sans-serif',
+                fontFamily: FONTS.manrope,
                 fontWeight: 700,
                 color: 'var(--wb-error, #b41340)',
               }}
@@ -585,7 +586,7 @@ export default async function BoardSettingsPage({
               style={{
                 margin: 0,
                 fontSize: 13,
-                fontFamily: 'Inter, sans-serif',
+                fontFamily: FONTS.inter,
                 color: 'var(--wb-on-surface-variant, #595c5d)',
               }}
             >
@@ -598,7 +599,7 @@ export default async function BoardSettingsPage({
               style={{
                 margin: 0,
                 fontSize: 13,
-                fontFamily: 'Inter, sans-serif',
+                fontFamily: FONTS.inter,
                 color: 'var(--wb-on-surface, #2c2f30)',
               }}
             >

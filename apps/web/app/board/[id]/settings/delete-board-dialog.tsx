@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { TrashIcon } from 'lucide-react'
+import { FONTS } from '@/lib/theme'
 
 interface DeleteBoardDialogProps {
   boardId: string
@@ -54,11 +55,11 @@ export function DeleteBoardDialog({ boardId, boardTitle }: DeleteBoardDialogProp
               height: 36,
               padding: '0 16px',
               borderRadius: 'var(--wb-radius-md, 0.375rem)',
-              backgroundColor: 'rgba(180, 19, 64, 0.08)',
-              border: '1px solid rgba(180, 19, 64, 0.2)',
+              backgroundColor: 'var(--wb-error-alpha-08)',
+              border: '1px solid var(--wb-error-alpha-20)',
               color: 'var(--wb-error, #b41340)',
               fontSize: 13,
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: FONTS.inter,
               fontWeight: 500,
               cursor: 'pointer',
             }}
@@ -84,11 +85,11 @@ export function DeleteBoardDialog({ boardId, boardTitle }: DeleteBoardDialogProp
             role="alert"
             style={{
               fontSize: 13,
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: FONTS.inter,
               color: 'var(--wb-error, #b41340)',
               padding: '8px 12px',
               borderRadius: 'var(--wb-radius-md, 0.375rem)',
-              backgroundColor: 'rgba(180, 19, 64, 0.06)',
+              backgroundColor: 'var(--wb-error-alpha-06)',
             }}
           >
             {error}
@@ -109,9 +110,9 @@ export function DeleteBoardDialog({ boardId, boardTitle }: DeleteBoardDialogProp
               borderRadius: 'var(--wb-radius-md, 0.375rem)',
               backgroundColor: 'var(--wb-error, #b41340)',
               border: 'none',
-              color: '#fff',
+              color: 'var(--wb-on-primary-solid)',
               fontSize: 13,
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: FONTS.inter,
               fontWeight: 500,
               cursor: isPending ? 'not-allowed' : 'pointer',
               opacity: isPending ? 0.6 : 1,

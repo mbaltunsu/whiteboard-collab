@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { CheckIcon } from 'lucide-react'
+import { FONTS, GRADIENTS } from '@/lib/theme'
 
 interface RenameBoardFormProps {
   boardId: string
@@ -65,7 +66,7 @@ export function RenameBoardForm({ boardId, currentTitle }: RenameBoardFormProps)
             borderRadius: 'var(--wb-radius-md, 0.375rem)',
             padding: '0 12px',
             fontSize: 14,
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: FONTS.inter,
             color: 'var(--wb-on-surface, #2c2f30)',
           }}
         />
@@ -77,12 +78,12 @@ export function RenameBoardForm({ boardId, currentTitle }: RenameBoardFormProps)
             padding: '0 16px',
             borderRadius: 'var(--wb-radius-md, 0.375rem)',
             background: isDirty && title.trim()
-              ? 'linear-gradient(135deg, #0c0bff, #9097ff)'
+              ? GRADIENTS.primary
               : 'var(--wb-surface-container, #e6e8ea)',
             border: 'none',
-            color: isDirty && title.trim() ? '#fff' : 'var(--wb-on-surface-variant, #595c5d)',
+            color: isDirty && title.trim() ? 'var(--wb-on-primary-solid)' : 'var(--wb-on-surface-variant, #595c5d)',
             fontSize: 13,
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: FONTS.inter,
             fontWeight: 500,
             cursor: isPending || !isDirty || !title.trim() ? 'not-allowed' : 'pointer',
             opacity: isPending ? 0.6 : 1,
@@ -100,7 +101,7 @@ export function RenameBoardForm({ boardId, currentTitle }: RenameBoardFormProps)
           role="alert"
           style={{
             fontSize: 13,
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: FONTS.inter,
             color: 'var(--wb-error, #b41340)',
           }}
         >

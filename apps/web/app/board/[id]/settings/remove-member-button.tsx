@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { UserMinusIcon } from 'lucide-react'
+import { FONTS } from '@/lib/theme'
 
 interface RemoveMemberButtonProps {
   boardId: string
@@ -50,7 +51,7 @@ export function RemoveMemberButton({ boardId, userId, name }: RemoveMemberButton
           height: 28,
           borderRadius: 'var(--wb-radius-md, 0.375rem)',
           background: 'transparent',
-          border: '1px solid rgba(171, 173, 174, 0.15)',
+          border: '1px solid var(--wb-ghost-border)',
           color: 'var(--wb-error, #b41340)',
           cursor: isPending ? 'not-allowed' : 'pointer',
           opacity: isPending ? 0.5 : 1,
@@ -60,7 +61,7 @@ export function RemoveMemberButton({ boardId, userId, name }: RemoveMemberButton
         onMouseEnter={(e) => {
           if (!isPending) {
             ;(e.currentTarget as HTMLButtonElement).style.background =
-              'rgba(180, 19, 64, 0.08)'
+              'var(--wb-error-alpha-08)'
           }
         }}
         onMouseLeave={(e) => {
@@ -74,7 +75,7 @@ export function RemoveMemberButton({ boardId, userId, name }: RemoveMemberButton
           role="alert"
           style={{
             fontSize: 11,
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: FONTS.inter,
             color: 'var(--wb-error, #b41340)',
           }}
         >

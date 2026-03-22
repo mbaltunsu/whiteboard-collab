@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { LinkIcon, CopyIcon, CheckIcon, RefreshCwIcon } from 'lucide-react'
+import { FONTS, GRADIENTS } from '@/lib/theme'
 
 interface InviteLinkSectionProps {
   boardId: string
@@ -69,7 +70,7 @@ export function InviteLinkSection({ boardId, roomCode: initialCode }: InviteLink
           style={{
             flex: 1,
             fontSize: 13,
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: FONTS.inter,
             color: 'var(--wb-on-surface, #2c2f30)',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -93,11 +94,11 @@ export function InviteLinkSection({ boardId, roomCode: initialCode }: InviteLink
             height: 34,
             padding: '0 14px',
             borderRadius: 'var(--wb-radius-md, 0.375rem)',
-            background: 'linear-gradient(135deg, #0c0bff, #9097ff)',
+            background: GRADIENTS.primary,
             border: 'none',
-            color: '#fff',
+            color: 'var(--wb-on-primary-solid)',
             fontSize: 13,
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: FONTS.inter,
             fontWeight: 500,
             cursor: 'pointer',
           }}
@@ -120,7 +121,7 @@ export function InviteLinkSection({ boardId, roomCode: initialCode }: InviteLink
             height: 34,
             borderRadius: 'var(--wb-radius-md, 0.375rem)',
             backgroundColor: 'var(--wb-surface-container, #e6e8ea)',
-            border: '1px solid rgba(171, 173, 174, 0.15)',
+            border: '1px solid var(--wb-ghost-border)',
             color: 'var(--wb-on-surface-variant, #595c5d)',
             cursor: isPending ? 'not-allowed' : 'pointer',
             opacity: isPending ? 0.5 : 1,
@@ -139,7 +140,7 @@ export function InviteLinkSection({ boardId, roomCode: initialCode }: InviteLink
           role="alert"
           style={{
             fontSize: 13,
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: FONTS.inter,
             color: 'var(--wb-error, #b41340)',
           }}
         >
