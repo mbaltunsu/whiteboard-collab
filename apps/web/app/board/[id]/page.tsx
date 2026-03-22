@@ -363,30 +363,24 @@ export default function BoardPage() {
 
   const handleElementCreate = useMemo(
     () =>
-      (payload: ElementCreatePayload & { id: string }) => {
+      (payload: ElementCreatePayload) => {
         if (!elementsMap || !doc) return
         doc.transact(() => {
           const yEl = new Y.Map<unknown>()
-          const element: WhiteboardElement = {
-            id: payload.id,
-            type: payload.type,
-            x: payload.x,
-            y: payload.y,
-            width: payload.width ?? 0,
-            height: payload.height ?? 0,
-            points: (payload as { points?: { x: number; y: number }[] }).points ?? [],
-            strokeColor: payload.strokeColor ?? '#2c2f30',
-            strokeWidth: payload.strokeWidth ?? 2,
-            fillColor: payload.fillColor ?? null,
-            roughness: payload.roughness ?? 1,
-            opacity: payload.opacity ?? 1,
-            zIndex: elementsMap.size,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            createdBy: session?.user?.userId ?? 'anonymous',
-          }
-          Object.entries(element).forEach(([k, v]) => yEl.set(k, v))
-          elementsMap.set(payload.id, yEl as Y.Map<unknown>)
+          const el = payload.element
+          const id = crypto.randomUUID()
+
+          yEl.set('id', id)
+          yEl.set('type', el.type)
+          yEl.set('position', el.position)
+          yEl.set('size', el.size)
+          yEl.set('style', el.style)
+          yEl.set('data', el.data)
+          yEl.set('zIndex', elementsMap.size)
+          yEl.set('createdBy', session?.user?.userId ?? 'anonymous')
+          yEl.set('locked', false)
+
+          elementsMap.set(id, yEl as Y.Map<unknown>)
         })
       },
     [elementsMap, doc, session?.user?.userId],
