@@ -38,6 +38,82 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
+
+    /* ============================================
+       Whiteboard Design System Tokens
+       Source: The Infinite Curator (design-tokens.md)
+       ============================================ */
+
+    /* Surfaces — Paper Hierarchy */
+    --wb-surface: #f5f6f7;
+    --wb-surface-container-lowest: #ffffff;
+    --wb-surface-container-low: #eff1f2;
+    --wb-surface-container: #e6e8ea;
+    --wb-surface-container-high: #e0e3e4;
+    --wb-surface-container-highest: #dadddf;
+    --wb-surface-dim: #d1d5d7;
+    --wb-surface-bright: #f5f6f7;
+
+    /* Brand / Primary — Electric Indigo */
+    --wb-primary: #0c0bff;
+    --wb-primary-dim: #0300e1;
+    --wb-primary-container: #9097ff;
+    --wb-primary-fixed: #9097ff;
+    --wb-primary-fixed-dim: #8088ff;
+    --wb-on-primary: #d8d8ff;
+    --wb-on-primary-container: #010083;
+    --wb-inverse-primary: #7c84ff;
+
+    /* Secondary — Cool Gray */
+    --wb-secondary: #555c69;
+    --wb-secondary-container: #dce2f3;
+    --wb-on-secondary: #eef2ff;
+    --wb-on-secondary-container: #4b525f;
+
+    /* Tertiary — Amber/Orange */
+    --wb-tertiary: #815100;
+    --wb-tertiary-container: #f8a010;
+    --wb-on-tertiary: #fff0e3;
+    --wb-on-tertiary-container: #4a2c00;
+
+    /* Text & Foreground */
+    --wb-on-surface: #2c2f30;
+    --wb-on-surface-variant: #595c5d;
+    --wb-on-background: #2c2f30;
+    --wb-outline: #757778;
+    --wb-outline-variant: #abadae;
+
+    /* Error */
+    --wb-error: #b41340;
+    --wb-error-container: #f74b6d;
+
+    /* Dark Mode Inverses */
+    --wb-inverse-surface: #0c0f10;
+    --wb-inverse-on-surface: #9b9d9e;
+
+    /* Shadows */
+    --wb-shadow-ambient: 0 12px 32px -4px rgba(12, 15, 16, 0.08);
+    --wb-shadow-contact: 0 2px 4px 0 rgba(12, 15, 16, 0.12);
+
+    /* Corner Radius */
+    --wb-radius-sm: 0.125rem;
+    --wb-radius-md: 0.375rem;
+    --wb-radius-lg: 0.5rem;
+    --wb-radius-xl: 0.75rem;
+    --wb-radius-full: 9999px;
+
+    /* Spacing */
+    --wb-spacing-1: 0.25rem;
+    --wb-spacing-2: 0.5rem;
+    --wb-spacing-4: 1rem;
+    --wb-spacing-6: 1.5rem;
+    --wb-spacing-8: 2rem;
+    --wb-spacing-10: 2.5rem;
+
+    /* Glassmorphism */
+    --wb-glass-bg: rgba(255, 255, 255, 0.8);
+    --wb-glass-blur: blur(12px);
+    --wb-ghost-border: rgba(171, 173, 174, 0.15);
   }
 
   * {
@@ -87,6 +163,28 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+
+    /* Whiteboard dark mode overrides */
+    --wb-surface: #1a1d1e;
+    --wb-surface-container-lowest: #0c0f10;
+    --wb-surface-container-low: #1f2223;
+    --wb-surface-container: #252829;
+    --wb-surface-container-high: #2c2f30;
+    --wb-surface-container-highest: #343738;
+    --wb-surface-dim: #0c0f10;
+    --wb-surface-bright: #2c2f30;
+
+    --wb-on-surface: #e3e5e6;
+    --wb-on-surface-variant: #9b9d9e;
+    --wb-on-background: #e3e5e6;
+    --wb-outline: #8b8e8f;
+    --wb-outline-variant: #3f4142;
+
+    --wb-glass-bg: rgba(12, 15, 16, 0.75);
+    --wb-ghost-border: rgba(63, 65, 66, 0.4);
+
+    /* Primary stays the same in dark mode — electric indigo */
+    --wb-inverse-primary: #7c84ff;
   }
   body {
     @apply bg-background text-foreground;
@@ -107,5 +205,48 @@
 
   .canvas-cursor-grabbing {
     cursor: grabbing;
+  }
+
+  /* Glassmorphism — floating toolbars and cursor labels */
+  .wb-glass {
+    background: var(--wb-glass-bg);
+    backdrop-filter: var(--wb-glass-blur);
+    -webkit-backdrop-filter: var(--wb-glass-blur);
+  }
+
+  /* Ambient shadow — floating panels */
+  .wb-shadow-ambient {
+    box-shadow: var(--wb-shadow-ambient);
+  }
+
+  /* Contact shadow — sticky notes */
+  .wb-shadow-contact {
+    box-shadow: var(--wb-shadow-contact);
+  }
+
+  /* Ghost border fallback */
+  .wb-ghost-border {
+    border: 1px solid var(--wb-ghost-border);
+  }
+
+  /* Tool dock container */
+  .wb-tool-dock {
+    background: var(--wb-glass-bg);
+    backdrop-filter: var(--wb-glass-blur);
+    -webkit-backdrop-filter: var(--wb-glass-blur);
+    box-shadow: var(--wb-shadow-ambient);
+    border-radius: var(--wb-radius-xl);
+    border: 1px solid var(--wb-ghost-border);
+  }
+
+  /* Active tool highlight */
+  .wb-tool-active {
+    color: var(--wb-primary);
+    background-color: rgba(144, 151, 255, 0.2);
+  }
+
+  /* Primary CTA gradient */
+  .wb-gradient-primary {
+    background: linear-gradient(135deg, #0c0bff, #9097ff);
   }
 }
