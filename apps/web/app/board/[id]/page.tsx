@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo } from 'react'
-import { useParams, useRouter, notFound } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { Settings, Share2, Undo2, Redo2 } from 'lucide-react'
