@@ -71,14 +71,12 @@ export function CreateBoardDialog() {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <button
-          className="inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c0bff]/50"
-          style={{ background: 'linear-gradient(135deg, #0c0bff, #9097ff)' }}
-        >
-          <Plus className="h-4 w-4" />
-          Create New Room
-        </button>
+      <DialogTrigger
+        className="inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c0bff]/50"
+        style={{ background: 'linear-gradient(135deg, #0c0bff, #9097ff)' }}
+      >
+        <Plus className="h-4 w-4" />
+        Create New Room
       </DialogTrigger>
 
       <DialogContent
