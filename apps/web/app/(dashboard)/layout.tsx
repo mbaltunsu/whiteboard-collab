@@ -30,18 +30,18 @@ export default async function DashboardLayout({
   return (
     <div
       className={`${manrope.variable} min-h-screen`}
-      style={{ backgroundColor: '#f5f6f7' }}
+      style={{ backgroundColor: 'var(--wb-surface)' }}
     >
       {/* Top navigation bar */}
       <header
         className="sticky top-0 z-40 flex h-14 items-center justify-between px-6"
-        style={{ backgroundColor: '#eff1f2' }}
+        style={{ backgroundColor: 'var(--wb-surface-container-low)' }}
       >
         {/* App name */}
         <Link
           href="/dashboard"
           className="font-manrope text-base font-bold tracking-tight"
-          style={{ color: '#2c2f30', fontFamily: 'var(--font-manrope, Manrope, sans-serif)' }}
+          style={{ color: 'var(--wb-on-surface)', fontFamily: 'var(--font-manrope, Manrope, sans-serif)' }}
         >
           The Infinite Curator
         </Link>
@@ -50,16 +50,17 @@ export default async function DashboardLayout({
         <div className="flex items-center gap-3">
           <Link
             href="/settings"
-            className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-[#e6e8ea]"
+            className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
+            style={{ color: 'var(--wb-on-surface-variant)' }}
             aria-label="Settings"
           >
-            <Settings className="h-4 w-4" style={{ color: '#595c5d' }} />
+            <Settings className="h-4 w-4" />
           </Link>
 
           <Avatar size="default">
             {user.image && <AvatarImage src={user.image} alt={user.name ?? 'User avatar'} />}
             <AvatarFallback
-              style={{ backgroundColor: '#e0e3e4', color: '#595c5d', fontSize: '0.75rem', fontWeight: 500 }}
+              style={{ backgroundColor: 'var(--wb-surface-container-high)', color: 'var(--wb-on-surface-variant)', fontSize: '0.75rem', fontWeight: 500 }}
             >
               {initials}
             </AvatarFallback>

@@ -51,7 +51,7 @@ export function CreateBoardDialog() {
         const res = await fetch('/api/boards', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title: trimmed }),
+          body: JSON.stringify({ title: trimmed, description: description.trim() || undefined }),
         })
 
         if (!res.ok) {
