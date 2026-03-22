@@ -114,6 +114,18 @@
     --wb-glass-bg: rgba(255, 255, 255, 0.8);
     --wb-glass-blur: blur(12px);
     --wb-ghost-border: rgba(171, 173, 174, 0.15);
+
+    /* Alpha tint variants — used in JSX inline styles where rgba() is needed */
+    --wb-gradient-primary: linear-gradient(135deg, #0c0bff, #9097ff);
+    --wb-primary-alpha-12: rgba(144, 151, 255, 0.12);
+    --wb-primary-alpha-18: rgba(12, 11, 255, 0.18);
+    --wb-primary-alpha-20: rgba(144, 151, 255, 0.20);
+    --wb-primary-alpha-25: rgba(12, 11, 255, 0.25);
+    --wb-error-alpha-06: rgba(180, 19, 64, 0.06);
+    --wb-error-alpha-08: rgba(180, 19, 64, 0.08);
+    --wb-error-alpha-20: rgba(180, 19, 64, 0.20);
+    --wb-on-primary-solid: #ffffff;
+    --wb-tertiary-alpha-12: rgba(248, 160, 16, 0.12);
   }
 
   * {
