@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Layers } from 'lucide-react'
+import { FONTS } from '@/lib/theme'
 import { requireAuth } from '@/lib/auth'
 import { connectDB } from '@/lib/mongodb'
 import { BoardModel } from '@/lib/models/board'
@@ -71,13 +72,13 @@ export default async function DashboardPage() {
           <h1
             className="text-3xl font-bold leading-tight tracking-tight"
             style={{
-              color: '#2c2f30',
-              fontFamily: 'Manrope, var(--font-manrope, sans-serif)',
+              color: 'var(--wb-on-surface)',
+              fontFamily: FONTS.manrope,
             }}
           >
             Active Rooms
           </h1>
-          <p className="max-w-md text-sm leading-relaxed" style={{ color: '#595c5d' }}>
+          <p className="max-w-md text-sm leading-relaxed" style={{ color: 'var(--wb-on-surface-variant)' }}>
             Browse and manage your ongoing creative collaborations and digital whiteboards.
           </p>
         </div>
@@ -91,7 +92,7 @@ export default async function DashboardPage() {
       {fetchError && (
         <div
           className="rounded-xl px-5 py-4 text-sm"
-          style={{ backgroundColor: '#fff0f3', color: '#b41340' }}
+          style={{ backgroundColor: 'var(--wb-error-surface)', color: 'var(--wb-error)' }}
         >
           Could not load your boards. Please refresh to try again.
         </div>
@@ -118,25 +119,25 @@ export default async function DashboardPage() {
       {!fetchError && boards.length === 0 && (
         <div
           className="flex flex-col items-center justify-center gap-5 rounded-2xl py-20 text-center"
-          style={{ backgroundColor: '#ffffff', boxShadow: '0 2px 8px -2px rgba(12, 15, 16, 0.06)' }}
+          style={{ backgroundColor: 'var(--wb-surface-container-lowest)', boxShadow: 'var(--wb-shadow-contact)' }}
         >
           <div
             className="flex h-14 w-14 items-center justify-center rounded-2xl"
-            style={{ backgroundColor: '#eff1f2' }}
+            style={{ backgroundColor: 'var(--wb-surface-container-low)' }}
           >
-            <Layers className="h-7 w-7" style={{ color: '#595c5d' }} />
+            <Layers className="h-7 w-7" style={{ color: 'var(--wb-on-surface-variant)' }} />
           </div>
           <div className="flex flex-col gap-1.5">
             <h2
               className="text-lg font-bold"
               style={{
-                color: '#2c2f30',
-                fontFamily: 'Manrope, var(--font-manrope, sans-serif)',
+                color: 'var(--wb-on-surface)',
+                fontFamily: FONTS.manrope,
               }}
             >
               No rooms yet
             </h2>
-            <p className="max-w-xs text-sm" style={{ color: '#595c5d' }}>
+            <p className="max-w-xs text-sm" style={{ color: 'var(--wb-on-surface-variant)' }}>
               Create your first whiteboard to start collaborating with your team.
             </p>
           </div>

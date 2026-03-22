@@ -87,7 +87,7 @@ export function StrokeWidthPicker() {
                   'flex-1 h-8 rounded-[var(--wb-radius-md)] transition-all duration-150 flex items-center justify-center',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary)]',
                   strokeWidth === w
-                    ? 'bg-[rgba(144,151,255,0.2)]'
+                    ? 'bg-[var(--wb-primary-alpha-20)]'
                     : 'hover:bg-[var(--wb-surface-container-low)]',
                 ].join(' ')}
               >

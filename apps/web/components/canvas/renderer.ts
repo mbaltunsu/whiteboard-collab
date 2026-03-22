@@ -8,16 +8,7 @@ import type {
 } from "@whiteboard/shared"
 import type { PresenceState } from "@whiteboard/shared"
 import type { Viewport } from "./viewport"
-
-// Design tokens
-const COLORS = {
-  surface: "#f5f6f7",
-  outlineVariant: "#abadae",
-  primary: "#0c0bff",
-  surfaceContainerLowest: "#ffffff",
-  onSurfaceVariant: "#595c5d",
-  onSurface: "#2c2f30",
-} as const
+import { CANVAS_COLORS, CANVAS_FONTS } from "@/lib/theme"
 
 // Grid spacing-10 = 2.5rem = 40px
 const GRID_SPACING = 40
@@ -131,7 +122,7 @@ export class Renderer {
     const endY = bounds.y + bounds.h + spacing
 
     ctx.save()
-    ctx.fillStyle = `rgba(171, 173, 174, 0.10)` // outline-variant at 10% opacity
+    ctx.fillStyle = CANVAS_COLORS.gridDotFaint
 
     for (let x = startX; x < endX; x += spacing) {
       for (let y = startY; y < endY; y += spacing) {
@@ -276,7 +267,7 @@ export class Renderer {
     const { x, y } = el.position
     const { resolved } = el.data
 
-    const pinColor = resolved ? COLORS.outlineVariant : COLORS.primary
+    const pinColor = resolved ? CANVAS_COLORS.outlineVariant : CANVAS_COLORS.primary
     const pinW = 20
     const pinH = 28
 
@@ -298,8 +289,8 @@ export class Renderer {
     // Comment count indicator (white dot)
     const msgCount = el.data.messages.length
     if (msgCount > 0) {
-      ctx.fillStyle = COLORS.surfaceContainerLowest
-      ctx.font = "bold 9px Inter, sans-serif"
+      ctx.fillStyle = CANVAS_COLORS.surfaceContainerLowest
+      ctx.font = `bold 9px ${CANVAS_FONTS.inter}`
       ctx.textAlign = "center"
       ctx.textBaseline = "middle"
       ctx.fillText(String(Math.min(msgCount, 9)), x + pinW / 2, y + 10)
@@ -337,7 +328,7 @@ export class Renderer {
 
       // Name label — glassmorphism style
       const label = presence.name || "User"
-      ctx.font = "500 11px Inter, sans-serif" // label-sm
+      ctx.font = `500 11px ${CANVAS_FONTS.inter}` // label-sm
       const labelWidth = ctx.measureText(label).width
       const labelPadX = 6
       const labelPadY = 3
@@ -345,18 +336,18 @@ export class Renderer {
       const labelY = y + 18
 
       // Background
-      ctx.fillStyle = "rgba(255, 255, 255, 0.85)" // surface-container-lowest ~80%
+      ctx.fillStyle = CANVAS_COLORS.cursorLabelBg
       ctx.beginPath()
       ctx.roundRect(labelX - labelPadX, labelY - labelPadY, labelWidth + labelPadX * 2, 18, 4)
       ctx.fill()
 
       // Ghost border
-      ctx.strokeStyle = `rgba(171, 173, 174, 0.15)` // outline-variant at 15%
+      ctx.strokeStyle = CANVAS_COLORS.cursorLabelBorder
       ctx.lineWidth = 1
       ctx.stroke()
 
       // Label text — on-surface-variant
-      ctx.fillStyle = COLORS.onSurfaceVariant
+      ctx.fillStyle = CANVAS_COLORS.onSurfaceVariant
       ctx.fillText(label, labelX, labelY + 9)
 
       ctx.restore()

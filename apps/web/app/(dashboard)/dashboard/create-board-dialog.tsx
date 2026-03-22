@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus } from 'lucide-react'
+import { FONTS, GRADIENTS } from '@/lib/theme'
 import {
   Dialog,
   DialogContent,
@@ -73,7 +74,7 @@ export function CreateBoardDialog() {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger
         className="inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c0bff]/50"
-        style={{ background: 'linear-gradient(135deg, #0c0bff, #9097ff)' }}
+        style={{ background: GRADIENTS.primary }}
       >
         <Plus className="h-4 w-4" />
         Create New Room
@@ -81,16 +82,16 @@ export function CreateBoardDialog() {
 
       <DialogContent
         className="sm:max-w-md"
-        style={{ backgroundColor: '#ffffff', borderRadius: '0.75rem' }}
+        style={{ backgroundColor: 'var(--wb-surface-container-lowest)', borderRadius: 'var(--wb-radius-xl)' }}
       >
         <DialogHeader>
           <DialogTitle
             className="text-base font-bold"
-            style={{ color: '#2c2f30', fontFamily: 'Manrope, sans-serif' }}
+            style={{ color: 'var(--wb-on-surface)', fontFamily: FONTS.manrope }}
           >
             Create a new room
           </DialogTitle>
-          <DialogDescription style={{ color: '#595c5d' }}>
+          <DialogDescription style={{ color: 'var(--wb-on-surface-variant)' }}>
             Give your board a name to get started.
           </DialogDescription>
         </DialogHeader>
@@ -101,7 +102,7 @@ export function CreateBoardDialog() {
             <label
               htmlFor="board-title"
               className="text-xs font-medium"
-              style={{ color: '#595c5d' }}
+              style={{ color: 'var(--wb-on-surface-variant)' }}
             >
               Board title
             </label>
@@ -114,10 +115,10 @@ export function CreateBoardDialog() {
               required
               disabled={isPending}
               style={{
-                backgroundColor: '#dadddf',
+                backgroundColor: 'var(--wb-surface-container-highest)',
                 border: 'none',
-                borderRadius: '0.375rem 0.375rem 0.125rem 0.125rem',
-                color: '#2c2f30',
+                borderRadius: 'var(--wb-radius-md) var(--wb-radius-md) var(--wb-radius-sm) var(--wb-radius-sm)',
+                color: 'var(--wb-on-surface)',
               }}
             />
           </div>
@@ -127,10 +128,10 @@ export function CreateBoardDialog() {
             <label
               htmlFor="board-description"
               className="text-xs font-medium"
-              style={{ color: '#595c5d' }}
+              style={{ color: 'var(--wb-on-surface-variant)' }}
             >
               Description{' '}
-              <span className="font-normal" style={{ color: '#757778' }}>
+              <span className="font-normal" style={{ color: 'var(--wb-outline)' }}>
                 (optional)
               </span>
             </label>
@@ -142,17 +143,17 @@ export function CreateBoardDialog() {
               maxLength={200}
               disabled={isPending}
               style={{
-                backgroundColor: '#dadddf',
+                backgroundColor: 'var(--wb-surface-container-highest)',
                 border: 'none',
-                borderRadius: '0.375rem 0.375rem 0.125rem 0.125rem',
-                color: '#2c2f30',
+                borderRadius: 'var(--wb-radius-md) var(--wb-radius-md) var(--wb-radius-sm) var(--wb-radius-sm)',
+                color: 'var(--wb-on-surface)',
               }}
             />
           </div>
 
           {/* Error message */}
           {error && (
-            <p className="text-xs" style={{ color: '#b41340' }}>
+            <p className="text-xs" style={{ color: 'var(--wb-error)' }}>
               {error}
             </p>
           )}
@@ -164,7 +165,7 @@ export function CreateBoardDialog() {
               onClick={() => handleOpenChange(false)}
               disabled={isPending}
               className="inline-flex h-9 items-center rounded-lg px-4 text-sm font-medium transition-colors disabled:opacity-50"
-              style={{ backgroundColor: '#eff1f2', color: '#595c5d' }}
+              style={{ backgroundColor: 'var(--wb-surface-container-low)', color: 'var(--wb-on-surface-variant)' }}
             >
               Cancel
             </button>
@@ -173,9 +174,9 @@ export function CreateBoardDialog() {
               disabled={isPending || !title.trim()}
               className="h-9 px-5 text-sm font-semibold text-white disabled:opacity-50"
               style={{
-                background: 'linear-gradient(135deg, #0c0bff, #9097ff)',
+                background: GRADIENTS.primary,
                 border: 'none',
-                borderRadius: '0.375rem',
+                borderRadius: 'var(--wb-radius-md)',
               }}
             >
               {isPending ? 'Creating…' : 'Create'}

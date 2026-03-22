@@ -1,5 +1,6 @@
 import { requireAuth } from '@/lib/auth'
 import { Manrope } from 'next/font/google'
+import { FONTS } from '@/lib/theme'
 import Link from 'next/link'
 import { Settings } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -41,7 +42,7 @@ export default async function DashboardLayout({
         <Link
           href="/dashboard"
           className="font-manrope text-base font-bold tracking-tight"
-          style={{ color: 'var(--wb-on-surface)', fontFamily: 'var(--font-manrope, Manrope, sans-serif)' }}
+          style={{ color: 'var(--wb-on-surface)', fontFamily: FONTS.manrope }}
         >
           The Infinite Curator
         </Link>

@@ -1,3 +1,5 @@
+import { FONTS } from '@/lib/theme'
+
 export default function BoardLoading() {
   return (
     <div
@@ -55,13 +57,13 @@ export default function BoardLoading() {
           left: 0,
           right: 0,
           height: 48,
-          backgroundColor: 'rgba(239,241,242,0.6)',
+          backgroundColor: 'var(--wb-skeleton-glass-bg)',
           backdropFilter: 'blur(12px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '0 16px',
-          borderBottom: '1px solid rgba(171,173,174,0.15)',
+          borderBottom: '1px solid var(--wb-ghost-border)',
         }}
         aria-hidden="true"
       >
@@ -108,7 +110,7 @@ export default function BoardLoading() {
           gap: 4,
           padding: 8,
           borderRadius: 'var(--wb-radius-xl, 0.75rem)',
-          backgroundColor: 'rgba(239,241,242,0.6)',
+          backgroundColor: 'var(--wb-skeleton-glass-bg)',
           backdropFilter: 'blur(12px)',
         }}
         aria-hidden="true"
@@ -136,7 +138,7 @@ export default function BoardLoading() {
           width: 160,
           height: 40,
           borderRadius: 'var(--wb-radius-xl, 0.75rem)',
-          backgroundColor: 'rgba(239,241,242,0.6)',
+          backgroundColor: 'var(--wb-skeleton-glass-bg)',
           backdropFilter: 'blur(12px)',
         }}
         aria-hidden="true"
@@ -152,7 +154,7 @@ export default function BoardLoading() {
       <span
         style={{
           fontSize: '13px',
-          fontFamily: 'Inter, sans-serif',
+          fontFamily: FONTS.inter,
           color: 'var(--wb-on-surface-variant, #595c5d)',
           marginTop: 8,
         }}

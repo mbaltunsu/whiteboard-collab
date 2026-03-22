@@ -1,5 +1,7 @@
 "use client"
 
+import { FONTS } from "@/lib/theme"
+
 interface RemoteCursorProps {
   name: string
   color: string
@@ -32,7 +34,7 @@ export function RemoteCursor({ name, color, x, y }: RemoteCursorProps) {
         <path
           d="M3 2L17 10L10 12L7 18L3 2Z"
           fill={color}
-          stroke="#fff"
+          stroke="var(--wb-on-primary-solid)"
           strokeWidth="1.5"
           strokeLinejoin="round"
         />
@@ -45,14 +47,14 @@ export function RemoteCursor({ name, color, x, y }: RemoteCursorProps) {
           padding: "2px 7px",
           borderRadius: "9999px",
           background: color,
-          color: "#fff",
+          color: 'var(--wb-on-primary-solid)',
           fontSize: "11px",
-          fontFamily: "Inter, sans-serif",
+          fontFamily: FONTS.inter,
           fontWeight: 500,
           lineHeight: "16px",
           whiteSpace: "nowrap",
-          border: "1px solid rgba(255,255,255,0.3)",
-          boxShadow: "0 1px 4px rgba(0,0,0,0.18)",
+          border: '1px solid var(--wb-cursor-label-pill-border)',
+          boxShadow: 'var(--wb-cursor-label-pill-shadow)',
           maxWidth: "120px",
           overflow: "hidden",
           textOverflow: "ellipsis",

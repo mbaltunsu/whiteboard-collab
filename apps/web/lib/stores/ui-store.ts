@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { ToolType, ShapeType } from '@whiteboard/shared'
+import { CANVAS_COLORS } from '@/lib/theme'
 
 interface UIState {
   activeTool: ToolType
@@ -28,7 +29,7 @@ interface UIState {
 export const useUIStore = create<UIState>((set) => ({
   activeTool: 'select',
   activeShapeType: 'rectangle',
-  strokeColor: '#2c2f30',
+  strokeColor: CANVAS_COLORS.onSurface,
   strokeWidth: 2,
   fillColor: null,
   roughness: 1,

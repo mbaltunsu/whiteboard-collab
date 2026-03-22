@@ -1,3 +1,5 @@
+import { FONTS } from '@/lib/theme'
+
 export default function InviteLoading() {
   return (
     <div
@@ -8,7 +10,7 @@ export default function InviteLoading() {
         justifyContent: 'center',
         backgroundColor: 'var(--wb-surface, #f5f6f7)',
         padding: '24px',
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: FONTS.inter,
       }}
       aria-label="Joining board"
       aria-busy="true"
@@ -35,7 +37,7 @@ export default function InviteLoading() {
           padding: '40px 32px',
           borderRadius: 'var(--wb-radius-lg, 0.5rem)',
           backgroundColor: 'var(--wb-surface-container-lowest, #ffffff)',
-          boxShadow: '0 12px 32px -4px rgba(12, 15, 16, 0.08)',
+          boxShadow: 'var(--wb-shadow-ambient)',
           textAlign: 'center',
         }}
       >

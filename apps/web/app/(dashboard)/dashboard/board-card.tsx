@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { FONTS, GRADIENTS, THUMBNAIL_GRADIENTS } from '@/lib/theme'
 
 interface BoardCardProps {
   id: string
@@ -33,18 +34,8 @@ function formatRelativeTime(dateStr: string): string {
 
 // Deterministic gradient from board id for placeholder thumbnails
 function getThumbnailGradient(id: string): string {
-  const gradients = [
-    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-    'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-    'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
-    'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-    'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)',
-  ]
-  const index = id.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0) % gradients.length
-  return gradients[index]
+  const index = id.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0) % THUMBNAIL_GRADIENTS.length
+  return THUMBNAIL_GRADIENTS[index]
 }
 
 export function BoardCard({
@@ -61,17 +52,15 @@ export function BoardCard({
     <article
       className="group flex flex-col overflow-hidden rounded-xl transition-all duration-200"
       style={{
-        backgroundColor: '#ffffff',
-        boxShadow: '0 2px 8px -2px rgba(12, 15, 16, 0.06)',
+        backgroundColor: 'var(--wb-surface-container-lowest)',
+        boxShadow: 'var(--wb-shadow-contact)',
       }}
       onMouseEnter={(e) => {
-        ;(e.currentTarget as HTMLElement).style.boxShadow =
-          '0 12px 32px -4px rgba(12, 15, 16, 0.08)'
+        ;(e.currentTarget as HTMLElement).style.boxShadow = 'var(--wb-shadow-ambient)'
         ;(e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'
       }}
       onMouseLeave={(e) => {
-        ;(e.currentTarget as HTMLElement).style.boxShadow =
-          '0 2px 8px -2px rgba(12, 15, 16, 0.06)'
+        ;(e.currentTarget as HTMLElement).style.boxShadow = 'var(--wb-shadow-contact)'
         ;(e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
       }}
     >
@@ -98,7 +87,7 @@ export function BoardCard({
         <div className="flex-1">
           <h3
             className="line-clamp-2 text-sm font-semibold leading-snug"
-            style={{ color: '#2c2f30', fontFamily: 'Manrope, var(--font-manrope, sans-serif)' }}
+            style={{ color: 'var(--wb-on-surface)', fontFamily: FONTS.manrope }}
           >
             {title}
           </h3>
@@ -106,11 +95,11 @@ export function BoardCard({
 
         {/* Meta row */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5" style={{ color: '#595c5d' }}>
+          <div className="flex items-center gap-1.5" style={{ color: 'var(--wb-on-surface-variant)' }}>
             <Users className="h-3.5 w-3.5 shrink-0" />
             <span className="text-xs">{memberCount}</span>
           </div>
-          <span className="text-xs" style={{ color: '#757778' }}>
+          <span className="text-xs" style={{ color: 'var(--wb-outline)' }}>
             Modified {formatRelativeTime(updatedAt)}
           </span>
         </div>
@@ -120,7 +109,7 @@ export function BoardCard({
           <Button
             className="w-full text-sm font-medium text-white"
             style={{
-              background: 'linear-gradient(135deg, #0c0bff, #9097ff)',
+              background: GRADIENTS.primary,
               borderRadius: '0.375rem',
               border: 'none',
               height: '2.25rem',

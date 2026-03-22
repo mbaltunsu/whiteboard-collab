@@ -29,7 +29,7 @@ export function ThemeToggle() {
       onMouseEnter={(e) => {
         const el = e.currentTarget
         el.style.backgroundColor = isDarkMode
-          ? 'rgba(144, 151, 255, 0.12)'
+          ? 'var(--wb-primary-alpha-12)'
           : 'var(--wb-surface-container)'
         el.style.color = 'var(--wb-on-surface)'
       }}

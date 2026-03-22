@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/mongodb'
 import { requireAuth } from '@/lib/auth'
 import { RoomModel } from '@/lib/models'
-import { RoomPermission } from '@/lib/models/room'
+import type { RoomPermission } from '@whiteboard/shared'
 import mongoose from 'mongoose'
 
 function isValidObjectId(id: string): boolean {

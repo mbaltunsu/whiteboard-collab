@@ -165,7 +165,7 @@ function ToolButton({ tool, label, shortcut, isActive, onSelect, children }: Too
               'relative flex items-center justify-center w-9 h-9 rounded-[var(--wb-radius-md)] transition-all duration-150',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary)] focus-visible:ring-offset-1',
               isActive
-                ? 'text-[var(--wb-primary)] bg-[rgba(144,151,255,0.2)]'
+                ? 'text-[var(--wb-primary)] bg-[var(--wb-primary-alpha-20)]'
                 : 'text-[var(--wb-on-surface-variant)] hover:text-[var(--wb-on-surface)] hover:bg-[var(--wb-surface-container-low)]',
             ].join(' ')}
           >

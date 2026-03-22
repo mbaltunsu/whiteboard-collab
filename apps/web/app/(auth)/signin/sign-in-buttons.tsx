@@ -1,8 +1,7 @@
 'use client'
 
 import { signIn } from 'next-auth/react'
-
-const primaryGradient = 'linear-gradient(135deg, #0c0bff 0%, #9097ff 100%)'
+import { FONTS, GRADIENTS } from '@/lib/theme'
 
 export function SignInButtons() {
   return (
@@ -10,7 +9,7 @@ export function SignInButtons() {
       <button
         onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
         className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-        style={{ fontFamily: 'Inter, sans-serif' }}
+        style={{ fontFamily: FONTS.inter }}
         type="button"
       >
         <GoogleIcon />
@@ -20,7 +19,7 @@ export function SignInButtons() {
       <button
         onClick={() => signIn('github', { callbackUrl: '/dashboard' })}
         className="flex w-full items-center justify-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-        style={{ background: primaryGradient, fontFamily: 'Inter, sans-serif' }}
+        style={{ background: GRADIENTS.primary, fontFamily: FONTS.inter }}
         type="button"
       >
         <GitHubIcon />

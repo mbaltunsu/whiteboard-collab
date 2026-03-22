@@ -223,10 +223,8 @@ export function Minimap({ elements, viewport, onNavigate, visible = true }: Mini
         background: 'var(--wb-glass-bg)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
-        boxShadow: isHovered
-          ? '0 16px 40px -6px rgba(12, 15, 16, 0.14)'
-          : '0 12px 32px -4px rgba(12, 15, 16, 0.08)',
-        border: '1px solid rgba(171, 173, 174, 0.15)',
+        boxShadow: isHovered ? 'var(--wb-minimap-shadow-hover)' : 'var(--wb-shadow-ambient)',
+        border: '1px solid var(--wb-ghost-border)',
         overflow: 'hidden',
         zIndex: 40,
         transition: 'box-shadow 150ms ease, opacity 150ms ease',

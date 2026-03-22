@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { FONTS, GRADIENTS } from '@/lib/theme'
 
 export default function BoardNotFound() {
   return (
@@ -62,7 +63,7 @@ export default function BoardNotFound() {
           style={{
             margin: 0,
             fontSize: '22px',
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: FONTS.manrope,
             fontWeight: 700,
             color: 'var(--wb-on-surface, #2c2f30)',
             lineHeight: 1.3,
@@ -74,7 +75,7 @@ export default function BoardNotFound() {
           style={{
             margin: 0,
             fontSize: '14px',
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: FONTS.inter,
             color: 'var(--wb-on-surface-variant, #595c5d)',
             lineHeight: 1.6,
           }}
@@ -93,13 +94,13 @@ export default function BoardNotFound() {
           height: 40,
           padding: '0 20px',
           borderRadius: 'var(--wb-radius-md, 0.375rem)',
-          background: 'linear-gradient(135deg, #0c0bff, #9097ff)',
-          color: '#fff',
+          background: GRADIENTS.primary,
+          color: 'var(--wb-on-primary-solid)',
           fontSize: '14px',
-          fontFamily: 'Inter, sans-serif',
+          fontFamily: FONTS.inter,
           fontWeight: 500,
           textDecoration: 'none',
-          boxShadow: '0 2px 8px rgba(12,11,255,0.2)',
+          boxShadow: 'var(--wb-primary-shadow-sm)',
           transition: 'opacity 150ms',
         }}
       >

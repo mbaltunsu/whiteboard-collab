@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { SignInButtons } from './sign-in-buttons'
+import { FONTS } from '@/lib/theme'
 
 export const metadata: Metadata = {
   title: 'Sign In',
@@ -10,22 +11,22 @@ export default function SignInPage() {
   return (
     <main
       className="flex min-h-screen items-center justify-center p-4"
-      style={{ backgroundColor: '#f5f6f7' }}
+      style={{ backgroundColor: 'var(--wb-surface)' }}
     >
       <div
         className="w-full max-w-sm rounded-2xl p-8 shadow-lg"
-        style={{ backgroundColor: '#ffffff' }}
+        style={{ backgroundColor: 'var(--wb-surface-container-lowest)' }}
       >
         <div className="mb-8 text-center">
           <h1
             className="mb-2 text-2xl font-bold tracking-tight"
-            style={{ fontFamily: 'Manrope, sans-serif', color: '#0f0f10' }}
+            style={{ fontFamily: FONTS.manrope, color: 'var(--wb-on-surface)' }}
           >
             Welcome back
           </h1>
           <p
             className="text-sm"
-            style={{ fontFamily: 'Inter, sans-serif', color: '#6b7280' }}
+            style={{ fontFamily: FONTS.inter, color: 'var(--wb-on-surface-variant)' }}
           >
             Sign in to access your whiteboards
           </p>
@@ -35,7 +36,7 @@ export default function SignInPage() {
 
         <p
           className="mt-6 text-center text-xs"
-          style={{ fontFamily: 'Inter, sans-serif', color: '#9ca3af' }}
+          style={{ fontFamily: FONTS.inter, color: 'var(--wb-outline)' }}
         >
           By continuing, you agree to our Terms of Service and Privacy Policy.
         </p>

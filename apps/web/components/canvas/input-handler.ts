@@ -1,6 +1,7 @@
 import type { WhiteboardElement, ToolType, FreehandElement, ShapeElement } from "@whiteboard/shared"
 import { DEFAULTS } from "@whiteboard/shared"
 import type { Viewport } from "./viewport"
+import { CANVAS_COLORS } from "@/lib/theme"
 
 export interface ElementCreatePayload {
   element: Omit<WhiteboardElement, "id" | "zIndex" | "createdBy">
@@ -11,6 +12,7 @@ export interface ElementUpdatePayload {
   position?: { x: number; y: number }
   size?: { w: number; h: number }
   data?: WhiteboardElement["data"]
+  changes?: Partial<Omit<WhiteboardElement, "id">>
 }
 
 export interface InputCallbacks {
@@ -237,7 +239,7 @@ export class InputHandler {
             position: { x: minX, y: minY },
             size: { w: Math.max(maxX - minX, 1), h: Math.max(maxY - minY, 1) },
             style: {
-              color: "#2c2f30",
+              color: CANVAS_COLORS.onSurface,
               strokeWidth: DEFAULTS.STROKE_WIDTH,
               opacity: DEFAULTS.OPACITY,
             },
@@ -271,7 +273,7 @@ export class InputHandler {
               position: { x, y },
               size: { w, h },
               style: {
-                color: "#2c2f30",
+                color: CANVAS_COLORS.onSurface,
                 strokeWidth: DEFAULTS.STROKE_WIDTH,
                 opacity: DEFAULTS.OPACITY,
               },
@@ -327,7 +329,7 @@ export class InputHandler {
           position: { x: canvas.x - 75, y: canvas.y - 75 },
           size: { w: 150, h: 150 },
           style: {
-            color: "#2c2f30",
+            color: CANVAS_COLORS.onSurface,
             strokeWidth: 1,
             opacity: DEFAULTS.OPACITY,
           },
@@ -348,7 +350,7 @@ export class InputHandler {
           position: { x: canvas.x, y: canvas.y },
           size: { w: 20, h: 28 },
           style: {
-            color: "#0c0bff",
+            color: CANVAS_COLORS.primary,
             strokeWidth: 1,
             opacity: DEFAULTS.OPACITY,
           },

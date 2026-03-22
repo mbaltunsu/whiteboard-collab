@@ -1,5 +1,6 @@
 import * as Y from "yjs"
 import { ELEMENTS_MAP_KEY } from "@whiteboard/shared"
+import { CANVAS_COLORS } from "@/lib/theme"
 import type {
   WhiteboardElement,
   ElementType,
@@ -44,7 +45,7 @@ export function createElement(
     yElement.set("type", options.type)
     yElement.set("position", options.position)
     yElement.set("size", options.size ?? { w: 100, h: 100 })
-    yElement.set("style", options.style ?? { color: "#2c2f30", strokeWidth: 2, opacity: 1 })
+    yElement.set("style", options.style ?? { color: CANVAS_COLORS.onSurface, strokeWidth: 2, opacity: 1 })
     yElement.set("zIndex", options.zIndex ?? currentMax)
     yElement.set("createdBy", options.createdBy)
     yElement.set("locked", false)

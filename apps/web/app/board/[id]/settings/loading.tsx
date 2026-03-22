@@ -1,10 +1,12 @@
+import { FONTS } from '@/lib/theme'
+
 export default function SettingsLoading() {
   return (
     <div
       style={{
         minHeight: '100dvh',
         backgroundColor: 'var(--wb-surface, #f5f6f7)',
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: FONTS.inter,
       }}
     >
       <style>{`
@@ -22,9 +24,9 @@ export default function SettingsLoading() {
           alignItems: 'center',
           gap: 12,
           padding: '0 24px',
-          backgroundColor: 'rgba(245, 246, 247, 0.85)',
+          backgroundColor: 'var(--wb-glass-bg)',
           backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(171, 173, 174, 0.15)',
+          borderBottom: '1px solid var(--wb-ghost-border)',
         }}
         aria-hidden="true"
       >
@@ -84,7 +86,7 @@ export default function SettingsLoading() {
               height,
               borderRadius: 'var(--wb-radius-lg, 0.5rem)',
               backgroundColor: 'var(--wb-surface-container-lowest, #ffffff)',
-              boxShadow: '0 2px 8px -2px rgba(12, 15, 16, 0.06)',
+              boxShadow: 'var(--wb-shadow-contact)',
               animation: `wb-pulse 1.5s ease-in-out ${i * 0.1}s infinite`,
             }}
             aria-hidden="true"

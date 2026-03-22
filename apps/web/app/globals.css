@@ -159,6 +159,13 @@
     /* Illustrative avatar placeholder colors (hero social proof) */
     --wb-avatar-emerald: #10b981;
     --wb-avatar-violet: #8b5cf6;
+
+    /* Cursor label pill (remote cursor name tag on colored background) */
+    --wb-cursor-label-pill-border: rgba(255, 255, 255, 0.3);
+    --wb-cursor-label-pill-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+
+    /* Glass backgrounds at different opacities */
+    --wb-surface-container-low-glass: rgba(239, 241, 242, 0.85);
   }
 
   * {
@@ -232,6 +239,8 @@
 
     /* Primary stays the same in dark mode — electric indigo */
     --wb-inverse-primary: #7c84ff;
+
+    --wb-surface-container-low-glass: rgba(31, 34, 35, 0.85);
   }
   body {
     @apply bg-background text-foreground;

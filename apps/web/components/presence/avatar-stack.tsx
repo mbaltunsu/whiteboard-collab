@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import type { PresenceState } from "@whiteboard/shared"
+import { FONTS } from "@/lib/theme"
 
 const MAX_VISIBLE = 4
 
@@ -34,9 +35,9 @@ function Avatar({ user, size = 32 }: AvatarProps) {
     justifyContent: "center",
     flexShrink: 0 as const,
     background: user.color,
-    color: "#fff",
+    color: 'var(--wb-on-primary-solid)',
     fontSize: size * 0.375,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: FONTS.inter,
     fontWeight: 600,
     userSelect: "none" as const,
   }
@@ -88,11 +89,11 @@ export function AvatarStack({ users }: AvatarStackProps) {
             width: 32,
             height: 32,
             borderRadius: "50%",
-            border: "2px solid #e2e8f0",
-            background: "#f1f5f9",
-            color: "#64748b",
+            border: '2px solid var(--wb-surface-container-high)',
+            background: 'var(--wb-surface-container-low)',
+            color: 'var(--wb-on-surface-variant)',
             fontSize: 11,
-            fontFamily: "Inter, sans-serif",
+            fontFamily: FONTS.inter,
             fontWeight: 600,
             display: "flex",
             alignItems: "center",

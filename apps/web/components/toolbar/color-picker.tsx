@@ -7,14 +7,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { STROKE_PALETTE_EXTRAS, CANVAS_COLORS } from '@/lib/theme'
 
 // 12-color palette from PRESENCE_COLORS plus whiteboard brand neutrals
 const STROKE_COLORS = [
   ...PRESENCE_COLORS,
-  '#2c2f30', // on-surface (default dark)
-  '#ffffff', // white
-  '#555c69', // secondary cool gray
-  '#0c0bff', // primary electric indigo
+  ...STROKE_PALETTE_EXTRAS,
 ]
 
 interface ColorPickerProps {
@@ -142,7 +140,7 @@ function ColorSection({ label, colors, selected, onSelect, allowNone }: ColorSec
                   >
                     <path
                       d="M2 6L5 9L10 3"
-                      stroke={isLightColor(color) ? '#2c2f30' : '#ffffff'}
+                      stroke={isLightColor(color) ? CANVAS_COLORS.onSurface : CANVAS_COLORS.onPrimary}
                       strokeWidth="1.75"
                       strokeLinecap="round"
                       strokeLinejoin="round"

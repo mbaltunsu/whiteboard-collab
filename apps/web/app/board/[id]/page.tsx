@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { Settings, Share2, Undo2, Redo2 } from 'lucide-react'
+import { FONTS, GRADIENTS, STATUS_COLORS } from '@/lib/theme'
 
 import { WhiteboardCanvas } from '@/components/canvas/whiteboard-canvas'
 import {
@@ -34,19 +35,19 @@ const STATUS_CONFIG: Record<
   { color: string; label: string; bg: string }
 > = {
   connected: {
-    color: '#22c55e',
+    color: STATUS_COLORS.connected.color,
     label: 'Connected',
-    bg: 'rgba(34, 197, 94, 0.12)',
+    bg: STATUS_COLORS.connected.bg,
   },
   connecting: {
-    color: '#f59e0b',
+    color: STATUS_COLORS.connecting.color,
     label: 'Connecting',
-    bg: 'rgba(245, 158, 11, 0.12)',
+    bg: STATUS_COLORS.connecting.bg,
   },
   disconnected: {
-    color: '#ef4444',
+    color: STATUS_COLORS.disconnected.color,
     label: 'Disconnected',
-    bg: 'rgba(239, 68, 68, 0.12)',
+    bg: STATUS_COLORS.disconnected.bg,
   },
 }
 
@@ -61,7 +62,7 @@ function ConnectionStatusBadge({ status }: { status: ConnectionStatus }) {
         padding: '4px 10px',
         borderRadius: '9999px',
         background: config.bg,
-        border: '1px solid rgba(171, 173, 174, 0.15)',
+        border: '1px solid var(--wb-ghost-border)',
       }}
       aria-label={`Connection status: ${config.label}`}
       role="status"
@@ -81,7 +82,7 @@ function ConnectionStatusBadge({ status }: { status: ConnectionStatus }) {
       <span
         style={{
           fontSize: '11px',
-          fontFamily: 'Inter, sans-serif',
+          fontFamily: FONTS.inter,
           fontWeight: 500,
           color: 'var(--wb-on-surface-variant, #595c5d)',
           userSelect: 'none',
@@ -172,10 +173,10 @@ function TopBar({ boardId, connectionStatus, remoteUsers }: TopBarProps) {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 16px',
-        background: 'rgba(255,255,255,0.8)',
+        background: 'var(--wb-glass-bg)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(171,173,174,0.15)',
+        borderBottom: '1px solid var(--wb-ghost-border)',
         pointerEvents: 'none',
       }}
     >
@@ -206,14 +207,14 @@ function TopBar({ boardId, connectionStatus, remoteUsers }: TopBarProps) {
             height: 32,
             padding: '0 12px',
             borderRadius: 'var(--wb-radius-md, 0.375rem)',
-            background: 'linear-gradient(135deg, #0c0bff, #9097ff)',
+            background: GRADIENTS.primary,
             border: 'none',
-            color: '#fff',
+            color: 'var(--wb-on-primary-solid)',
             fontSize: '12px',
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: FONTS.inter,
             fontWeight: 500,
             cursor: 'pointer',
-            boxShadow: '0 2px 8px rgba(12,11,255,0.2)',
+            boxShadow: 'var(--wb-primary-shadow-sm)',
           }}
         >
           <Share2 size={13} aria-hidden="true" />
@@ -271,12 +272,12 @@ function BottomBar({ undoManager }: BottomBarProps) {
         alignItems: 'center',
         gap: 4,
         padding: '6px 8px',
-        background: 'rgba(255,255,255,0.8)',
+        background: 'var(--wb-glass-bg)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         borderRadius: 'var(--wb-radius-xl, 0.75rem)',
-        border: '1px solid rgba(171,173,174,0.15)',
-        boxShadow: '0 12px 32px -4px rgba(12,15,16,0.08)',
+        border: '1px solid var(--wb-ghost-border)',
+        boxShadow: 'var(--wb-shadow-ambient)',
       }}
       role="toolbar"
       aria-label="Edit history"
@@ -393,7 +394,12 @@ export default function BoardPage() {
         doc.transact(() => {
           const yEl = elementsMap.get(payload.id)
           if (!yEl) return
-          Object.entries(payload.changes).forEach(([k, v]) => {
+          const updates: Record<string, unknown> = {}
+          if (payload.position) updates.position = payload.position
+          if (payload.size) updates.size = payload.size
+          if (payload.data) updates.data = payload.data
+          if (payload.changes) Object.assign(updates, payload.changes)
+          Object.entries(updates).forEach(([k, v]) => {
             yEl.set(k, v)
           })
           yEl.set('updatedAt', Date.now())
@@ -493,12 +499,12 @@ export default function BoardPage() {
           alignItems: 'center',
           gap: 4,
           padding: '6px',
-          background: 'rgba(239,241,242,0.85)',
+          background: 'var(--wb-surface-container-low-glass)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderRadius: 'var(--wb-radius-xl, 0.75rem)',
-          border: '1px solid rgba(171,173,174,0.15)',
-          boxShadow: '0 12px 32px -4px rgba(12,15,16,0.08)',
+          border: '1px solid var(--wb-ghost-border)',
+          boxShadow: 'var(--wb-shadow-ambient)',
         }}
         role="toolbar"
         aria-label="Drawing options"
