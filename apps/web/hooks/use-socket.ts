@@ -99,11 +99,10 @@ export function useSocket(
     })
 
     socket.on("cursor:leave", (payload) => {
-      setRemoteCursor(payload.userId, -1, -1)
       const store = usePresenceStore.getState()
-      const user = store.remoteUsers.get(payload.userId)
-      if (user) {
-        store.remoteUsers.set(payload.userId, { ...user, cursor: null })
+      const existing = store.remoteUsers.get(payload.userId)
+      if (existing) {
+        store.addUser({ ...existing, cursor: null })
       }
     })
 
