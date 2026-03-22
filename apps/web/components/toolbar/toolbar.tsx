@@ -17,6 +17,7 @@ import {
   CommentIcon,
   EraserIcon,
   HighlighterIcon,
+  TextIcon,
 } from './tool-icons'
 import { ShapeSelector } from './shape-selector'
 
@@ -36,6 +37,7 @@ const NAV_TOOLS: ToolConfig[] = [
 
 const CONTENT_TOOLS: ToolConfig[] = [
   { tool: 'sticky', label: 'Sticky Note', shortcut: 'S', icon: StickyNoteIcon },
+  { tool: 'text', label: 'Text field', shortcut: 'T', icon: TextIcon },
   { tool: 'comment', label: 'Comment', shortcut: 'C', icon: CommentIcon },
 ]
 
@@ -49,6 +51,7 @@ const KEYBOARD_MAP: Record<string, ToolType> = {
   h: 'highlighter',
   r: 'shape',
   s: 'sticky',
+  t: 'text',
   c: 'comment',
   e: 'eraser',
 }
@@ -87,7 +90,7 @@ export function Toolbar() {
 
   return (
     <div
-      className="wb-tool-dock fixed left-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-1 p-2"
+      className="wb-tool-dock fixed bottom-20 left-1/2 -translate-x-1/2 z-50 flex flex-row items-center gap-0.5 p-1.5 md:flex-col md:bottom-auto md:top-1/2 md:left-4 md:translate-x-0 md:-translate-y-1/2"
       role="toolbar"
       aria-label="Drawing tools"
       aria-orientation="vertical"
@@ -105,11 +108,13 @@ export function Toolbar() {
         </ToolButton>
       ))}
 
-      <Separator className="w-7 my-1 bg-[var(--wb-ghost-border)]" />
+      <span className="block w-px h-6 mx-0.5 md:hidden bg-[var(--wb-ghost-border)]" aria-hidden="true" />
+      <Separator className="hidden md:block w-7 my-1 bg-[var(--wb-ghost-border)]" />
 
       <ShapeSelector />
 
-      <Separator className="w-7 my-1 bg-[var(--wb-ghost-border)]" />
+      <span className="block w-px h-6 mx-0.5 md:hidden bg-[var(--wb-ghost-border)]" aria-hidden="true" />
+      <Separator className="hidden md:block w-7 my-1 bg-[var(--wb-ghost-border)]" />
 
       {CONTENT_TOOLS.map(({ tool, label, shortcut, icon: Icon }) => (
         <ToolButton
@@ -124,7 +129,8 @@ export function Toolbar() {
         </ToolButton>
       ))}
 
-      <Separator className="w-7 my-1 bg-[var(--wb-ghost-border)]" />
+      <span className="block w-px h-6 mx-0.5 md:hidden bg-[var(--wb-ghost-border)]" aria-hidden="true" />
+      <Separator className="hidden md:block w-7 my-1 bg-[var(--wb-ghost-border)]" />
 
       {EDIT_TOOLS.map(({ tool, label, shortcut, icon: Icon }) => (
         <ToolButton
@@ -162,7 +168,7 @@ function ToolButton({ tool, label, shortcut, isActive, onSelect, children }: Too
             aria-label={`${label} (${shortcut})`}
             aria-pressed={isActive}
             className={[
-              'relative flex items-center justify-center w-9 h-9 rounded-[var(--wb-radius-md)] transition-all duration-150',
+              'relative flex items-center justify-center w-11 h-11 md:w-9 md:h-9 rounded-[var(--wb-radius-md)] transition-all duration-150',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary)] focus-visible:ring-offset-1',
               isActive
                 ? 'text-[var(--wb-primary)] bg-[var(--wb-primary-alpha-20)]'

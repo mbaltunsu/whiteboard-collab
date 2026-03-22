@@ -50,6 +50,7 @@ export const TOOL_TYPES: ToolType[] = [
   "shape",
   "sticky",
   "comment",
+  "text",
   "hand",
 ]
 
