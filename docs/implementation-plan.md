@@ -2,9 +2,84 @@
 
 ## Context
 
-The project has comprehensive design docs already written (`docs/architecture.md`, `docs/tech-stack.md`, `docs/canvas-engine.md`, `docs/realtime-sync.md`, `docs/features.md`, `docs/rules.md`) and a CLAUDE.md that references them. The codebase directory is empty — no code exists yet. 12 agents are configured in `.claude/agents/`. 4 Stitch screens provide design reference (IDs in `.claude/rules/STITCH_DESIGN.md`).
+The project has comprehensive design docs already written (`docs/architecture.md`, `docs/tech-stack.md`, `docs/canvas-engine.md`, `docs/realtime-sync.md`, `docs/features.md`, `docs/rules.md`) and a CLAUDE.md that references them. 13 agents are configured in `.claude/agents/` (including scrum-master for coordination). 4 Stitch screens provide design reference (IDs in `.claude/rules/STITCH_DESIGN.md`).
 
-**Goal:** Implement the full collaborative whiteboard with clear agent assignments and parallel work streams.
+**Goal:** Implement the full collaborative whiteboard with clear agent assignments, parallel work streams, and git worktree isolation.
+
+---
+
+## Git Worktree Strategy
+
+Every agent works in its own **git worktree** on a dedicated feature branch. This eliminates merge conflicts and enables true parallel development.
+
+### Branch Naming
+
+```
+main                        ← integration branch (protected)
+├── feat/scaffold-monorepo  ← nextjs-developer
+├── feat/ci-pipeline        ← deployment-engineer
+├── feat/shared-types       ← typescript-pro
+├── feat/db-models          ← api-designer
+├── feat/auth-system        ← nextjs-developer
+├── feat/canvas-engine      ← react-specialist
+├── feat/ws-server          ← websocket-engineer
+├── feat/zustand-stores     ← react-specialist
+├── feat/api-routes         ← api-designer
+├── feat/toolbar-ui         ← ui-designer
+├── feat/dashboard          ← nextjs-developer
+├── feat/yjs-client         ← react-specialist
+├── feat/socket-presence    ← react-specialist
+├── feat/board-page         ← nextjs-developer
+├── feat/comments           ← react-specialist
+├── feat/settings-invites   ← nextjs-developer
+├── feat/landing-page       ← ui-designer
+├── feat/keyboard-shortcuts ← react-specialist
+├── feat/minimap-export     ← react-specialist
+├── feat/dark-mode          ← ui-designer
+├── feat/tests              ← test-automator
+├── feat/performance        ← performance-engineer
+└── feat/deploy-config      ← deployment-engineer + devops-engineer
+```
+
+### File Ownership Map (No Clashes)
+
+| Agent | Owns These Paths | Shared Access |
+|-------|-----------------|---------------|
+| nextjs-developer | `apps/web/app/`, `turbo.json`, root configs | Read `packages/shared/` |
+| typescript-pro | `packages/shared/` | Owner — merges first |
+| react-specialist | `apps/web/components/canvas/`, `apps/web/components/elements/`, `apps/web/components/presence/`, `apps/web/hooks/`, `apps/web/lib/yjs/` | Import from shared |
+| websocket-engineer | `apps/ws-server/` | Import from shared |
+| api-designer | `apps/web/app/api/`, `apps/web/lib/models/` | Import from shared |
+| ui-designer | `apps/web/components/toolbar/`, `apps/web/components/ui/`, `apps/web/styles/` | Import from shared |
+| deployment-engineer | `.github/workflows/` | No |
+| test-automator | `__tests__/`, `*.test.ts`, `*.spec.ts` | Read all, write tests only |
+
+### Commit Rules
+
+- **One logical unit per commit** — one model, one component, one route, one hook
+- **Never batch** — if you built 3 components, make 3 commits
+- **Conventional commits** — `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`
+- **Rebase onto latest `main`** before opening PR
+- **PR per feature branch** — code-reviewer reviews before merge
+
+### Merge Order (Dependency Chain)
+
+```
+Phase 1: scaffold → merge → CI ⚡ shared-types → merge → db-models → merge → auth → merge
+Phase 2: canvas ⚡ ws-server ⚡ api-routes ⚡ stores → merge all (no overlap)
+Phase 3: yjs-client ⚡ socket-client ⚡ toolbar ⚡ dashboard → merge → board-page → merge
+Phase 4: 6 parallel tracks (no overlap) → merge all
+Phase 5: tests ⚡ perf ⚡ deploy → merge all
+```
+
+### Scrum Master Coordination
+
+The **scrum-master** agent runs between phases to:
+- Verify all branches for the phase are merged to main cleanly
+- Check for file ownership violations (two agents editing the same file)
+- Ensure `turbo build && turbo lint` passes on main after merges
+- Flag dependency issues before the next phase starts
+- Track progress and update status
 
 ---
 
@@ -170,30 +245,33 @@ Reference: Stitch "Room Dashboard" screen
 
 ## Agent Utilization Summary
 
-| Agent | Phases Active |
-|-------|--------------|
-| nextjs-developer | 1A, 1D, 3D, 3E, 4B |
-| react-specialist | 2A, 2C, 3A, 3B, 4A, 4D, 4E |
-| typescript-pro | 1B |
-| websocket-engineer | 2B |
-| api-designer | 1C, 2D |
-| ui-designer | Phase 0, 3C, 4C, 4F |
-| code-reviewer | Review after each phase |
-| test-automator | 5A |
-| performance-engineer | 5B |
-| deployment-engineer | 1E, 5C |
-| devops-engineer | 5C |
+| Agent | Phases Active | Worktree Branches |
+|-------|--------------|-------------------|
+| nextjs-developer | 1A, 1D, 3D, 3E, 4B | `feat/scaffold-monorepo`, `feat/auth-system`, `feat/dashboard`, `feat/board-page`, `feat/settings-invites` |
+| react-specialist | 2A, 2C, 3A, 3B, 4A, 4D, 4E | `feat/canvas-engine`, `feat/zustand-stores`, `feat/yjs-client`, `feat/socket-presence`, `feat/comments`, `feat/keyboard-shortcuts`, `feat/minimap-export` |
+| typescript-pro | 1B | `feat/shared-types` |
+| websocket-engineer | 2B | `feat/ws-server` |
+| api-designer | 1C, 2D | `feat/db-models`, `feat/api-routes` |
+| ui-designer | Phase 0, 3C, 4C, 4F | `feat/toolbar-ui`, `feat/landing-page`, `feat/dark-mode` |
+| code-reviewer | Review after each phase | Reviews on `main` |
+| scrum-master | Between all phases | Coordinates merges, tracks progress |
+| test-automator | 5A | `feat/tests` |
+| performance-engineer | 5B | `feat/performance` |
+| deployment-engineer | 1E, 5C | `feat/ci-pipeline`, `feat/deploy-config` |
+| devops-engineer | 5C | `feat/deploy-config` (shared with deployment-engineer) |
 
 ## Max Parallel Agents per Phase
 
-| Phase | Parallel Agents | Which |
-|-------|----------------|-------|
-| 0 | 1 | ui-designer |
-| 1 | 2 | nextjs-developer + deployment-engineer |
-| 2 | **4** | react-specialist, websocket-engineer, api-designer |
-| 3 | 3 | react-specialist, ui-designer, nextjs-developer |
-| 4 | **3** | react-specialist, nextjs-developer, ui-designer |
-| 5 | **3** | test-automator, performance-engineer, deployment+devops |
+| Phase | Parallel Agents | Which | Worktrees Active |
+|-------|----------------|-------|-----------------|
+| 0 | 1 | ui-designer | 1 |
+| 1 | 2 | nextjs-developer + deployment-engineer | 2 |
+| 2 | **4** | react-specialist, websocket-engineer, api-designer | 4 |
+| 3 | 4 | react-specialist, ui-designer, nextjs-developer | 4 |
+| 4 | **6** | react-specialist, nextjs-developer, ui-designer | 6 |
+| 5 | **3** | test-automator, performance-engineer, deployment+devops | 3 |
+
+**Between phases:** scrum-master verifies `main`, code-reviewer reviews PRs
 
 ## Critical Risk Areas
 

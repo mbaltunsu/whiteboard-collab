@@ -48,6 +48,18 @@
 - One feature per branch, one concern per commit
 - Never commit `.env` files or secrets
 
+## Git Worktree Rules (Multi-Agent Development)
+
+- Each agent works in its own **git worktree** on a dedicated feature branch
+- **One logical unit per commit** — one model, one component, one route, one hook
+- Never batch multiple features into a single commit
+- **File ownership** — each agent owns specific directories (see `docs/implementation-plan.md` for the map). Never edit files owned by another agent
+- `packages/shared/` is owned by `typescript-pro` — other agents import from it, never write to it
+- **Rebase onto latest `main`** before opening a PR
+- **PR per feature branch** — code-reviewer reviews before merge to main
+- If you need a type/constant that doesn't exist in `packages/shared/`, ask (don't create it yourself)
+- If confused about file ownership or approach, ask for help rather than guessing
+
 ## Environment Variables
 
 ```

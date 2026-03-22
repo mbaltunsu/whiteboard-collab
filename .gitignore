@@ -53,6 +53,9 @@ test-results
 # Superpowers brainstorm sessions
 .superpowers/
 
+# Stitch design downloads
+.stitch-designs/
+
 # Claude local settings
 .claude/settings.local.json
 

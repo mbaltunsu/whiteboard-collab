@@ -83,19 +83,26 @@ See [docs/rules.md](docs/rules.md) for full conventions. Key points:
 - Socket.io events: `namespace:action` format (e.g., `cursor:move`)
 - Files: `kebab-case.ts`, components: `PascalCase` exports
 - Git: conventional commits (`feat:`, `fix:`, `refactor:`)
+- Use "py" for terminal python commands
+- Follow rules in `.claude/rules/` folder
+- Use `STITCH_DESIGN.md` to fetch designs for reference at start
 
-## Rules
+## Multi-Agent Workflow
 
-1. Use "py" for terminal python commands
-2. Follow rules in rules folder
-3. Use stitch_design.md to fetch designs for reference at start
+- Each agent works in its own **git worktree** on a dedicated feature branch
+- **Small commits** — one logical unit per commit (one model, one component, one route)
+- **File ownership enforced** — see [Implementation Plan](docs/implementation-plan.md) for the ownership map
+- `packages/shared/` is the single source of truth for types — only `typescript-pro` writes to it
+- **Rebase + PR** before merging to main — code-reviewer gates every merge
+- **scrum-master** coordinates between phases: verifies merges, checks ownership, tracks progress
+- If confused about what to do or which files to touch, **ask for help** — don't guess
 
 ## Project Team
 
 See [TEAM.md](TEAM.md) for the list of agents configured for this project.
-Always use agents and subagents(only when parallel work is really needed).
+Always use agents and subagents (only when parallel work is really needed).
 Distribute work as much as possible.
-Use ui-ux=pro-max for ui/ux design and improvements, playwright mcp when visual content needed.
-Code reviewer should review after mid/big tasks not small changes
+Use ui-ux-pro-max for ui/ux design and improvements, playwright mcp when visual content needed.
+Code reviewer should review after mid/big tasks not small changes.
 Try to use design agents early in the development.
 Regularly update current status and progress.
