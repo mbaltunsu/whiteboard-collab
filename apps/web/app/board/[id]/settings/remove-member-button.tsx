@@ -17,6 +17,7 @@ export function RemoveMemberButton({ boardId, userId, name }: RemoveMemberButton
   const [isPending, startTransition] = useTransition()
 
   function handleRemove() {
+    if (!window.confirm(`Remove ${name ?? 'this member'} from the board?`)) return
     setError(null)
     startTransition(async () => {
       const res = await fetch(`/api/boards/${boardId}/members/${userId}`, {

@@ -28,6 +28,8 @@ export function InviteLinkSection({ boardId, roomCode: initialCode }: InviteLink
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
+    }).catch(() => {
+      setError('Could not copy to clipboard')
     })
   }
 

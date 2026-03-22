@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { CheckCircleIcon, XCircleIcon, UsersIcon } from 'lucide-react'
+import { XCircleIcon, UsersIcon } from 'lucide-react'
 import { requireAuth } from '@/lib/auth'
 import { connectDB } from '@/lib/mongodb'
 import { RoomModel } from '@/lib/models/room'

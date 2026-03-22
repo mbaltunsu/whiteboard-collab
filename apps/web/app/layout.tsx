@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Geist, Manrope, Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 const manrope = Manrope({
@@ -43,7 +44,9 @@ export default function RootLayout({
       lang="en"
       className={cn("font-sans", geist.variable, manrope.variable, inter.variable)}
     >
-      <body className="bg-white text-gray-900 antialiased">{children}</body>
+      <body className="antialiased">
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

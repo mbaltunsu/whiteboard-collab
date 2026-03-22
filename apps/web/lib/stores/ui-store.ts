@@ -20,6 +20,7 @@ interface UIState {
   setRoughness: (roughness: number) => void
   setZoom: (zoom: number) => void
   toggleDarkMode: () => void
+  setDarkMode: (value: boolean) => void
   setSelectedElementIds: (ids: string[]) => void
   clearSelection: () => void
 }
@@ -43,6 +44,7 @@ export const useUIStore = create<UIState>((set) => ({
   setRoughness: (roughness) => set({ roughness }),
   setZoom: (zoom) => set({ zoom }),
   toggleDarkMode: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
+  setDarkMode: (value) => set({ isDarkMode: value }),
   setSelectedElementIds: (ids) => set({ selectedElementIds: ids }),
   clearSelection: () => set({ selectedElementIds: [] }),
 }))

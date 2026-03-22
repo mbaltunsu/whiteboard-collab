@@ -66,7 +66,6 @@ export function CommentThread({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
-        nativeButton={false}
         render={
           <span
             style={{
@@ -355,7 +354,7 @@ export function CommentThread({
               >
                 <path
                   d="M1.5 7L12.5 7M12.5 7L8 2.5M12.5 7L8 11.5"
-                  stroke={inputValue.trim() ? '#fff' : 'var(--wb-on-surface-variant)'}
+                  stroke={inputValue.trim() ? 'var(--wb-on-primary)' : 'var(--wb-on-surface-variant)'}
                   strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"

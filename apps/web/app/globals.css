@@ -250,3 +250,8 @@
     background: linear-gradient(135deg, #0c0bff, #9097ff);
   }
 }
+
+@keyframes wb-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

@@ -10,25 +10,17 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const { isDarkMode, toggleDarkMode } = useUIStore()
+  const { isDarkMode, setDarkMode } = useUIStore()
 
   // On mount: read localStorage or fall back to system preference, then sync store
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
-
-    if (stored !== null) {
-      const prefersDark = stored === 'dark'
-      if (prefersDark !== isDarkMode) {
-        toggleDarkMode()
-      }
-    } else {
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      if (systemPrefersDark !== isDarkMode) {
-        toggleDarkMode()
-      }
-    }
-  // Run once on mount — intentionally omitting isDarkMode / toggleDarkMode
-  // to avoid re-triggering when the store updates after the initial sync
+    const prefersDark =
+      stored !== null
+        ? stored === 'dark'
+        : window.matchMedia('(prefers-color-scheme: dark)').matches
+    setDarkMode(prefersDark)
+  // Run once on mount — intentionally stable: setDarkMode is a Zustand action
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

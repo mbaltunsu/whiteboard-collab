@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, useCallback, useState } from 'react'
+import { useRef, useEffect, useCallback, useMemo, useState } from 'react'
 import type { WhiteboardElement } from '@whiteboard/shared'
 import type { VisibleBounds } from './viewport'
 
@@ -52,7 +52,7 @@ export function Minimap({ elements, viewport, onNavigate, visible = true }: Mini
   const isDraggingRef = useRef(false)
   const [isHovered, setIsHovered] = useState(false)
 
-  const worldBounds = getBoundingBox(elements)
+  const worldBounds = useMemo(() => getBoundingBox(elements), [elements])
 
   // Map canvas-world coordinates to minimap pixel coordinates
   const worldToMini = useCallback(

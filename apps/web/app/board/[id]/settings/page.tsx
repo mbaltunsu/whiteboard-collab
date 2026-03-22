@@ -85,14 +85,14 @@ const PERMISSION_CONFIG: Record<
   owner: {
     label: 'Owner',
     icon: <CrownIcon size={11} aria-hidden="true" />,
-    color: '#815100',
-    bg: 'rgba(248, 160, 16, 0.15)',
+    color: 'var(--wb-on-tertiary-container)',
+    bg: 'var(--wb-tertiary-container)',
   },
   editor: {
     label: 'Editor',
     icon: <PencilIcon size={11} aria-hidden="true" />,
-    color: '#010083',
-    bg: 'rgba(144, 151, 255, 0.18)',
+    color: 'var(--wb-on-primary-container)',
+    bg: 'var(--wb-primary-container)',
   },
   viewer: {
     label: 'Viewer',
@@ -376,10 +376,10 @@ export default async function BoardSettingsPage({
           gap: 12,
           padding: '0 24px',
           height: 52,
-          backgroundColor: 'rgba(245, 246, 247, 0.85)',
+          backgroundColor: 'var(--wb-glass-bg)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(171, 173, 174, 0.15)',
+          borderBottom: '1px solid var(--wb-ghost-border)',
         }}
       >
         <Link
