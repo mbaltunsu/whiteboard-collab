@@ -29,7 +29,7 @@ function elementsMapToArray(map: Y.Map<Y.Map<unknown>>): WhiteboardElement[] {
   return result.sort((a, b) => a.zIndex - b.zIndex)
 }
 
-export function useYjs(boardId: string): UseYjsReturn {
+export function useYjs(boardId: string, token?: string | null): UseYjsReturn {
   const docRef = useRef<Y.Doc | null>(null)
   const providerRef = useRef<WebsocketProvider | null>(null)
   const persistenceRef = useRef<IndexeddbPersistence | null>(null)
@@ -70,6 +70,7 @@ export function useYjs(boardId: string): UseYjsReturn {
     setConnectionStatus("connecting")
     const provider = new WebsocketProvider(wsUrl, boardId, doc, {
       connect: true,
+      params: token ? { token } : {},
     })
     providerRef.current = provider
 
@@ -110,7 +111,7 @@ export function useYjs(boardId: string): UseYjsReturn {
       metaMapRef.current = null
       setConnectionStatus("disconnected")
     }
-  }, [boardId, stableSetElements])
+  }, [boardId, token, stableSetElements])
 
   return {
     doc: docRef.current,
