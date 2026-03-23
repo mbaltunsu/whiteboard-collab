@@ -1,33 +1,27 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { toast } from 'sonner'
 import { FONTS, GRADIENTS } from '@/lib/theme'
 
 type Provider = 'google' | 'github'
 
-interface SignInButtonsProps {
-  error?: string
+const ERROR_MESSAGES: Record<string, string> = {
+  Callback:
+    "We couldn't complete sign-in. Make sure you allow the app access in Google/GitHub, then try again.",
+  OAuthSignin: 'Could not connect to the sign-in provider. Please try again in a moment.',
+  OAuthCallback:
+    'Something went wrong during sign-in. If this keeps happening, try a different browser.',
+  OAuthAccountNotLinked:
+    'This email is already linked to a different sign-in method. Try signing in with the other provider.',
+  SessionRequired: 'Please sign in to access this page.',
+  AccessDenied: 'Access was denied. Make sure you approve the permissions when signing in.',
 }
 
-function getFriendlyErrorMessage(error: string): string {
-  switch (error) {
-    case 'Callback':
-      return "Sign-in failed. Please check that you've authorized the app in your Google/GitHub account settings, then try again."
-    case 'OAuthSignin':
-      return 'Could not connect to the sign-in provider. Please try again in a moment.'
-    case 'OAuthCallback':
-      return 'Something went wrong during sign-in. If this keeps happening, try a different browser.'
-    case 'OAuthAccountNotLinked':
-      return 'This email is already linked to a different sign-in method. Try signing in with the other provider.'
-    case 'SessionRequired':
-      return 'Please sign in to access this page.'
-    case 'AccessDenied':
-      return 'Access was denied. Make sure you approve the permissions when signing in.'
-    default:
-      return 'Sign-in failed. Please try again.'
-  }
+function getFriendlyError(code: string): string {
+  return ERROR_MESSAGES[code] ?? 'Sign-in failed. Please try again.'
 }
 
 function Spinner() {
@@ -49,14 +43,16 @@ function Spinner() {
   )
 }
 
-export function SignInButtons({ error }: SignInButtonsProps) {
+export function SignInButtons() {
+  const searchParams = useSearchParams()
+  const errorCode = searchParams.get('error')
   const [loadingProvider, setLoadingProvider] = useState<Provider | null>(null)
 
   useEffect(() => {
-    if (error) {
-      toast.error(getFriendlyErrorMessage(error))
+    if (errorCode) {
+      toast.error(getFriendlyError(errorCode), { duration: 6000 })
     }
-  }, [error])
+  }, [errorCode])
 
   async function handleSignIn(provider: Provider) {
     setLoadingProvider(provider)
@@ -67,6 +63,21 @@ export function SignInButtons({ error }: SignInButtonsProps) {
 
   return (
     <div className="flex flex-col gap-3">
+      {/* Inline error banner — visible even if toast library fails */}
+      {errorCode && (
+        <div
+          className="rounded-lg px-4 py-3 text-sm leading-snug"
+          style={{
+            backgroundColor: 'var(--wb-error-alpha-08, #fce8ee)',
+            color: 'var(--wb-error, #b41340)',
+            fontFamily: FONTS.inter,
+          }}
+          role="alert"
+        >
+          {getFriendlyError(errorCode)}
+        </div>
+      )}
+
       <button
         onClick={() => handleSignIn('google')}
         disabled={isLoading}

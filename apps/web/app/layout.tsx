@@ -49,8 +49,8 @@ export default function RootLayout({
       <body className="antialiased" suppressHydrationWarning>
         <Providers>
           <ThemeProvider>{children}</ThemeProvider>
-          <Toaster position="bottom-right" richColors closeButton />
         </Providers>
+        <Toaster position="bottom-right" richColors closeButton />
       </body>
     </html>
   );

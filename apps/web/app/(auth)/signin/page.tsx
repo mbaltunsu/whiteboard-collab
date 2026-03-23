@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { SignInButtons } from './sign-in-buttons'
 import { FONTS } from '@/lib/theme'
 
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
   description: 'Sign in to CollaborativeWhiteBoard',
 }
 
-export default function SignInPage({ searchParams }: { searchParams: { error?: string } }) {
+export default function SignInPage() {
   return (
     <main
       className="flex min-h-screen items-center justify-center p-4"
@@ -32,7 +33,9 @@ export default function SignInPage({ searchParams }: { searchParams: { error?: s
           </p>
         </div>
 
-        <SignInButtons error={searchParams.error} />
+        <Suspense>
+          <SignInButtons />
+        </Suspense>
 
         <p
           className="mt-6 text-center text-xs"
