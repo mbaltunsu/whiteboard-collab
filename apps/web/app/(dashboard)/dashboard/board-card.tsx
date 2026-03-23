@@ -74,7 +74,6 @@ export function BoardCard({
       {/* Thumbnail */}
       <div className="relative h-40 w-full overflow-hidden">
         {thumbnailUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={thumbnailUrl}
             alt={`${title} thumbnail`}

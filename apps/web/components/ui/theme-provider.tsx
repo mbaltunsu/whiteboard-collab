@@ -21,7 +21,6 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
         : window.matchMedia('(prefers-color-scheme: dark)').matches
     setDarkMode(prefersDark)
   // Run once on mount — intentionally stable: setDarkMode is a Zustand action
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Whenever isDarkMode changes: apply/remove the class and persist

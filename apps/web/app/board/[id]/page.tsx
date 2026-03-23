@@ -28,7 +28,8 @@ import { useUIStore } from '@/lib/stores/ui-store'
 import type { ConnectionStatus } from '@/hooks/use-yjs'
 import type { ElementCreatePayload, ElementUpdatePayload } from '@/components/canvas/input-handler'
 import * as Y from 'yjs'
-import type { CommentElement, StickyNoteElement, TextElement, WhiteboardElement } from '@whiteboard/shared'
+import type { CommentElement, StickyNoteElement, TextElement } from '@whiteboard/shared'
+import type { StickyColor } from '@whiteboard/shared'
 
 // ---------------------------------------------------------------------------
 // Connection status indicator
@@ -680,7 +681,7 @@ export default function BoardPage() {
             const el = elements.find((e) => e.id === ctxMenu.elementId)
             if (!el) return
             if (el.type === 'sticky') {
-              handleElementUpdate({ id: el.id, data: { ...el.data, color: color as import('@whiteboard/shared').StickyColor } })
+              handleElementUpdate({ id: el.id, data: { ...el.data, color: color as StickyColor } })
             } else {
               handleElementUpdate({ id: el.id, changes: { style: { ...el.style, color } } })
             }

@@ -11,7 +11,6 @@ import {
   DialogFooter,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { TrashIcon } from 'lucide-react'
 import { FONTS } from '@/lib/theme'
 import { toast } from 'sonner'

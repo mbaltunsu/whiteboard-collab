@@ -8,7 +8,6 @@ import { CANVAS_COLORS } from '@/lib/theme'
 const MINIMAP_W = 200
 const MINIMAP_H = 150
 const PADDING = 12
-const VIEWPORT_RECT_ALPHA = 0.18
 
 interface MinimapProps {
   elements: WhiteboardElement[]

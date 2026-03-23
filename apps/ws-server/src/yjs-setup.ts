@@ -1,5 +1,5 @@
-import { IncomingMessage } from "http"
-import { WebSocketServer, WebSocket } from "ws"
+import { type IncomingMessage } from "http"
+import { WebSocketServer, type WebSocket } from "ws"
 import type { Server as HttpServer } from "http"
 import { YJS_WEBSOCKET_PATH } from "@whiteboard/shared"
 

@@ -90,7 +90,6 @@ export const WhiteboardCanvas = forwardRef<WhiteboardCanvasHandle, WhiteboardCan
         manager.destroy()
         managerRef.current = null
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // Keep callbacks current when Yjs initialises (avoids stale closure at mount)

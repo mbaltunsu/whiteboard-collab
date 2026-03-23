@@ -144,7 +144,7 @@ export class Renderer {
     )
   }
 
-  private drawGrid(cssWidth: number, cssHeight: number): void {
+  private drawGrid(_cssWidth: number, _cssHeight: number): void {
     const { ctx, viewport } = this
     const bounds = viewport.getVisibleBounds()
     const scale = viewport.scale
@@ -339,7 +339,7 @@ export class Renderer {
 
   private drawPreview(): void {
     const { ctx } = this
-    const { penPoints, shapeStart, shapeEnd, activeShapeType, strokeColor, strokeWidth, eraserPos, tool } = this.preview
+    const { penPoints, shapeStart, shapeEnd, activeShapeType, strokeColor, strokeWidth } = this.preview
     const scale = this.viewport.scale
 
     // Freehand trail (pen/highlighter in progress)

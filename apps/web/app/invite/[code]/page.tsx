@@ -65,7 +65,6 @@ export default async function InvitePage({
   }
 
   // Error states
-  const isInvalidCode = result.reason === 'invalid_code'
   const isRoomFull = result.reason === 'room_full'
 
   return (

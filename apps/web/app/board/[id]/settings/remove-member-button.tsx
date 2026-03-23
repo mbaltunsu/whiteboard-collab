@@ -2,9 +2,7 @@
 
 import { useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
 import { UserMinusIcon } from 'lucide-react'
-import { FONTS } from '@/lib/theme'
 import { toast } from 'sonner'
 
 interface RemoveMemberButtonProps {

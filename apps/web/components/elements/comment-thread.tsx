@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useRef, useCallback, KeyboardEvent } from 'react'
+import type { KeyboardEvent } from 'react';
+import { useState, useRef, useCallback } from 'react'
 import type { CommentElement } from '@whiteboard/shared'
 import { FONTS } from '@/lib/theme'
 import {

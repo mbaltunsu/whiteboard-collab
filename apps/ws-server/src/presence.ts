@@ -9,7 +9,7 @@ import type {
   UserJoinPayload,
 } from "@whiteboard/shared"
 import type { SocketUserData } from "./auth"
-import { RoomManager } from "./rooms"
+import type { RoomManager } from "./rooms"
 
 type AppSocket = Socket<
   ClientToServerEvents,

@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState, useCallback } from "react"
-import { io, Socket } from "socket.io-client"
+import type { Socket } from "socket.io-client";
+import { io } from "socket.io-client"
 import { usePresenceStore } from "@/lib/stores/presence-store"
 import { THROTTLE } from "@whiteboard/shared"
 import type {
@@ -142,7 +143,6 @@ export function useSocket(
       setIsConnected(false)
       clearAll()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [boardId, session?.user?.userId])
 
   const emitCursorMove = useCallback(
@@ -153,7 +153,6 @@ export function useSocket(
       const payload: CursorMovePayload = { userId, x, y, boardId }
       socket.emit("cursor:move", payload)
     }, THROTTLE.CURSOR_MS),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [boardId, session?.user?.userId],
   )
 
@@ -165,7 +164,6 @@ export function useSocket(
       const payload: SelectionSetPayload = { userId, elementIds }
       socket.emit("selection:set", payload)
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [session?.user?.userId],
   )
 

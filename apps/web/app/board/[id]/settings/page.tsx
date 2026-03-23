@@ -138,7 +138,6 @@ function MemberAvatar({ name, image }: { name: string | null; image: string | nu
 
   if (image) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={image}
         alt={name ?? 'Member'}

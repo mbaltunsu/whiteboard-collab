@@ -1,5 +1,6 @@
-import mongoose, { Schema, Document, Model } from 'mongoose'
-import type { RoomPermission, RoomMember } from '@whiteboard/shared'
+import type { Document, Model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose'
+import type { RoomMember } from '@whiteboard/shared'
 
 export interface IRoom extends Document {
   boardId: string
