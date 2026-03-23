@@ -50,7 +50,7 @@ export function ZoomControls({ onFitToScreen, onZoomIn, onZoomOut, onReset }: Zo
 
   return (
     <div
-      className="wb-tool-dock fixed bottom-4 right-4 z-50 flex items-center gap-0.5 p-1.5"
+      className="wb-tool-dock fixed bottom-6 right-3 z-50 flex items-center gap-0.5 p-1.5"
       role="toolbar"
       aria-label="Zoom controls"
     >
@@ -63,7 +63,7 @@ export function ZoomControls({ onFitToScreen, onZoomIn, onZoomOut, onReset }: Zo
               disabled={zoom <= MIN_ZOOM}
               aria-label="Zoom out"
               className={[
-                'flex items-center justify-center w-10 h-10 md:w-8 md:h-8 rounded-[var(--wb-radius-md)] transition-all duration-150',
+                'flex items-center justify-center w-11 h-11 md:w-8 md:h-8 rounded-[var(--wb-radius-md)] transition-all duration-150',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary)] focus-visible:ring-offset-1',
                 'text-[var(--wb-on-surface-variant)] hover:text-[var(--wb-on-surface)] hover:bg-[var(--wb-surface-container-low)]',
                 'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent',
@@ -86,7 +86,7 @@ export function ZoomControls({ onFitToScreen, onZoomIn, onZoomOut, onReset }: Zo
               onClick={resetZoom}
               aria-label={`Current zoom: ${displayPercent}%. Click to reset to 100%`}
               className={[
-                'flex items-center justify-center h-10 md:h-8 px-2 min-w-[3.5rem] rounded-[var(--wb-radius-md)] transition-all duration-150',
+                'flex items-center justify-center h-11 md:h-8 px-2 min-w-[3.5rem] rounded-[var(--wb-radius-md)] transition-all duration-150',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary)] focus-visible:ring-offset-1',
                 'text-[var(--wb-on-surface-variant)] hover:text-[var(--wb-on-surface)] hover:bg-[var(--wb-surface-container-low)]',
                 'text-xs font-medium tabular-nums',
@@ -110,7 +110,7 @@ export function ZoomControls({ onFitToScreen, onZoomIn, onZoomOut, onReset }: Zo
               disabled={zoom >= MAX_ZOOM}
               aria-label="Zoom in"
               className={[
-                'flex items-center justify-center w-10 h-10 md:w-8 md:h-8 rounded-[var(--wb-radius-md)] transition-all duration-150',
+                'flex items-center justify-center w-11 h-11 md:w-8 md:h-8 rounded-[var(--wb-radius-md)] transition-all duration-150',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary)] focus-visible:ring-offset-1',
                 'text-[var(--wb-on-surface-variant)] hover:text-[var(--wb-on-surface)] hover:bg-[var(--wb-surface-container-low)]',
                 'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent',
@@ -135,7 +135,7 @@ export function ZoomControls({ onFitToScreen, onZoomIn, onZoomOut, onReset }: Zo
               onClick={fitToScreen}
               aria-label="Fit to screen"
               className={[
-                'flex items-center justify-center w-10 h-10 md:w-8 md:h-8 rounded-[var(--wb-radius-md)] transition-all duration-150',
+                'flex items-center justify-center w-11 h-11 md:w-8 md:h-8 rounded-[var(--wb-radius-md)] transition-all duration-150',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary)] focus-visible:ring-offset-1',
                 'text-[var(--wb-on-surface-variant)] hover:text-[var(--wb-on-surface)] hover:bg-[var(--wb-surface-container-low)]',
               ].join(' ')}
