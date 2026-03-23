@@ -1,8 +1,8 @@
 'use client'
 
-import Link from 'next/link'
-import { Users } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Users, Loader2 } from 'lucide-react'
 import { FONTS, GRADIENTS, THUMBNAIL_GRADIENTS } from '@/lib/theme'
 
 interface BoardCardProps {
@@ -46,7 +46,14 @@ export function BoardCard({
   memberCount,
   isOwner,
 }: BoardCardProps) {
+  const router = useRouter()
+  const [isNavigating, setIsNavigating] = useState(false)
   const buttonLabel = isOwner ? 'Resume' : 'Join Board'
+
+  function handleNavigate() {
+    setIsNavigating(true)
+    router.push(`/board/${id}`)
+  }
 
   return (
     <article
@@ -105,19 +112,26 @@ export function BoardCard({
         </div>
 
         {/* CTA */}
-        <Link href={`/board/${id}`} className="mt-1 block">
-          <Button
-            className="w-full text-sm font-medium text-white"
-            style={{
-              background: GRADIENTS.primary,
-              borderRadius: '0.375rem',
-              border: 'none',
-              height: '2.25rem',
-            }}
-          >
-            {buttonLabel}
-          </Button>
-        </Link>
+        <button
+          onClick={handleNavigate}
+          disabled={isNavigating}
+          className="mt-1 inline-flex w-full items-center justify-center gap-2 text-sm font-medium text-white transition-opacity disabled:opacity-70"
+          style={{
+            background: GRADIENTS.primary,
+            borderRadius: '0.375rem',
+            border: 'none',
+            height: '2.25rem',
+          }}
+        >
+          {isNavigating ? (
+            <>
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              {buttonLabel}
+            </>
+          ) : (
+            buttonLabel
+          )}
+        </button>
       </div>
     </article>
   )

@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus } from 'lucide-react'
+import { toast } from 'sonner'
 import { FONTS, GRADIENTS } from '@/lib/theme'
 import {
   Dialog,
@@ -25,25 +26,22 @@ export function CreateBoardDialog() {
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
   function handleOpenChange(next: boolean) {
     if (!next) {
       setTitle('')
       setDescription('')
-      setError(null)
     }
     setOpen(next)
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setError(null)
 
     const trimmed = title.trim()
     if (!trimmed) {
-      setError('Board title is required.')
+      toast.error('Board title is required.')
       return
     }
 
@@ -57,15 +55,16 @@ export function CreateBoardDialog() {
 
         if (!res.ok) {
           const data = (await res.json()) as { error?: string }
-          setError(data.error ?? 'Failed to create board.')
+          toast.error(data.error ?? 'Failed to create board. Please try again.')
           return
         }
 
         const board = (await res.json()) as CreateBoardResponse
+        toast.success('Board created!')
         setOpen(false)
         router.push(`/board/${board.id}`)
       } catch {
-        setError('Something went wrong. Please try again.')
+        toast.error('Something went wrong. Please try again.')
       }
     })
   }
@@ -150,13 +149,6 @@ export function CreateBoardDialog() {
               }}
             />
           </div>
-
-          {/* Error message */}
-          {error && (
-            <p className="text-xs" style={{ color: 'var(--wb-error)' }}>
-              {error}
-            </p>
-          )}
 
           {/* Actions */}
           <div className="flex justify-end gap-2 pt-1">

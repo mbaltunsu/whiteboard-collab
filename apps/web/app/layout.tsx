@@ -3,6 +3,8 @@ import "./globals.css";
 import { Manrope, Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import { Toaster } from "sonner";
+import { Providers } from "./providers";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -44,8 +46,11 @@ export default function RootLayout({
       className={cn("font-sans", manrope.variable, inter.variable)}
       suppressHydrationWarning
     >
-      <body className="antialiased">
-        <ThemeProvider>{children}</ThemeProvider>
+      <body className="antialiased" suppressHydrationWarning>
+        <Providers>
+          <ThemeProvider>{children}</ThemeProvider>
+          <Toaster position="bottom-right" richColors closeButton />
+        </Providers>
       </body>
     </html>
   );

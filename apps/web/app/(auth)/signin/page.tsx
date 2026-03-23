@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: 'Sign in to CollaborativeWhiteBoard',
 }
 
-export default function SignInPage() {
+export default function SignInPage({ searchParams }: { searchParams: { error?: string } }) {
   return (
     <main
       className="flex min-h-screen items-center justify-center p-4"
@@ -32,7 +32,7 @@ export default function SignInPage() {
           </p>
         </div>
 
-        <SignInButtons />
+        <SignInButtons error={searchParams.error} />
 
         <p
           className="mt-6 text-center text-xs"

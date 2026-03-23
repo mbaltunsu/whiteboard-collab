@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { TrashIcon } from 'lucide-react'
 import { FONTS } from '@/lib/theme'
+import { toast } from 'sonner'
 
 interface DeleteBoardDialogProps {
   boardId: string
@@ -23,17 +24,15 @@ interface DeleteBoardDialogProps {
 export function DeleteBoardDialog({ boardId, boardTitle }: DeleteBoardDialogProps) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
   function handleDelete() {
-    setError(null)
     startTransition(async () => {
       const res = await fetch(`/api/boards/${boardId}`, { method: 'DELETE' })
 
       if (!res.ok) {
         const data = (await res.json().catch(() => ({}))) as { error?: string }
-        setError(data.error ?? 'Failed to delete board')
+        toast.error(data.error ?? 'Failed to delete board. Please try again.')
         return
       }
 
@@ -79,22 +78,6 @@ export function DeleteBoardDialog({ boardId, boardTitle }: DeleteBoardDialogProp
             board, all its elements, and the room. This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
-
-        {error && (
-          <p
-            role="alert"
-            style={{
-              fontSize: 13,
-              fontFamily: FONTS.inter,
-              color: 'var(--wb-error, #b41340)',
-              padding: '8px 12px',
-              borderRadius: 'var(--wb-radius-md, 0.375rem)',
-              backgroundColor: 'var(--wb-error-alpha-06)',
-            }}
-          >
-            {error}
-          </p>
-        )}
 
         <DialogFooter showCloseButton={!isPending}>
           <button

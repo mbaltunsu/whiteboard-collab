@@ -1,29 +1,92 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
+import { toast } from 'sonner'
 import { FONTS, GRADIENTS } from '@/lib/theme'
 
-export function SignInButtons() {
+type Provider = 'google' | 'github'
+
+interface SignInButtonsProps {
+  error?: string
+}
+
+function getFriendlyErrorMessage(error: string): string {
+  switch (error) {
+    case 'Callback':
+      return "Sign-in failed. Please check that you've authorized the app in your Google/GitHub account settings, then try again."
+    case 'OAuthSignin':
+      return 'Could not connect to the sign-in provider. Please try again in a moment.'
+    case 'OAuthCallback':
+      return 'Something went wrong during sign-in. If this keeps happening, try a different browser.'
+    case 'OAuthAccountNotLinked':
+      return 'This email is already linked to a different sign-in method. Try signing in with the other provider.'
+    case 'SessionRequired':
+      return 'Please sign in to access this page.'
+    case 'AccessDenied':
+      return 'Access was denied. Make sure you approve the permissions when signing in.'
+    default:
+      return 'Sign-in failed. Please try again.'
+  }
+}
+
+function Spinner() {
+  return (
+    <svg
+      className="animate-spin h-4 w-4"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+      />
+    </svg>
+  )
+}
+
+export function SignInButtons({ error }: SignInButtonsProps) {
+  const [loadingProvider, setLoadingProvider] = useState<Provider | null>(null)
+
+  useEffect(() => {
+    if (error) {
+      toast.error(getFriendlyErrorMessage(error))
+    }
+  }, [error])
+
+  async function handleSignIn(provider: Provider) {
+    setLoadingProvider(provider)
+    await signIn(provider, { callbackUrl: '/dashboard' })
+  }
+
+  const isLoading = loadingProvider !== null
+
   return (
     <div className="flex flex-col gap-3">
       <button
-        onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-        className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+        onClick={() => handleSignIn('google')}
+        disabled={isLoading}
+        className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 disabled:opacity-60 disabled:cursor-not-allowed"
         style={{ fontFamily: FONTS.inter }}
         type="button"
       >
-        <GoogleIcon />
-        Continue with Google
+        {loadingProvider === 'google' ? <Spinner /> : <GoogleIcon />}
+        {loadingProvider === 'google' ? 'Signing in…' : 'Continue with Google'}
       </button>
 
       <button
-        onClick={() => signIn('github', { callbackUrl: '/dashboard' })}
-        className="flex w-full items-center justify-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+        onClick={() => handleSignIn('github')}
+        disabled={isLoading}
+        className="flex w-full items-center justify-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 disabled:opacity-60 disabled:cursor-not-allowed"
         style={{ background: GRADIENTS.primary, fontFamily: FONTS.inter }}
         type="button"
       >
-        <GitHubIcon />
-        Continue with GitHub
+        {loadingProvider === 'github' ? <Spinner /> : <GitHubIcon />}
+        {loadingProvider === 'github' ? 'Signing in…' : 'Continue with GitHub'}
       </button>
     </div>
   )

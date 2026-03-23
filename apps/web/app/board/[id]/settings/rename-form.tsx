@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { CheckIcon } from 'lucide-react'
 import { FONTS, GRADIENTS } from '@/lib/theme'
+import { toast } from 'sonner'
 
 interface RenameBoardFormProps {
   boardId: string
@@ -15,7 +16,6 @@ interface RenameBoardFormProps {
 export function RenameBoardForm({ boardId, currentTitle }: RenameBoardFormProps) {
   const router = useRouter()
   const [title, setTitle] = useState(currentTitle)
-  const [error, setError] = useState<string | null>(null)
   const [saved, setSaved] = useState(false)
   const [isPending, startTransition] = useTransition()
 
@@ -24,7 +24,6 @@ export function RenameBoardForm({ boardId, currentTitle }: RenameBoardFormProps)
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!title.trim() || !isDirty) return
-    setError(null)
     setSaved(false)
 
     startTransition(async () => {
@@ -36,10 +35,11 @@ export function RenameBoardForm({ boardId, currentTitle }: RenameBoardFormProps)
 
       if (!res.ok) {
         const data = (await res.json().catch(() => ({}))) as { error?: string }
-        setError(data.error ?? 'Failed to rename board')
+        toast.error(data.error ?? 'Failed to rename board. Please try again.')
         return
       }
 
+      toast.success('Board renamed!')
       setSaved(true)
       router.refresh()
     })
@@ -53,7 +53,6 @@ export function RenameBoardForm({ boardId, currentTitle }: RenameBoardFormProps)
           onChange={(e) => {
             setTitle(e.target.value)
             setSaved(false)
-            setError(null)
           }}
           placeholder="Board name"
           maxLength={100}
@@ -96,18 +95,6 @@ export function RenameBoardForm({ boardId, currentTitle }: RenameBoardFormProps)
           {isPending ? 'Saving...' : saved ? 'Saved' : 'Save'}
         </Button>
       </div>
-      {error && (
-        <p
-          role="alert"
-          style={{
-            fontSize: 13,
-            fontFamily: FONTS.inter,
-            color: 'var(--wb-error, #b41340)',
-          }}
-        >
-          {error}
-        </p>
-      )}
     </form>
   )
 }
