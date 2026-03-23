@@ -12,6 +12,7 @@ import type { WhiteboardCanvasHandle } from '@/components/canvas/whiteboard-canv
 import { StickyNoteOverlay } from '@/components/canvas/sticky-note-overlay'
 import { CommentOverlay } from '@/components/canvas/comment-overlay'
 import { TextOverlay } from '@/components/canvas/text-overlay'
+import { CanvasContextMenu } from '@/components/canvas/canvas-context-menu'
 import {
   Toolbar,
   ColorPicker,
@@ -338,8 +339,8 @@ export default function BoardPage() {
   const canvasRef = useRef<WhiteboardCanvasHandle>(null)
   const [viewportState, setViewportState] = useState({ translateX: 0, translateY: 0, scale: 1 })
   const [focusedStickyId, setFocusedStickyId] = useState<string | null>(null)
-  const [focusedCommentId, setFocusedCommentId] = useState<string | null>(null)
   const [focusedTextId, setFocusedTextId] = useState<string | null>(null)
+  const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number; elementId: string } | null>(null)
   const [shareCopied, setShareCopied] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   useEffect(() => {
@@ -356,28 +357,6 @@ export default function BoardPage() {
       router.replace('/signin')
     }
   }, [sessionStatus, router])
-
-  // Sync keyboard undo/redo to Yjs undoManager
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!undoManager) return
-      const isMac = navigator.platform.toUpperCase().includes('MAC')
-      const ctrl = isMac ? e.metaKey : e.ctrlKey
-      if (!ctrl) return
-      if (e.key === 'z' && !e.shiftKey) {
-        e.preventDefault()
-        undoManager.undo()
-      } else if (e.key === 'z' && e.shiftKey) {
-        e.preventDefault()
-        undoManager.redo()
-      } else if (e.key === 'y') {
-        e.preventDefault()
-        undoManager.redo()
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [undoManager])
 
   // ---------------------------------------------------------------------------
   // Canvas event handlers — write mutations directly into the Yjs elementsMap
@@ -410,7 +389,7 @@ export default function BoardPage() {
             setTimeout(() => setFocusedStickyId(id), 50)
           }
           if (el.type === 'comment') {
-            setTimeout(() => setFocusedCommentId(id), 50)
+            // no auto-focus for comments; editing activated via double-click
           }
           if (el.type === 'text') {
             setTimeout(() => setFocusedTextId(id), 50)
@@ -464,6 +443,41 @@ export default function BoardPage() {
     [elementsMap, doc],
   )
 
+  // Sync keyboard undo/redo to Yjs undoManager, and Delete/Backspace to remove selected elements
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().includes('MAC')
+      const ctrl = isMac ? e.metaKey : e.ctrlKey
+
+      if ((e.key === 'Delete' || e.key === 'Backspace') && !e.ctrlKey && !e.metaKey) {
+        const target = e.target as HTMLElement
+        if (target.isContentEditable || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return
+        const ids = useUIStore.getState().selectedElementIds
+        if (ids.length > 0) {
+          e.preventDefault()
+          handleElementDelete(ids)
+          useUIStore.getState().setSelectedElementIds([])
+        }
+        return
+      }
+
+      if (!undoManager) return
+      if (!ctrl) return
+      if (e.key === 'z' && !e.shiftKey) {
+        e.preventDefault()
+        undoManager.undo()
+      } else if (e.key === 'z' && e.shiftKey) {
+        e.preventDefault()
+        undoManager.redo()
+      } else if (e.key === 'y') {
+        e.preventDefault()
+        undoManager.redo()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [undoManager, handleElementDelete])
+
   const handleViewportChange = useMemo(
     () => () => {
       // Viewport changes are local-only; no Yjs update needed
@@ -503,23 +517,22 @@ export default function BoardPage() {
     [elements, handleElementUpdate],
   )
 
-  const handleCommentTitleChange = useCallback(
-    (id: string, title: string) => {
-      const el = elements.find((e) => e.id === id) as CommentElement | undefined
-      if (!el) return
-      handleElementUpdate({ id, data: { ...el.data, title } })
+  const handleCommentTextChange = useCallback(
+    (id: string, text: string) => {
+      if (!elementsMap || !doc) return
+      doc.transact(() => {
+        const yEl = elementsMap.get(id)
+        if (!yEl) return
+        const data = yEl.get('data') as Record<string, unknown>
+        yEl.set('data', { ...data, title: text })
+      })
     },
-    [elements, handleElementUpdate],
+    [elementsMap, doc],
   )
 
-  const handleAddMessage = useCallback(
-    (id: string, text: string) => {
-      const el = elements.find((e) => e.id === id) as CommentElement | undefined
-      if (!el) return
-      const messages = [...(el.data.messages || []), { author: 'You', text, timestamp: Date.now() }]
-      handleElementUpdate({ id, data: { ...el.data, messages } })
-    },
-    [elements, handleElementUpdate],
+  const handleContextMenu = useCallback(
+    (id: string, x: number, y: number) => setCtxMenu({ x, y, elementId: id }),
+    [],
   )
 
   const handleShare = useCallback(async () => {
@@ -597,16 +610,15 @@ export default function BoardPage() {
           onTextChange={handleStickyTextChange}
           onFocusChange={setFocusedStickyId}
           onPositionChange={(id, x, y) => handleElementUpdate({ id, position: { x, y } })}
+          onContextMenu={handleContextMenu}
         />
 
         <CommentOverlay
           comments={commentElements}
           viewport={viewportState}
-          focusedId={focusedCommentId}
-          onTitleChange={handleCommentTitleChange}
-          onAddMessage={handleAddMessage}
-          onFocusChange={setFocusedCommentId}
+          onTextChange={handleCommentTextChange}
           onPositionChange={(id, x, y) => handleElementUpdate({ id, position: { x, y } })}
+          onContextMenu={handleContextMenu}
         />
 
         <TextOverlay
@@ -616,6 +628,7 @@ export default function BoardPage() {
           onTextChange={handleTextTextChange}
           onFocusChange={setFocusedTextId}
           onPositionChange={(id, x, y) => handleElementUpdate({ id, position: { x, y } })}
+          onContextMenu={handleContextMenu}
         />
 
       </div>
@@ -651,6 +664,30 @@ export default function BoardPage() {
 
       {/* Undo / Redo — bottom center */}
       <BottomBar undoManager={undoManager} />
+
+      {/* Context menu — rendered when right-clicking an element */}
+      {ctxMenu && (
+        <CanvasContextMenu
+          x={ctxMenu.x}
+          y={ctxMenu.y}
+          element={elements.find((e) => e.id === ctxMenu.elementId) ?? null}
+          onClose={() => setCtxMenu(null)}
+          onDelete={() => {
+            handleElementDelete([ctxMenu.elementId])
+            setCtxMenu(null)
+          }}
+          onColorChange={(color) => {
+            const el = elements.find((e) => e.id === ctxMenu.elementId)
+            if (!el) return
+            if (el.type === 'sticky') {
+              handleElementUpdate({ id: el.id, data: { ...el.data, color: color as import('@whiteboard/shared').StickyColor } })
+            } else {
+              handleElementUpdate({ id: el.id, changes: { style: { ...el.style, color } } })
+            }
+            setCtxMenu(null)
+          }}
+        />
+      )}
     </>
   )
 }

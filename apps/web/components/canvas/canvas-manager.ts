@@ -11,6 +11,7 @@ export interface CanvasManagerCallbacks {
   onElementSelect?: (ids: string[]) => void
   onElementDelete?: (ids: string[]) => void
   onViewportChange?: () => void
+  onContextMenu?: (id: string, x: number, y: number) => void
 }
 
 export class CanvasManager {
@@ -49,6 +50,7 @@ export class CanvasManager {
         this.renderer?.markDirty()
         this.callbacks.onViewportChange?.()
       },
+      onContextMenu: (id, x, y) => this.callbacks.onContextMenu?.(id, x, y),
     }
 
     this.inputHandler = new InputHandler(canvasElement, this.viewport, inputCallbacks)
@@ -174,6 +176,10 @@ export class CanvasManager {
 
   onViewportChange(cb: CanvasManagerCallbacks["onViewportChange"]): void {
     this.callbacks.onViewportChange = cb
+  }
+
+  onContextMenu(cb: (id: string, x: number, y: number) => void): void {
+    this.callbacks.onContextMenu = cb
   }
 
   resize(width: number, height: number): void {

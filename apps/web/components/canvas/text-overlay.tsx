@@ -16,6 +16,7 @@ interface TextOverlayProps {
   onTextChange: (id: string, text: string) => void
   onFocusChange: (id: string | null) => void
   onPositionChange: (id: string, x: number, y: number) => void
+  onContextMenu?: (id: string, x: number, y: number) => void
 }
 
 function TextBox({
@@ -25,6 +26,7 @@ function TextBox({
   onTextChange,
   onFocusChange,
   onPositionChange,
+  onContextMenu,
 }: {
   text: TextElement
   viewport: ViewportSnapshot
@@ -32,6 +34,7 @@ function TextBox({
   onTextChange: (id: string, text: string) => void
   onFocusChange: (id: string | null) => void
   onPositionChange: (id: string, x: number, y: number) => void
+  onContextMenu?: (id: string, x: number, y: number) => void
 }) {
   const divRef = useRef<HTMLDivElement>(null)
   const isFocusedRef = useRef(false)
@@ -79,6 +82,11 @@ function TextBox({
         cursor: isDragging ? "grabbing" : "default",
       }}
       onMouseDown={(e) => e.stopPropagation()}
+      onContextMenu={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        onContextMenu?.(text.id, e.clientX, e.clientY)
+      }}
       onPointerDown={(e) => {
         if (e.target === divRef.current) return
         longPressTimer.current = setTimeout(() => {
@@ -145,6 +153,7 @@ export function TextOverlay({
   onTextChange,
   onFocusChange,
   onPositionChange,
+  onContextMenu,
 }: TextOverlayProps) {
   if (texts.length === 0) return null
 
@@ -166,6 +175,7 @@ export function TextOverlay({
           onTextChange={onTextChange}
           onFocusChange={onFocusChange}
           onPositionChange={onPositionChange}
+          onContextMenu={onContextMenu}
         />
       ))}
     </div>

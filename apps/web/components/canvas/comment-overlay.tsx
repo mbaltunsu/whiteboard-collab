@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import type { CommentElement, CommentMessage } from "@whiteboard/shared"
+import type { CommentElement } from "@whiteboard/shared"
 
 interface ViewportSnapshot {
   translateX: number
@@ -12,62 +12,66 @@ interface ViewportSnapshot {
 interface CommentOverlayProps {
   comments: CommentElement[]
   viewport: ViewportSnapshot
-  focusedId: string | null
-  onTitleChange: (id: string, title: string) => void
-  onAddMessage: (id: string, text: string) => void
-  onFocusChange: (id: string | null) => void
+  onTextChange: (id: string, text: string) => void
   onPositionChange: (id: string, x: number, y: number) => void
+  onContextMenu: (id: string, x: number, y: number) => void
+}
+
+function hexToRgba(hex: string, alpha: number): string {
+  const clean = hex.replace("#", "")
+  const r = parseInt(clean.substring(0, 2), 16)
+  const g = parseInt(clean.substring(2, 4), 16)
+  const b = parseInt(clean.substring(4, 6), 16)
+  if (isNaN(r) || isNaN(g) || isNaN(b)) return `rgba(255,255,255,${alpha})`
+  return `rgba(${r},${g},${b},${alpha})`
 }
 
 function CommentCard({
   comment,
   viewport,
-  focused,
-  onTitleChange,
-  onAddMessage,
-  onFocusChange,
+  onTextChange,
   onPositionChange,
+  onContextMenu,
 }: {
   comment: CommentElement
   viewport: ViewportSnapshot
-  focused: boolean
-  onTitleChange: (id: string, title: string) => void
-  onAddMessage: (id: string, text: string) => void
-  onFocusChange: (id: string | null) => void
+  onTextChange: (id: string, text: string) => void
   onPositionChange: (id: string, x: number, y: number) => void
+  onContextMenu: (id: string, x: number, y: number) => void
 }) {
-  const titleRef = useRef<HTMLDivElement>(null)
-  const isFocusedRef = useRef(false)
+  const contentRef = useRef<HTMLDivElement>(null)
   const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null)
-  const [replyText, setReplyText] = useState("")
+  const [isEditing, setIsEditing] = useState(false)
   const { translateX, translateY, scale } = viewport
 
   const screenX = comment.position.x * scale + translateX
   const screenY = comment.position.y * scale + translateY
-  const screenW = comment.size.w * scale
-  const screenH = comment.size.h * scale
-  const fontSize = Math.max(11, 13 * scale)
-  const padding = Math.max(6, 8 * scale)
 
-  // Sync title content when not focused
-  useEffect(() => {
-    if (titleRef.current && !isFocusedRef.current) {
-      titleRef.current.innerText = comment.data.title || ""
-    }
-  }, [comment.data.title])
+  const bgColor = comment.style?.color
+    ? hexToRgba(comment.style.color, 0.55)
+    : "rgba(255,255,255,0.6)"
 
-  // Auto-focus on creation
+  // Sync content when not editing
   useEffect(() => {
-    if (focused && titleRef.current) {
-      titleRef.current.focus()
-      const range = document.createRange()
-      const sel = window.getSelection()
-      range.selectNodeContents(titleRef.current)
-      range.collapse(false)
-      sel?.removeAllRanges()
-      sel?.addRange(range)
+    if (contentRef.current && !isEditing) {
+      contentRef.current.innerText = comment.data.title || ""
     }
-  }, [focused])
+  }, [comment.data.title, isEditing])
+
+  const handleDoubleClick = () => {
+    setIsEditing(true)
+    setTimeout(() => {
+      if (contentRef.current) {
+        contentRef.current.focus()
+        const range = document.createRange()
+        const sel = window.getSelection()
+        range.selectNodeContents(contentRef.current)
+        range.collapse(false)
+        sel?.removeAllRanges()
+        sel?.addRange(range)
+      }
+    }, 0)
+  }
 
   return (
     <div
@@ -75,23 +79,28 @@ function CommentCard({
         position: "absolute",
         left: screenX,
         top: screenY,
-        width: Math.max(180, screenW),
-        minHeight: Math.max(80, screenH),
-        border: "1.5px solid rgba(124, 92, 191, 0.45)",
-        borderRadius: 8,
-        boxShadow: focused
-          ? "0 4px 20px rgba(124, 92, 191, 0.18)"
-          : "0 2px 12px rgba(0,0,0,0.08)",
-        background: "rgba(255,255,255,0.05)",
-        backdropFilter: "blur(2px)",
+        minWidth: 160,
+        maxWidth: 240,
+        background: bgColor,
+        border: "1px solid rgba(255,255,255,0.35)",
+        borderRadius: 12,
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
         pointerEvents: "auto",
-        zIndex: focused ? 10000 : 9000,
+        zIndex: 9000,
+        cursor: isEditing ? "text" : "default",
       }}
       onMouseDown={(e) => e.stopPropagation()}
-      onClick={() => onFocusChange(comment.id)}
+      onDoubleClick={handleDoubleClick}
+      onContextMenu={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        onContextMenu(comment.id, e.clientX, e.clientY)
+      }}
     >
       {/* Drag handle strip */}
       <div
@@ -113,7 +122,6 @@ function CommentCard({
         }}
         onPointerMove={(e) => {
           if (!dragRef.current) return
-          const { scale } = viewport
           const nx = dragRef.current.origX + (e.clientX - dragRef.current.startX) / scale
           const ny = dragRef.current.origY + (e.clientY - dragRef.current.startY) / scale
           onPositionChange(comment.id, nx, ny)
@@ -121,70 +129,28 @@ function CommentCard({
         onPointerUp={() => { dragRef.current = null }}
         onPointerCancel={() => { dragRef.current = null }}
       />
-      {/* Title */}
+
+      {/* Content */}
       <div
-        ref={titleRef}
-        contentEditable
+        ref={contentRef}
+        contentEditable={isEditing ? "true" : "false"}
         suppressContentEditableWarning
-        onInput={(e) => onTitleChange(comment.id, (e.target as HTMLDivElement).innerText)}
-        onFocus={() => { isFocusedRef.current = true; onFocusChange(comment.id) }}
-        onBlur={() => { isFocusedRef.current = false }}
+        onInput={(e) => onTextChange(comment.id, (e.target as HTMLDivElement).innerText)}
+        onBlur={() => setIsEditing(false)}
         data-placeholder="Add a comment..."
         style={{
-          padding,
-          fontSize,
+          padding: "8px 10px",
+          fontSize: 13,
           fontWeight: 500,
           color: "#3d2869",
           fontFamily: "Inter, sans-serif",
           outline: "none",
-          minHeight: padding * 3,
+          minHeight: 36,
           wordBreak: "break-word",
           whiteSpace: "pre-wrap",
+          cursor: isEditing ? "text" : "default",
         }}
       />
-
-      {/* Thread section — shown when focused */}
-      {focused && (
-        <div
-          style={{
-            background: "rgba(255,255,255,0.85)",
-            borderTop: "1px solid rgba(124,92,191,0.15)",
-            padding: padding * 0.75,
-            display: "flex",
-            flexDirection: "column",
-            gap: 4,
-          }}
-        >
-          {comment.data.messages.map((msg: CommentMessage, i: number) => (
-            <div key={i} style={{ fontSize: Math.max(10, 11 * scale), color: "#555" }}>
-              <span style={{ fontWeight: 600, color: "#3d2869" }}>{msg.author}: </span>
-              {msg.text}
-            </div>
-          ))}
-          <input
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && replyText.trim()) {
-                onAddMessage(comment.id, replyText.trim())
-                setReplyText("")
-              }
-            }}
-            placeholder="Reply..."
-            style={{
-              marginTop: 4,
-              padding: "4px 6px",
-              fontSize: Math.max(10, 11 * scale),
-              border: "1px solid rgba(124,92,191,0.3)",
-              borderRadius: 4,
-              outline: "none",
-              background: "white",
-              color: "#3d2869",
-              fontFamily: "Inter, sans-serif",
-            }}
-          />
-        </div>
-      )}
     </div>
   )
 }
@@ -192,11 +158,9 @@ function CommentCard({
 export function CommentOverlay({
   comments,
   viewport,
-  focusedId,
-  onTitleChange,
-  onAddMessage,
-  onFocusChange,
+  onTextChange,
   onPositionChange,
+  onContextMenu,
 }: CommentOverlayProps) {
   if (comments.length === 0) return null
 
@@ -214,11 +178,9 @@ export function CommentOverlay({
           key={c.id}
           comment={c}
           viewport={viewport}
-          focused={focusedId === c.id}
-          onTitleChange={onTitleChange}
-          onAddMessage={onAddMessage}
-          onFocusChange={onFocusChange}
+          onTextChange={onTextChange}
           onPositionChange={onPositionChange}
+          onContextMenu={onContextMenu}
         />
       ))}
     </div>

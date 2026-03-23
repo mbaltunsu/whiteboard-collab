@@ -32,6 +32,7 @@ export interface InputCallbacks {
   onElementSelect: (ids: string[]) => void
   onElementDelete: (ids: string[]) => void
   onViewportChange: () => void
+  onContextMenu?: (id: string, x: number, y: number) => void
 }
 
 interface DragState {
@@ -605,6 +606,12 @@ export class InputHandler {
 
   private onContextMenu = (e: MouseEvent): void => {
     e.preventDefault()
+    const canvas = this.viewport.screenToCanvas(e.offsetX, e.offsetY)
+    const sorted = [...this.elements].sort((a, b) => b.zIndex - a.zIndex)
+    const hit = sorted.find((el) => hitTest(el, canvas.x, canvas.y))
+    if (hit) {
+      this.callbacks.onContextMenu?.(hit.id, e.clientX, e.clientY)
+    }
   }
 
   private bindEvents(): void {

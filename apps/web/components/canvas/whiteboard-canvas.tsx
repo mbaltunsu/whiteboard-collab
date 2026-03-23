@@ -28,6 +28,7 @@ export interface WhiteboardCanvasProps {
   onElementDelete?: (ids: string[]) => void
   onViewportChange?: () => void
   onViewportSnapshot?: (v: { translateX: number; translateY: number; scale: number }) => void
+  onContextMenu?: (id: string, x: number, y: number) => void
   className?: string
 }
 
@@ -47,6 +48,7 @@ export const WhiteboardCanvas = forwardRef<WhiteboardCanvasHandle, WhiteboardCan
       onElementDelete,
       onViewportChange,
       onViewportSnapshot,
+      onContextMenu,
       className,
     },
     ref
@@ -80,6 +82,7 @@ export const WhiteboardCanvas = forwardRef<WhiteboardCanvasHandle, WhiteboardCan
           onViewportSnapshot({ translateX: vp.translateX, translateY: vp.translateY, scale: vp.scale })
         }
       })
+      if (onContextMenu) manager.onContextMenu(onContextMenu)
 
       manager.init(canvas)
 
@@ -106,6 +109,10 @@ export const WhiteboardCanvas = forwardRef<WhiteboardCanvasHandle, WhiteboardCan
     useEffect(() => {
       if (onElementDelete) managerRef.current?.onElementDelete(onElementDelete)
     }, [onElementDelete])
+
+    useEffect(() => {
+      if (onContextMenu) managerRef.current?.onContextMenu(onContextMenu)
+    }, [onContextMenu])
 
     // Sync elements
     useEffect(() => {

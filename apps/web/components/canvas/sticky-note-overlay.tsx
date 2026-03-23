@@ -16,6 +16,7 @@ interface StickyNoteOverlayProps {
   onTextChange: (id: string, text: string) => void
   onFocusChange: (id: string | null) => void
   onPositionChange: (id: string, x: number, y: number) => void
+  onContextMenu?: (id: string, x: number, y: number) => void
 }
 
 const STICKY_STYLES: Record<string, { bg: string; border: string; text: string }> = {
@@ -33,6 +34,7 @@ function StickyNote({
   onTextChange,
   onFocusChange,
   onPositionChange,
+  onContextMenu,
 }: {
   sticky: StickyNoteElement
   viewport: ViewportSnapshot
@@ -40,6 +42,7 @@ function StickyNote({
   onTextChange: (id: string, text: string) => void
   onFocusChange: (id: string | null) => void
   onPositionChange: (id: string, x: number, y: number) => void
+  onContextMenu?: (id: string, x: number, y: number) => void
 }) {
   const divRef = useRef<HTMLDivElement>(null)
   const isFocusedRef = useRef(false)
@@ -96,6 +99,11 @@ function StickyNote({
         pointerEvents: "auto",
       }}
       onMouseDown={(e) => e.stopPropagation()}
+      onContextMenu={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        onContextMenu?.(sticky.id, e.clientX, e.clientY)
+      }}
     >
       {/* Header strip */}
       <div
@@ -160,6 +168,7 @@ export function StickyNoteOverlay({
   onTextChange,
   onFocusChange,
   onPositionChange,
+  onContextMenu,
 }: StickyNoteOverlayProps) {
   if (stickies.length === 0) return null
 
@@ -181,6 +190,7 @@ export function StickyNoteOverlay({
           onTextChange={onTextChange}
           onFocusChange={onFocusChange}
           onPositionChange={onPositionChange}
+          onContextMenu={onContextMenu}
         />
       ))}
     </div>
