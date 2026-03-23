@@ -333,7 +333,7 @@ export default function BoardPage() {
 
   const { remoteCursors, remoteUsers } = usePresence()
 
-  const { activeTool, activeShapeType, strokeColor, strokeWidth, fillColor, setSelectedElementIds } = useUIStore()
+  const { activeTool, activeShapeType, strokeColor, strokeWidth, fillColor, setSelectedElementIds, setActiveTool } = useUIStore()
 
   const canvasRef = useRef<WhiteboardCanvasHandle>(null)
   const [viewportState, setViewportState] = useState({ translateX: 0, translateY: 0, scale: 1 })
@@ -341,6 +341,13 @@ export default function BoardPage() {
   const [focusedCommentId, setFocusedCommentId] = useState<string | null>(null)
   const [focusedTextId, setFocusedTextId] = useState<string | null>(null)
   const [shareCopied, setShareCopied] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   // Redirect unauthenticated users (layout handles server-side, this guards
   // client-side hydration races)
@@ -383,7 +390,7 @@ export default function BoardPage() {
         doc.transact(() => {
           const yEl = new Y.Map<unknown>()
           const el = payload.element
-          const id = crypto.randomUUID()
+          const id = (payload as ElementCreatePayload & { id: string }).id
 
           yEl.set('id', id)
           yEl.set('type', el.type)
@@ -408,9 +415,12 @@ export default function BoardPage() {
           if (el.type === 'text') {
             setTimeout(() => setFocusedTextId(id), 50)
           }
+          if (el.type === 'sticky' || el.type === 'comment' || el.type === 'text') {
+            setActiveTool('select')
+          }
         })
       },
-    [elementsMap, doc, session?.user?.userId],
+    [elementsMap, doc, session?.user?.userId, setActiveTool],
   )
 
   const handleElementUpdate = useMemo(
@@ -625,8 +635,8 @@ export default function BoardPage() {
         role="toolbar"
         aria-label="Drawing options"
       >
-        <ColorPicker showFill />
-        <StrokeWidthPicker />
+        <ColorPicker showFill side={isMobile ? 'top' : 'right'} />
+        <StrokeWidthPicker side={isMobile ? 'top' : 'right'} />
       </div>
 
       {/* Zoom controls — bottom right (self-positioned via fixed) */}

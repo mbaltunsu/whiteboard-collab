@@ -90,6 +90,23 @@ export const WhiteboardCanvas = forwardRef<WhiteboardCanvasHandle, WhiteboardCan
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    // Keep callbacks current when Yjs initialises (avoids stale closure at mount)
+    useEffect(() => {
+      if (onElementCreate) managerRef.current?.onElementCreate(onElementCreate)
+    }, [onElementCreate])
+
+    useEffect(() => {
+      if (onElementUpdate) managerRef.current?.onElementUpdate(onElementUpdate)
+    }, [onElementUpdate])
+
+    useEffect(() => {
+      if (onElementSelect) managerRef.current?.onElementSelect(onElementSelect)
+    }, [onElementSelect])
+
+    useEffect(() => {
+      if (onElementDelete) managerRef.current?.onElementDelete(onElementDelete)
+    }, [onElementDelete])
+
     // Sync elements
     useEffect(() => {
       managerRef.current?.setElements(elements)
