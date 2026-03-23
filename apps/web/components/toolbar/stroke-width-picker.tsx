@@ -10,7 +10,11 @@ import { Slider } from '@/components/ui/slider'
 
 const PRESET_WIDTHS = [1, 2, 4, 8] as const
 
-export function StrokeWidthPicker() {
+interface StrokeWidthPickerProps {
+  side?: 'top' | 'right' | 'bottom' | 'left'
+}
+
+export function StrokeWidthPicker({ side = 'right' }: StrokeWidthPickerProps) {
   const { strokeWidth, setStrokeWidth, strokeColor } = useUIStore()
 
   return (
@@ -32,7 +36,7 @@ export function StrokeWidthPicker() {
         }
       />
       <PopoverContent
-        side="right"
+        side={side}
         align="center"
         sideOffset={8}
         className="w-56 p-4 rounded-[var(--wb-radius-xl)] wb-glass wb-shadow-ambient border-[var(--wb-ghost-border)]"

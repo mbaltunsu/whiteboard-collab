@@ -17,9 +17,10 @@ const STROKE_COLORS = [
 
 interface ColorPickerProps {
   showFill?: boolean
+  side?: 'top' | 'right' | 'bottom' | 'left'
 }
 
-export function ColorPicker({ showFill = false }: ColorPickerProps) {
+export function ColorPicker({ showFill = false, side = 'right' }: ColorPickerProps) {
   const { strokeColor, setStrokeColor, fillColor, setFillColor } = useUIStore()
 
   return (
@@ -41,7 +42,7 @@ export function ColorPicker({ showFill = false }: ColorPickerProps) {
         }
       />
       <PopoverContent
-        side="right"
+        side={side}
         align="center"
         sideOffset={8}
         className="w-auto p-3 rounded-[var(--wb-radius-xl)] wb-glass wb-shadow-ambient border-[var(--wb-ghost-border)]"
