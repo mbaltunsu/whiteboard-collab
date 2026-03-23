@@ -82,6 +82,8 @@ export class InputHandler {
   private moveStartElementPos: { x: number; y: number } | null = null
   private boxSelectStart: { x: number; y: number } | null = null
   private selectedIds: string[] = []
+  private mouseX = 0
+  private mouseY = 0
   private pinchStartDist: number | null = null
   private pinchLastMidX: number = 0
   private pinchLastMidY: number = 0
@@ -211,6 +213,18 @@ export class InputHandler {
   }
 
   private onMouseMove = (e: MouseEvent): void => {
+    const dx = e.offsetX - this.mouseX
+    const dy = e.offsetY - this.mouseY
+    this.mouseX = e.offsetX
+    this.mouseY = e.offsetY
+
+    // Middle button (buttons & 4) or right button (buttons & 2) → pan
+    if (e.buttons & 4 || e.buttons & 2) {
+      this.viewport.pan(dx, dy)
+      this.callbacks.onViewportChange()
+      return
+    }
+
     if (!this.isPointerDown) return
 
     const canvas = this.viewport.screenToCanvas(e.offsetX, e.offsetY)
@@ -589,8 +603,13 @@ export class InputHandler {
     this.onMouseUp(syntheticEvent)
   }
 
+  private onContextMenu = (e: MouseEvent): void => {
+    e.preventDefault()
+  }
+
   private bindEvents(): void {
     this.canvas.addEventListener("mousedown", this.onMouseDown)
+    this.canvas.addEventListener("contextmenu", this.onContextMenu)
     this.canvas.addEventListener("mousemove", this.onMouseMove)
     this.canvas.addEventListener("mousemove", this.onMouseMoveGlobal)
     this.canvas.addEventListener("mouseup", this.onMouseUp)
@@ -603,6 +622,7 @@ export class InputHandler {
 
   destroy(): void {
     this.canvas.removeEventListener("mousedown", this.onMouseDown)
+    this.canvas.removeEventListener("contextmenu", this.onContextMenu)
     this.canvas.removeEventListener("mousemove", this.onMouseMove)
     this.canvas.removeEventListener("mousemove", this.onMouseMoveGlobal)
     this.canvas.removeEventListener("mouseup", this.onMouseUp)

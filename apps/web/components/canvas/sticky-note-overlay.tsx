@@ -15,6 +15,7 @@ interface StickyNoteOverlayProps {
   focusedId: string | null
   onTextChange: (id: string, text: string) => void
   onFocusChange: (id: string | null) => void
+  onPositionChange: (id: string, x: number, y: number) => void
 }
 
 const STICKY_STYLES: Record<string, { bg: string; border: string; text: string }> = {
@@ -31,15 +32,18 @@ function StickyNote({
   focused,
   onTextChange,
   onFocusChange,
+  onPositionChange,
 }: {
   sticky: StickyNoteElement
   viewport: ViewportSnapshot
   focused: boolean
   onTextChange: (id: string, text: string) => void
   onFocusChange: (id: string | null) => void
+  onPositionChange: (id: string, x: number, y: number) => void
 }) {
   const divRef = useRef<HTMLDivElement>(null)
   const isFocusedRef = useRef(false)
+  const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null)
   const { translateX, translateY, scale } = viewport
   const { x, y } = sticky.position
   const { w, h } = sticky.size
@@ -101,6 +105,25 @@ function StickyNote({
           flexShrink: 0,
           cursor: "move",
         }}
+        onPointerDown={(e) => {
+          e.stopPropagation()
+          e.currentTarget.setPointerCapture(e.pointerId)
+          dragRef.current = {
+            startX: e.clientX,
+            startY: e.clientY,
+            origX: sticky.position.x,
+            origY: sticky.position.y,
+          }
+        }}
+        onPointerMove={(e) => {
+          if (!dragRef.current) return
+          const { scale } = viewport
+          const nx = dragRef.current.origX + (e.clientX - dragRef.current.startX) / scale
+          const ny = dragRef.current.origY + (e.clientY - dragRef.current.startY) / scale
+          onPositionChange(sticky.id, nx, ny)
+        }}
+        onPointerUp={() => { dragRef.current = null }}
+        onPointerCancel={() => { dragRef.current = null }}
       />
       {/* Text area */}
       <div
@@ -136,6 +159,7 @@ export function StickyNoteOverlay({
   focusedId,
   onTextChange,
   onFocusChange,
+  onPositionChange,
 }: StickyNoteOverlayProps) {
   if (stickies.length === 0) return null
 
@@ -156,6 +180,7 @@ export function StickyNoteOverlay({
           focused={focusedId === sticky.id}
           onTextChange={onTextChange}
           onFocusChange={onFocusChange}
+          onPositionChange={onPositionChange}
         />
       ))}
     </div>

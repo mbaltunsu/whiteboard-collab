@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { TextElement } from "@whiteboard/shared"
 
 interface ViewportSnapshot {
@@ -15,6 +15,7 @@ interface TextOverlayProps {
   focusedId: string | null
   onTextChange: (id: string, text: string) => void
   onFocusChange: (id: string | null) => void
+  onPositionChange: (id: string, x: number, y: number) => void
 }
 
 function TextBox({
@@ -23,15 +24,20 @@ function TextBox({
   focused,
   onTextChange,
   onFocusChange,
+  onPositionChange,
 }: {
   text: TextElement
   viewport: ViewportSnapshot
   focused: boolean
   onTextChange: (id: string, text: string) => void
   onFocusChange: (id: string | null) => void
+  onPositionChange: (id: string, x: number, y: number) => void
 }) {
   const divRef = useRef<HTMLDivElement>(null)
   const isFocusedRef = useRef(false)
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
   const { translateX, translateY, scale } = viewport
 
   const screenX = text.position.x * scale + translateX
@@ -70,8 +76,39 @@ function TextBox({
         minHeight: screenH,
         zIndex: 99999,
         pointerEvents: "auto",
+        cursor: isDragging ? "grabbing" : "default",
       }}
       onMouseDown={(e) => e.stopPropagation()}
+      onPointerDown={(e) => {
+        if (e.target === divRef.current) return
+        longPressTimer.current = setTimeout(() => {
+          setIsDragging(true)
+          e.currentTarget.setPointerCapture(e.pointerId)
+          dragRef.current = {
+            startX: e.clientX,
+            startY: e.clientY,
+            origX: text.position.x,
+            origY: text.position.y,
+          }
+        }, 200)
+      }}
+      onPointerMove={(e) => {
+        if (!isDragging || !dragRef.current) return
+        const { scale } = viewport
+        const nx = dragRef.current.origX + (e.clientX - dragRef.current.startX) / scale
+        const ny = dragRef.current.origY + (e.clientY - dragRef.current.startY) / scale
+        onPositionChange(text.id, nx, ny)
+      }}
+      onPointerUp={() => {
+        if (longPressTimer.current) clearTimeout(longPressTimer.current)
+        setIsDragging(false)
+        dragRef.current = null
+      }}
+      onPointerCancel={() => {
+        if (longPressTimer.current) clearTimeout(longPressTimer.current)
+        setIsDragging(false)
+        dragRef.current = null
+      }}
     >
       <div
         ref={divRef}
@@ -107,6 +144,7 @@ export function TextOverlay({
   focusedId,
   onTextChange,
   onFocusChange,
+  onPositionChange,
 }: TextOverlayProps) {
   if (texts.length === 0) return null
 
@@ -127,6 +165,7 @@ export function TextOverlay({
           focused={focusedId === t.id}
           onTextChange={onTextChange}
           onFocusChange={onFocusChange}
+          onPositionChange={onPositionChange}
         />
       ))}
     </div>

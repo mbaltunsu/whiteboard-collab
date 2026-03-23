@@ -16,6 +16,7 @@ interface CommentOverlayProps {
   onTitleChange: (id: string, title: string) => void
   onAddMessage: (id: string, text: string) => void
   onFocusChange: (id: string | null) => void
+  onPositionChange: (id: string, x: number, y: number) => void
 }
 
 function CommentCard({
@@ -25,6 +26,7 @@ function CommentCard({
   onTitleChange,
   onAddMessage,
   onFocusChange,
+  onPositionChange,
 }: {
   comment: CommentElement
   viewport: ViewportSnapshot
@@ -32,9 +34,11 @@ function CommentCard({
   onTitleChange: (id: string, title: string) => void
   onAddMessage: (id: string, text: string) => void
   onFocusChange: (id: string | null) => void
+  onPositionChange: (id: string, x: number, y: number) => void
 }) {
   const titleRef = useRef<HTMLDivElement>(null)
   const isFocusedRef = useRef(false)
+  const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null)
   const [replyText, setReplyText] = useState("")
   const { translateX, translateY, scale } = viewport
 
@@ -89,6 +93,34 @@ function CommentCard({
       onMouseDown={(e) => e.stopPropagation()}
       onClick={() => onFocusChange(comment.id)}
     >
+      {/* Drag handle strip */}
+      <div
+        style={{
+          height: 8,
+          background: "rgba(124, 92, 191, 0.35)",
+          cursor: "move",
+          flexShrink: 0,
+        }}
+        onPointerDown={(e) => {
+          e.stopPropagation()
+          e.currentTarget.setPointerCapture(e.pointerId)
+          dragRef.current = {
+            startX: e.clientX,
+            startY: e.clientY,
+            origX: comment.position.x,
+            origY: comment.position.y,
+          }
+        }}
+        onPointerMove={(e) => {
+          if (!dragRef.current) return
+          const { scale } = viewport
+          const nx = dragRef.current.origX + (e.clientX - dragRef.current.startX) / scale
+          const ny = dragRef.current.origY + (e.clientY - dragRef.current.startY) / scale
+          onPositionChange(comment.id, nx, ny)
+        }}
+        onPointerUp={() => { dragRef.current = null }}
+        onPointerCancel={() => { dragRef.current = null }}
+      />
       {/* Title */}
       <div
         ref={titleRef}
@@ -164,6 +196,7 @@ export function CommentOverlay({
   onTitleChange,
   onAddMessage,
   onFocusChange,
+  onPositionChange,
 }: CommentOverlayProps) {
   if (comments.length === 0) return null
 
@@ -185,6 +218,7 @@ export function CommentOverlay({
           onTitleChange={onTitleChange}
           onAddMessage={onAddMessage}
           onFocusChange={onFocusChange}
+          onPositionChange={onPositionChange}
         />
       ))}
     </div>

@@ -596,6 +596,7 @@ export default function BoardPage() {
           focusedId={focusedStickyId}
           onTextChange={handleStickyTextChange}
           onFocusChange={setFocusedStickyId}
+          onPositionChange={(id, x, y) => handleElementUpdate({ id, position: { x, y } })}
         />
 
         <CommentOverlay
@@ -605,6 +606,7 @@ export default function BoardPage() {
           onTitleChange={handleCommentTitleChange}
           onAddMessage={handleAddMessage}
           onFocusChange={setFocusedCommentId}
+          onPositionChange={(id, x, y) => handleElementUpdate({ id, position: { x, y } })}
         />
 
         <TextOverlay
@@ -613,6 +615,7 @@ export default function BoardPage() {
           focusedId={focusedTextId}
           onTextChange={handleTextTextChange}
           onFocusChange={setFocusedTextId}
+          onPositionChange={(id, x, y) => handleElementUpdate({ id, position: { x, y } })}
         />
 
       </div>
