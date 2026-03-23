@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 WORKDIR /app
 
 COPY package.json package-lock.json turbo.json tsconfig.base.json ./
@@ -14,7 +14,7 @@ RUN cd packages/shared && npx tsc
 # Build ws-server → apps/ws-server/dist/
 RUN npm run build --workspace=apps/ws-server
 
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
