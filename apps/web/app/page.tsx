@@ -17,112 +17,73 @@ function HeroIllustration() {
   return (
     <div className="hero-illustration" aria-hidden="true">
       {/* Dot-grid canvas surface */}
-      <svg
-        className="canvas-grid"
-        width="100%"
-        height="100%"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg className="canvas-grid" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern
-            id="dot-grid"
-            x="0"
-            y="0"
-            width="24"
-            height="24"
-            patternUnits="userSpaceOnUse"
-          >
+          <pattern id="dot-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
             <circle cx="1" cy="1" r="1" style={{ fill: 'var(--wb-outline-variant-alpha-25)' }} />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dot-grid)" />
       </svg>
 
-      {/* Rough-style sticky notes */}
-      <div className="sketch-note note-orange">Ship it!</div>
-      <div className="sketch-note note-blue">CRDT sync</div>
-      <div className="sketch-note note-green">Live cursors</div>
+      {/* Flow diagram: Idea → Design → Build → Ship */}
+      <div className="flow-node flow-idea">Idea</div>
+      <svg className="flow-arrow flow-arrow-1" width="48" height="24" viewBox="0 0 48 24" fill="none">
+        <path d="M 2 12 L 38 12" strokeWidth="2" strokeLinecap="round" style={{ stroke: 'var(--wb-outline-variant)' }} />
+        <path d="M 34 6 L 44 12 L 34 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" style={{ stroke: 'var(--wb-outline-variant)' }} />
+      </svg>
+      <div className="flow-node flow-design">Design</div>
+      <svg className="flow-arrow flow-arrow-2" width="48" height="24" viewBox="0 0 48 24" fill="none">
+        <path d="M 2 12 L 38 12" strokeWidth="2" strokeLinecap="round" style={{ stroke: 'var(--wb-outline-variant)' }} />
+        <path d="M 34 6 L 44 12 L 34 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" style={{ stroke: 'var(--wb-outline-variant)' }} />
+      </svg>
+      <div className="flow-node flow-build">Build</div>
+      <svg className="flow-arrow flow-arrow-3" width="48" height="24" viewBox="0 0 48 24" fill="none">
+        <path d="M 2 12 L 38 12" strokeWidth="2" strokeLinecap="round" style={{ stroke: 'var(--wb-outline-variant)' }} />
+        <path d="M 34 6 L 44 12 L 34 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" style={{ stroke: 'var(--wb-outline-variant)' }} />
+      </svg>
+      <div className="flow-node flow-ship">Ship</div>
 
-      {/* Rough-style rectangle shape */}
-      <svg
-        className="sketch-shape"
-        width="160"
-        height="90"
-        viewBox="0 0 160 90"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      {/* "Sprint 1" sticky note top-left */}
+      <div className="sketch-note note-orange">Sprint 1</div>
+
+      {/* "User Flow" framed rectangle top-right */}
+      <div className="frame-label">User Flow</div>
+      <svg className="sketch-frame" width="140" height="80" viewBox="0 0 140 80" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
-          d="M 4 6 Q 6 3 12 4 L 148 2 Q 154 3 156 8 L 157 82 Q 156 88 150 87 L 10 88 Q 4 87 3 81 Z"
+          d="M 4 6 Q 6 3 10 4 L 130 3 Q 136 4 136 8 L 137 72 Q 136 78 130 77 L 10 78 Q 4 77 3 72 Z"
           strokeWidth="2"
           strokeLinejoin="round"
           style={{ stroke: 'var(--wb-primary)', fill: 'var(--wb-primary-alpha-08)' }}
         />
       </svg>
 
-      {/* Arrow connector sketch */}
-      <svg
-        className="sketch-arrow"
-        width="120"
-        height="40"
-        viewBox="0 0 120 40"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      {/* Freehand underline under "User Flow" */}
+      <svg className="sketch-underline" width="110" height="12" viewBox="0 0 110 12" fill="none">
         <path
-          d="M 2 20 Q 40 18 80 22 Q 100 23 112 20"
-          strokeWidth="2"
-          strokeLinecap="round"
-          fill="none"
-          style={{ stroke: 'var(--wb-secondary)' }}
-        />
-        <path
-          d="M 104 14 L 116 20 L 104 26"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-          style={{ stroke: 'var(--wb-secondary)' }}
-        />
-      </svg>
-
-      {/* Freehand scribble line */}
-      <svg
-        className="sketch-scribble"
-        width="200"
-        height="60"
-        viewBox="0 0 200 60"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M 4 30 Q 20 10 40 32 Q 60 54 80 28 Q 100 4 120 30 Q 140 56 160 26 Q 180 2 196 30"
+          d="M 2 8 Q 30 3 55 7 Q 80 11 108 5"
           strokeWidth="2.5"
           strokeLinecap="round"
           fill="none"
-          opacity="0.7"
           style={{ stroke: 'var(--wb-tertiary-container)' }}
         />
       </svg>
 
+      {/* Checklist sticky near center-bottom */}
+      <div className="sketch-note note-checklist">
+        <span style={{ opacity: 0.6 }}>✓</span> Auth flow<br />
+        <span style={{ opacity: 0.6 }}>✓</span> Canvas engine<br />
+        <span>○</span> Presence
+      </div>
+
       {/* Cursor presence indicators */}
       <div className="cursor-presence cursor-a">
         <div className="cursor-dot" style={{ background: 'var(--wb-primary)' }} />
-        <div className="cursor-label" style={{ background: 'var(--wb-primary)' }}>
-          Alice
-        </div>
+        <div className="cursor-label" style={{ background: 'var(--wb-primary)' }}>Alice</div>
       </div>
       <div className="cursor-presence cursor-b">
-        <div
-          className="cursor-dot"
-          style={{ background: 'var(--wb-tertiary-container)' }}
-        />
-        <div
-          className="cursor-label"
-          style={{ background: 'var(--wb-tertiary-container)', color: 'var(--wb-on-tertiary-container)' }}
-        >
-          Bob
-        </div>
+        <div className="cursor-dot" style={{ background: 'var(--wb-tertiary-container)' }} />
+        <div className="cursor-label" style={{ background: 'var(--wb-tertiary-container)', color: 'var(--wb-on-tertiary-container)' }}>Bob</div>
       </div>
 
       {/* Ambient glow blobs */}

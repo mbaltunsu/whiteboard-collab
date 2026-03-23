@@ -8,6 +8,7 @@
   background-color: var(--wb-surface);
   color: var(--wb-on-surface);
   overflow-x: hidden;
+  user-select: none;
 }
 
 /* ── Navbar ─────────────────────────────────────── */
@@ -86,7 +87,7 @@
   position: relative;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(auto, 540px) 1fr;
   align-items: center;
   gap: 3rem;
   padding: 9rem clamp(1.5rem, 5vw, 6rem) 5rem;
@@ -222,11 +223,16 @@
 /* ── Hero illustration ── */
 .hero-illustration-col {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   animation: fadeIn 0.8s 0.3s ease both;
 }
 .hero-illustration {
   position: relative;
   height: 500px;
+  max-width: 580px;
+  width: 100%;
   border-radius: var(--wb-radius-xl);
   overflow: hidden;
   background: var(--wb-surface-container-lowest);
@@ -248,43 +254,102 @@
   box-shadow: 0 2px 4px var(--wb-surface-shadow-alpha-14), 2px 3px 0 var(--wb-surface-shadow-alpha-05);
 }
 .note-orange {
-  top: 14%; left: 10%;
+  top: 8%; left: 6%;
   background: var(--wb-tertiary-container);
   color: var(--wb-on-tertiary-container);
   transform: rotate(-2.5deg);
-  animation: floatIn 0.7s 0.5s ease both;
+  animation: floatIn 0.7s 0.5s ease both, gentleFloat 4.5s 0.8s ease-in-out infinite;
 }
-.note-blue {
-  top: 44%; left: 52%;
+
+/* Flow nodes */
+.flow-node {
+  position: absolute;
+  padding: 0.5rem 1rem;
+  border-radius: var(--wb-radius-md);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px var(--wb-surface-shadow-alpha-14);
+}
+.flow-idea {
+  top: 46%; left: 5%;
   background: var(--wb-primary-alpha-20);
   color: var(--wb-on-primary-container);
-  transform: rotate(1.5deg);
-  animation: floatIn 0.7s 0.7s ease both;
-  backdrop-filter: blur(8px);
   border: 1px solid var(--wb-primary-alpha-30);
+  animation: floatIn 0.7s 0.4s ease both, gentleFloat 5s 1s ease-in-out infinite;
 }
-.note-green {
-  bottom: 18%; left: 18%;
-  background: var(--wb-sticky-green-bg);
-  color: var(--wb-sticky-green-text);
-  transform: rotate(-1deg);
+.flow-design {
+  top: 46%; left: 24%;
+  background: var(--wb-surface-container-low);
+  color: var(--wb-on-surface);
+  border: 1px solid var(--wb-ghost-border);
+  animation: floatIn 0.7s 0.55s ease both, gentleFloat 5s 1.3s ease-in-out infinite;
+}
+.flow-build {
+  top: 46%; left: 47%;
+  background: var(--wb-surface-container-low);
+  color: var(--wb-on-surface);
+  border: 1px solid var(--wb-ghost-border);
+  animation: floatIn 0.7s 0.7s ease both, gentleFloat 5s 1.6s ease-in-out infinite;
+}
+.flow-ship {
+  top: 46%; left: 70%;
+  background: var(--wb-tertiary-container);
+  color: var(--wb-on-tertiary-container);
+  border: none;
+  animation: floatIn 0.7s 0.85s ease both, gentleFloat 5s 1.9s ease-in-out infinite;
+}
+
+/* Flow arrows */
+.flow-arrow {
+  position: absolute;
+  top: 48%;
+}
+.flow-arrow-1 { left: 15%; animation: floatIn 0.7s 0.5s ease both; }
+.flow-arrow-2 { left: 37%; animation: floatIn 0.7s 0.65s ease both; }
+.flow-arrow-3 { left: 60%; animation: floatIn 0.7s 0.8s ease both; }
+
+.flow-arrow path {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: drawLine 0.6s ease forwards;
+}
+.flow-arrow-1 path { animation-delay: 0.5s; }
+.flow-arrow-2 path { animation-delay: 0.65s; }
+.flow-arrow-3 path { animation-delay: 0.8s; }
+
+/* Frame and underline */
+.frame-label {
+  position: absolute;
+  top: 12%; right: 14%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--wb-primary);
+  letter-spacing: 0.04em;
+  animation: floatIn 0.7s 0.6s ease both, gentleFloat 6s 0.5s ease-in-out infinite;
+}
+.sketch-frame {
+  position: absolute;
+  top: 17%; right: 10%;
+  animation: floatIn 0.7s 0.6s ease both, gentleFloat 6s 0.5s ease-in-out infinite;
+}
+.sketch-underline {
+  position: absolute;
+  top: 33%; right: 12%;
   animation: floatIn 0.7s 0.9s ease both;
 }
-.sketch-shape {
-  position: absolute;
-  top: 30%; left: 7%;
-  animation: floatIn 0.7s 0.6s ease both;
+
+/* Checklist sticky */
+.note-checklist {
+  bottom: 14%; left: 38%;
+  background: var(--wb-sticky-green-bg);
+  color: var(--wb-sticky-green-text);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  transform: rotate(1deg);
+  animation: floatIn 0.7s 0.95s ease both, gentleFloat 5s 2s ease-in-out infinite;
 }
-.sketch-arrow {
-  position: absolute;
-  top: 56%; left: 28%;
-  animation: floatIn 0.7s 0.8s ease both;
-}
-.sketch-scribble {
-  position: absolute;
-  bottom: 14%; right: 6%;
-  animation: floatIn 0.7s 1s ease both;
-}
+
 .cursor-presence {
   position: absolute;
   display: flex;
@@ -292,12 +357,12 @@
   gap: 4px;
 }
 .cursor-a {
-  top: 26%; right: 16%;
-  animation: floatIn 0.7s 1.1s ease both;
+  top: 22%; right: 22%;
+  animation: floatIn 0.7s 1.1s ease both, cursorDrift 6s 1.5s ease-in-out infinite;
 }
 .cursor-b {
-  bottom: 30%; right: 28%;
-  animation: floatIn 0.7s 1.3s ease both;
+  bottom: 26%; left: 65%;
+  animation: floatIn 0.7s 1.3s ease both, cursorDrift 7s 2s ease-in-out infinite;
 }
 .cursor-dot {
   width: 9px; height: 9px;
@@ -624,4 +689,21 @@
 @keyframes floatIn {
   from { opacity: 0; transform: translateY(10px) scale(0.97); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes gentleFloat {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(0, -6px); }
+}
+@keyframes cursorDrift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(8px, -4px); }
+  50% { transform: translate(12px, 2px); }
+  75% { transform: translate(4px, 6px); }
+}
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes drawIn {
+  from { stroke-dashoffset: var(--dash-length); opacity: 0.3; }
+  to { stroke-dashoffset: 0; opacity: 1; }
 }
