@@ -148,7 +148,7 @@ export const WhiteboardCanvas = forwardRef<WhiteboardCanvasHandle, WhiteboardCan
           display: "block",
           width: "100%",
           height: "100%",
-          background: "#f5f6f7", // surface token
+          background: "var(--wb-surface)",
           touchAction: "none",
         }}
       />

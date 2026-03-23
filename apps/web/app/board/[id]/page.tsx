@@ -19,7 +19,6 @@ import {
   ZoomControls,
 } from '@/components/toolbar'
 import { AvatarStack } from '@/components/presence/avatar-stack'
-import { RemoteCursor } from '@/components/presence/remote-cursor'
 
 import { useYjs } from '@/hooks/use-yjs'
 import { useSocket } from '@/hooks/use-socket'
@@ -546,7 +545,22 @@ export default function BoardPage() {
           overflow: 'hidden',
         }}
         aria-label="Whiteboard canvas"
-        onMouseMove={(e) => emitCursorMove(e.clientX, e.clientY)}
+        onMouseMove={(e) => {
+          const { translateX, translateY, scale } = viewportState
+          emitCursorMove(
+            (e.clientX - translateX) / scale,
+            (e.clientY - translateY) / scale,
+          )
+        }}
+        onTouchMove={(e) => {
+          const touch = e.touches[0]
+          if (!touch) return
+          const { translateX, translateY, scale } = viewportState
+          emitCursorMove(
+            (touch.clientX - translateX) / scale,
+            (touch.clientY - translateY) / scale,
+          )
+        }}
       >
         <WhiteboardCanvas
           ref={canvasRef}
@@ -591,34 +605,15 @@ export default function BoardPage() {
           onFocusChange={setFocusedTextId}
         />
 
-        {/* Remote cursor overlays — positioned absolutely over the canvas */}
-        {remoteCursors.map((user) =>
-          user.cursor ? (
-            <RemoteCursor
-              key={user.userId}
-              name={user.name}
-              color={user.color}
-              x={user.cursor.x}
-              y={user.cursor.y}
-            />
-          ) : null,
-        )}
       </div>
 
       {/* Floating toolbar — left center */}
       <Toolbar />
 
-      {/* Color + stroke pickers attached below the toolbar */}
+      {/* Color + stroke pickers — above toolbar on mobile, left-side on desktop */}
       <div
+        className="fixed z-50 flex items-center gap-1 bottom-36 left-1/2 -translate-x-1/2 flex-row md:flex-col md:bottom-[72px] md:left-4 md:translate-x-0"
         style={{
-          position: 'fixed',
-          left: 16,
-          bottom: 72,
-          zIndex: 50,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 4,
           padding: '6px',
           background: 'var(--wb-surface-container-low-glass)',
           backdropFilter: 'blur(20px)',

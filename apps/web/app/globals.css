@@ -43,14 +43,14 @@
        ============================================ */
 
     /* Surfaces — Paper Hierarchy */
-    --wb-surface: #f5f6f7;
-    --wb-surface-container-lowest: #ffffff;
-    --wb-surface-container-low: #eff1f2;
-    --wb-surface-container: #e6e8ea;
-    --wb-surface-container-high: #e0e3e4;
-    --wb-surface-container-highest: #dadddf;
-    --wb-surface-dim: #d1d5d7;
-    --wb-surface-bright: #f5f6f7;
+    --wb-surface: #f0f0ee;
+    --wb-surface-container-lowest: #fafaf8;
+    --wb-surface-container-low: #eae9e6;
+    --wb-surface-container: #e2e0dd;
+    --wb-surface-container-high: #d9d7d3;
+    --wb-surface-container-highest: #d1cfcb;
+    --wb-surface-dim: #cac8c4;
+    --wb-surface-bright: #f0f0ee;
 
     /* Brand / Primary — Electric Indigo */
     --wb-primary: #0c0bff;
