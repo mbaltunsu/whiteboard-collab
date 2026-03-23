@@ -292,6 +292,11 @@
     box-shadow: var(--wb-shadow-ambient);
     border-radius: var(--wb-radius-xl);
     border: 1px solid var(--wb-ghost-border);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .wb-tool-dock::-webkit-scrollbar {
+    display: none;
   }
 
   /* Active tool highlight */

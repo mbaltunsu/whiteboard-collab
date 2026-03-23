@@ -90,7 +90,7 @@ export function Toolbar() {
 
   return (
     <div
-      className="wb-tool-dock fixed bottom-20 left-1/2 -translate-x-1/2 z-50 flex flex-row items-center gap-0.5 p-1.5 md:flex-col md:bottom-auto md:top-1/2 md:left-4 md:translate-x-0 md:-translate-y-1/2"
+      className="wb-tool-dock fixed bottom-16 left-1/2 -translate-x-1/2 z-50 flex flex-row items-center gap-0.5 p-1 max-w-[calc(100vw-24px)] overflow-x-auto md:overflow-x-visible md:max-w-none md:p-1.5 md:flex-col md:bottom-auto md:top-1/2 md:left-4 md:translate-x-0 md:-translate-y-1/2"
       role="toolbar"
       aria-label="Drawing tools"
       aria-orientation="vertical"
@@ -168,7 +168,7 @@ function ToolButton({ tool, label, shortcut, isActive, onSelect, children }: Too
             aria-label={`${label} (${shortcut})`}
             aria-pressed={isActive}
             className={[
-              'relative flex items-center justify-center w-11 h-11 md:w-9 md:h-9 rounded-[var(--wb-radius-md)] transition-all duration-150',
+              'relative flex items-center justify-center w-9 h-9 rounded-[var(--wb-radius-md)] transition-all duration-150',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--wb-primary)] focus-visible:ring-offset-1',
               isActive
                 ? 'text-[var(--wb-primary)] bg-[var(--wb-primary-alpha-20)]'

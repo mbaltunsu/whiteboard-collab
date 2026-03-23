@@ -179,7 +179,7 @@ function TopBar({ boardId, connectionStatus, remoteUsers, onShare, shareCopied }
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 16px',
+        padding: '0 12px',
         background: 'var(--wb-glass-bg)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
@@ -188,7 +188,7 @@ function TopBar({ boardId, connectionStatus, remoteUsers, onShare, shareCopied }
       }}
     >
       {/* Left: connection status */}
-      <div style={{ pointerEvents: 'auto' }}>
+      <div style={{ pointerEvents: 'auto', flexShrink: 0 }}>
         <ConnectionStatusBadge status={connectionStatus} />
       </div>
 
@@ -197,8 +197,9 @@ function TopBar({ boardId, connectionStatus, remoteUsers, onShare, shareCopied }
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 12,
+          gap: 8,
           pointerEvents: 'auto',
+          flexShrink: 0,
         }}
       >
         <AvatarStack users={remoteUsers} />
@@ -211,9 +212,9 @@ function TopBar({ boardId, connectionStatus, remoteUsers, onShare, shareCopied }
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 6,
+            gap: 4,
             height: 32,
-            padding: '0 12px',
+            padding: '0 10px',
             borderRadius: 'var(--wb-radius-md, 0.375rem)',
             background: shareCopied ? 'var(--wb-surface-container-low)' : GRADIENTS.primary,
             border: shareCopied ? '1px solid var(--wb-ghost-border)' : 'none',
@@ -224,10 +225,11 @@ function TopBar({ boardId, connectionStatus, remoteUsers, onShare, shareCopied }
             cursor: 'pointer',
             boxShadow: shareCopied ? 'none' : 'var(--wb-primary-shadow-sm)',
             transition: 'all 200ms',
+            flexShrink: 0,
           }}
         >
           <Share2 size={13} aria-hidden="true" />
-          {shareCopied ? 'Copied!' : 'Share'}
+          <span className="hidden sm:inline">{shareCopied ? 'Copied!' : 'Share'}</span>
         </button>
 
         <Link
@@ -271,12 +273,8 @@ interface BottomBarProps {
 function BottomBar({ undoManager }: BottomBarProps) {
   return (
     <div
+      className="fixed bottom-4 left-3 z-40 md:bottom-6 md:left-1/2 md:-translate-x-1/2"
       style={{
-        position: 'fixed',
-        bottom: 24,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 40,
         display: 'flex',
         alignItems: 'center',
         gap: 4,
@@ -639,7 +637,7 @@ export default function BoardPage() {
 
       {/* Color + stroke pickers — above toolbar on mobile, left-side on desktop */}
       <div
-        className="fixed z-50 flex items-center gap-1 bottom-36 left-1/2 -translate-x-1/2 flex-row md:flex-col md:bottom-[72px] md:left-4 md:translate-x-0"
+        className="fixed z-50 flex items-center gap-1 bottom-28 left-1/2 -translate-x-1/2 flex-row md:flex-col md:bottom-[72px] md:left-4 md:translate-x-0"
         style={{
           padding: '6px',
           background: 'var(--wb-surface-container-low-glass)',
