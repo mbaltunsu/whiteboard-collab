@@ -18,8 +18,8 @@ const RoomMemberSchema = new Schema<RoomMember>(
 
 const RoomSchema = new Schema<IRoom>(
   {
-    boardId: { type: String, required: true, unique: true },
-    code: { type: String, required: true, unique: true },
+    boardId: { type: String, required: true },
+    code: { type: String, required: true },
     members: { type: [RoomMemberSchema], default: [] },
     maxUsers: { type: Number, default: 20 },
   },

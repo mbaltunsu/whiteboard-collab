@@ -78,7 +78,8 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     await dbSession.abortTransaction()
     dbSession.endSession()
-    throw err
+    console.error('[POST /api/boards]', err)
+    return NextResponse.json({ error: 'Failed to create board' }, { status: 500 })
   }
 }
 
@@ -94,32 +95,37 @@ export async function GET() {
 
   const userId = session.user.userId
 
-  // Find all rooms the user belongs to
-  const rooms = await RoomModel.find({ 'members.userId': userId }).lean()
-  const boardIds = rooms.map((r) => r.boardId)
+  try {
+    // Find all rooms the user belongs to
+    const rooms = await RoomModel.find({ 'members.userId': userId }).lean()
+    const boardIds = rooms.map((r) => r.boardId)
 
-  const boards = await BoardModel.find({
-    _id: { $in: boardIds.map((id) => new mongoose.Types.ObjectId(id)) },
-  })
-    .sort({ updatedAt: -1 })
-    .lean()
+    const boards = await BoardModel.find({
+      _id: { $in: boardIds.map((id) => new mongoose.Types.ObjectId(id)) },
+    })
+      .sort({ updatedAt: -1 })
+      .lean()
 
-  const roomByBoardId = new Map(rooms.map((r) => [r.boardId, r]))
+    const roomByBoardId = new Map(rooms.map((r) => [r.boardId, r]))
 
-  const result = boards.map((b) => {
-    const id = (b._id as mongoose.Types.ObjectId).toString()
-    const room = roomByBoardId.get(id)
-    return {
-      id,
-      title: b.title,
-      ownerId: b.ownerId,
-      roomCode: b.roomCode,
-      thumbnailUrl: b.thumbnailUrl ?? null,
-      createdAt: b.createdAt,
-      updatedAt: b.updatedAt,
-      memberCount: room ? room.members.length : 0,
-    }
-  })
+    const result = boards.map((b) => {
+      const id = (b._id as mongoose.Types.ObjectId).toString()
+      const room = roomByBoardId.get(id)
+      return {
+        id,
+        title: b.title,
+        ownerId: b.ownerId,
+        roomCode: b.roomCode,
+        thumbnailUrl: b.thumbnailUrl ?? null,
+        createdAt: b.createdAt,
+        updatedAt: b.updatedAt,
+        memberCount: room ? room.members.length : 0,
+      }
+    })
 
-  return NextResponse.json(result)
+    return NextResponse.json(result)
+  } catch (err) {
+    console.error('[GET /api/boards]', err)
+    return NextResponse.json({ error: 'Failed to fetch boards' }, { status: 500 })
+  }
 }

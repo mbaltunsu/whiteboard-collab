@@ -21,7 +21,7 @@ test.describe('Landing page (/)', () => {
 
   test('nav has a Sign in link', async ({ page }) => {
     await page.goto('/')
-    const signInLink = page.getByRole('link', { name: /sign in/i })
+    const signInLink = page.getByRole('link', { name: /sign in/i }).first()
     await expect(signInLink).toBeVisible()
   })
 

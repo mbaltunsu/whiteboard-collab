@@ -33,6 +33,11 @@ app.get("/health", (_req, res) => {
 
 const httpServer = createServer(app)
 
+// Must be registered BEFORE Socket.io attaches its own upgrade listener.
+// Engine.io (used by Socket.io) destroys any WebSocket upgrade it doesn't
+// recognise — so y-websocket must claim /yjs/* upgrades first.
+setupYjsWebSocket(httpServer)
+
 const io = new Server<
   ClientToServerEvents,
   ServerToClientEvents,
@@ -64,9 +69,6 @@ io.on("connection", (socket) => {
     )
   })
 })
-
-// Set up y-websocket on /yjs path (intercepts HTTP upgrade before Socket.io)
-setupYjsWebSocket(httpServer)
 
 // Connect to MongoDB (non-blocking — server still starts without it)
 connectMongo().catch((err: unknown) => {

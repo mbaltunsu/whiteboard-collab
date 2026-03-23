@@ -14,7 +14,7 @@ const BoardSchema = new Schema<IBoard>(
     title: { type: String, required: true },
     ownerId: { type: String, required: true },
     thumbnailUrl: { type: String },
-    roomCode: { type: String, required: true, unique: true },
+    roomCode: { type: String, required: true },
   },
   { timestamps: true }
 )
