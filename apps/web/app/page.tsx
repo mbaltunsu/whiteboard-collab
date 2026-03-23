@@ -26,61 +26,69 @@ function HeroIllustration() {
         <rect width="100%" height="100%" fill="url(#dot-grid)" />
       </svg>
 
-      {/* Flow diagram: Idea → Design → Build → Ship */}
-      <div className="flow-node flow-idea">Idea</div>
-      <svg className="flow-arrow flow-arrow-1" width="48" height="24" viewBox="0 0 48 24" fill="none">
-        <path d="M 2 12 L 38 12" strokeWidth="2" strokeLinecap="round" style={{ stroke: 'var(--wb-outline-variant)' }} />
-        <path d="M 34 6 L 44 12 L 34 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" style={{ stroke: 'var(--wb-outline-variant)' }} />
-      </svg>
-      <div className="flow-node flow-design">Design</div>
-      <svg className="flow-arrow flow-arrow-2" width="48" height="24" viewBox="0 0 48 24" fill="none">
-        <path d="M 2 12 L 38 12" strokeWidth="2" strokeLinecap="round" style={{ stroke: 'var(--wb-outline-variant)' }} />
-        <path d="M 34 6 L 44 12 L 34 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" style={{ stroke: 'var(--wb-outline-variant)' }} />
-      </svg>
-      <div className="flow-node flow-build">Build</div>
-      <svg className="flow-arrow flow-arrow-3" width="48" height="24" viewBox="0 0 48 24" fill="none">
-        <path d="M 2 12 L 38 12" strokeWidth="2" strokeLinecap="round" style={{ stroke: 'var(--wb-outline-variant)' }} />
-        <path d="M 34 6 L 44 12 L 34 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" style={{ stroke: 'var(--wb-outline-variant)' }} />
-      </svg>
-      <div className="flow-node flow-ship">Ship</div>
-
-      {/* "Sprint 1" sticky note top-left */}
+      {/* Sprint Board sticky — top-left */}
       <div className="sketch-note note-orange">Sprint 1</div>
 
-      {/* "User Flow" framed rectangle top-right */}
-      <div className="frame-label">User Flow</div>
-      <svg className="sketch-frame" width="140" height="80" viewBox="0 0 140 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M 4 6 Q 6 3 10 4 L 130 3 Q 136 4 136 8 L 137 72 Q 136 78 130 77 L 10 78 Q 4 77 3 72 Z"
-          strokeWidth="2"
-          strokeLinejoin="round"
-          style={{ stroke: 'var(--wb-primary)', fill: 'var(--wb-primary-alpha-08)' }}
-        />
-      </svg>
+      {/* User Flow frame with mini-flowchart — top-center/right */}
+      <div className="userflow-group">
+        <div className="frame-label">User Flow</div>
+        <svg className="sketch-frame" width="160" height="100" viewBox="0 0 160 100" fill="none">
+          <path
+            d="M 4 6 Q 6 3 12 4 L 148 2 Q 154 3 156 8 L 157 92 Q 156 98 150 97 L 10 98 Q 4 97 3 91 Z"
+            strokeWidth="2" strokeLinejoin="round"
+            style={{ stroke: 'var(--wb-primary)', fill: 'var(--wb-primary-alpha-08)' }}
+          />
+        </svg>
+        {/* Mini boxes inside the frame */}
+        <div className="mini-box mini-box-1" />
+        <div className="mini-box mini-box-2" />
+        <div className="mini-box mini-box-3" />
+        <svg className="mini-connector" width="80" height="50" viewBox="0 0 80 50" fill="none">
+          <path d="M 12 10 L 40 10 L 40 40 L 68 40" strokeWidth="1.5" strokeLinecap="round" fill="none" style={{ stroke: 'var(--wb-primary)' }} opacity="0.5" />
+        </svg>
+      </div>
 
-      {/* Freehand underline under "User Flow" */}
-      <svg className="sketch-underline" width="110" height="12" viewBox="0 0 110 12" fill="none">
+      {/* Staircase flow: Idea → Design → Build → Ship */}
+      <div className="flow-node flow-idea">Idea</div>
+      <svg className="flow-arrow flow-arrow-1" width="40" height="30" viewBox="0 0 40 30" fill="none">
+        <path d="M 2 8 Q 20 8 32 22" strokeWidth="2" strokeLinecap="round" fill="none" style={{ stroke: 'var(--wb-outline-variant)' }} />
+        <path d="M 27 18 L 34 24 L 26 25" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" style={{ stroke: 'var(--wb-outline-variant)' }} />
+      </svg>
+      <div className="flow-node flow-design">Design</div>
+      <svg className="flow-arrow flow-arrow-2" width="40" height="30" viewBox="0 0 40 30" fill="none">
+        <path d="M 2 8 Q 20 8 32 22" strokeWidth="2" strokeLinecap="round" fill="none" style={{ stroke: 'var(--wb-outline-variant)' }} />
+        <path d="M 27 18 L 34 24 L 26 25" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" style={{ stroke: 'var(--wb-outline-variant)' }} />
+      </svg>
+      <div className="flow-node flow-build">Build</div>
+      <svg className="flow-arrow flow-arrow-3" width="40" height="30" viewBox="0 0 40 30" fill="none">
+        <path d="M 2 8 Q 20 8 32 22" strokeWidth="2" strokeLinecap="round" fill="none" style={{ stroke: 'var(--wb-outline-variant)' }} />
+        <path d="M 27 18 L 34 24 L 26 25" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" style={{ stroke: 'var(--wb-outline-variant)' }} />
+      </svg>
+      <div className="flow-node flow-ship">Ship!</div>
+
+      {/* Freehand scribble — bottom-left (pen test aesthetic) */}
+      <svg className="sketch-scribble" width="120" height="40" viewBox="0 0 120 40" fill="none">
         <path
-          d="M 2 8 Q 30 3 55 7 Q 80 11 108 5"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          fill="none"
+          d="M 4 20 Q 15 8 30 22 Q 45 36 60 18 Q 75 2 90 20 Q 105 36 116 18"
+          strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.5"
           style={{ stroke: 'var(--wb-tertiary-container)' }}
         />
       </svg>
 
-      {/* Checklist sticky near center-bottom */}
+      {/* Checklist sticky — bottom-center */}
       <div className="sketch-note note-checklist">
         <span style={{ opacity: 0.6 }}>✓</span> Auth flow<br />
         <span style={{ opacity: 0.6 }}>✓</span> Canvas engine<br />
         <span>○</span> Presence
       </div>
 
-      {/* Cursor presence indicators */}
+      {/* Cursor Alice — near User Flow frame, as if working on it */}
       <div className="cursor-presence cursor-a">
         <div className="cursor-dot" style={{ background: 'var(--wb-primary)' }} />
         <div className="cursor-label" style={{ background: 'var(--wb-primary)' }}>Alice</div>
       </div>
+
+      {/* Cursor Bob — near checklist, as if checking items */}
       <div className="cursor-presence cursor-b">
         <div className="cursor-dot" style={{ background: 'var(--wb-tertiary-container)' }} />
         <div className="cursor-label" style={{ background: 'var(--wb-tertiary-container)', color: 'var(--wb-on-tertiary-container)' }}>Bob</div>
