@@ -48,8 +48,12 @@ export function useYjs(boardId: string, token?: string | null): UseYjsReturn {
   useEffect(() => {
     if (!boardId) return
 
-    const serverUrl = process.env.NEXT_PUBLIC_WS_SERVER_URL ?? "http://localhost:4000"
-    const wsUrl = serverUrl.replace(/^http/, "ws") + "/yjs"
+    const rawUrl = process.env.NEXT_PUBLIC_WS_SERVER_URL ?? "http://localhost:4000"
+    // Ensure it has a protocol. If missing, default to wss:// for production, ws:// for localhost.
+    const normalised = /^https?:\/\/|^wss?:\/\//.test(rawUrl)
+      ? rawUrl
+      : (rawUrl.includes('localhost') ? 'http://' : 'https://') + rawUrl
+    const wsUrl = normalised.replace(/^http/, "ws") + "/yjs"
 
     const doc = new Y.Doc()
     docRef.current = doc

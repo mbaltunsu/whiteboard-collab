@@ -62,7 +62,11 @@ export function useSocket(
   useEffect(() => {
     if (!boardId || !session?.user?.userId) return
 
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL ?? "http://localhost:4000"
+    const rawWsUrl = process.env.NEXT_PUBLIC_WS_URL ?? "http://localhost:4000"
+    // Ensure it has a protocol — socket.io-client needs an absolute URL.
+    const wsUrl = /^https?:\/\//.test(rawWsUrl)
+      ? rawWsUrl
+      : (rawWsUrl.includes('localhost') ? 'http://' : 'https://') + rawWsUrl
     const userId = session.user.userId
     const name = session.user.name ?? "Anonymous"
     const avatar = session.user.image ?? ""
