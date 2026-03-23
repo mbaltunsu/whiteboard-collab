@@ -82,6 +82,9 @@ export class InputHandler {
   private moveStartElementPos: { x: number; y: number } | null = null
   private boxSelectStart: { x: number; y: number } | null = null
   private selectedIds: string[] = []
+  private pinchStartDist: number | null = null
+  private pinchLastMidX: number = 0
+  private pinchLastMidY: number = 0
 
   constructor(canvas: HTMLCanvasElement, viewport: Viewport, callbacks: InputCallbacks) {
     this.canvas = canvas
@@ -501,7 +504,21 @@ export class InputHandler {
 
   private onTouchStart = (e: TouchEvent): void => {
     e.preventDefault()
-    if (e.touches.length === 0) return
+    if (e.touches.length === 2) {
+      // Two-finger gesture — initialise pinch state
+      const t0 = e.touches[0]
+      const t1 = e.touches[1]
+      this.pinchStartDist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY)
+      const rect = this.canvas.getBoundingClientRect()
+      this.pinchLastMidX = (t0.clientX + t1.clientX) / 2 - rect.left
+      this.pinchLastMidY = (t0.clientY + t1.clientY) / 2 - rect.top
+      // Cancel any in-progress single-touch drawing action
+      this.isPointerDown = false
+      this.penPoints = []
+      this.shapeStartCanvas = null
+      return
+    }
+    if (e.touches.length !== 1) return
     const touch = e.touches[0]
     const rect = this.canvas.getBoundingClientRect()
     const syntheticEvent = {
@@ -515,7 +532,32 @@ export class InputHandler {
 
   private onTouchMove = (e: TouchEvent): void => {
     e.preventDefault()
-    if (e.touches.length === 0) return
+    if (e.touches.length === 2 && this.pinchStartDist !== null) {
+      const t0 = e.touches[0]
+      const t1 = e.touches[1]
+      const rect = this.canvas.getBoundingClientRect()
+      const newDist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY)
+      const midX = (t0.clientX + t1.clientX) / 2 - rect.left
+      const midY = (t0.clientY + t1.clientY) / 2 - rect.top
+
+      // Zoom relative to pinch centre
+      const factor = newDist / this.pinchStartDist
+      this.viewport.zoom(factor, midX, midY)
+
+      // Pan by midpoint delta (two-finger drag)
+      const dx = midX - this.pinchLastMidX
+      const dy = midY - this.pinchLastMidY
+      this.viewport.pan(dx, dy)
+
+      this.pinchStartDist = newDist
+      this.pinchLastMidX = midX
+      this.pinchLastMidY = midY
+
+      this.callbacks.onViewportChange()
+      return
+    }
+    if (e.touches.length !== 1) return
+    this.pinchStartDist = null
     const touch = e.touches[0]
     const rect = this.canvas.getBoundingClientRect()
     const syntheticEvent = {
@@ -529,6 +571,12 @@ export class InputHandler {
 
   private onTouchEnd = (e: TouchEvent): void => {
     e.preventDefault()
+    // If releasing to fewer than 2 fingers, clear pinch state
+    if (e.touches.length < 2) {
+      this.pinchStartDist = null
+    }
+    // Only finalise single-touch action when all fingers are lifted
+    if (e.touches.length > 0) return
     const touch = e.changedTouches[0]
     if (!touch) return
     const rect = this.canvas.getBoundingClientRect()
