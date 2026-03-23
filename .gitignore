@@ -58,6 +58,10 @@ test-results
 
 # Claude local settings
 .claude/settings.local.json
+.claude/worktrees/
+
+# Playwright CLI artifacts
+.playwright-cli/
 
 # Misc
 *.pem
